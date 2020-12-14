@@ -80,10 +80,8 @@ class SinglyLinkedList {
     if (!this.head) {
       return undefined;
     }
-    let indexCounter = 0;
     let specificNode = this.head;
     for (let i = 1; i <= index; i++) {
-      indexCounter++;
       specificNode = specificNode.next;
     }
     return specificNode;

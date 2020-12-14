@@ -15723,15 +15723,18 @@ module.exports = g;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _nodeClassDoubly = __webpack_require__(/*! ./nodeClassDoubly.js */ "./source/nodeClassDoubly.js");
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Node = function Node(value) {
-  _classCallCheck(this, Node);
-
-  this.value = value;
-  this.next = null;
-  this.previous = null;
-};
+/**
+class Node {
+  constructor(value) {
+    this.next = null;
+    this.previous = null;
+  }
+}
+* */
 
 var DoublyLinkedList = function () {
   function DoublyLinkedList() {
@@ -15745,21 +15748,138 @@ var DoublyLinkedList = function () {
   _createClass(DoublyLinkedList, [{
     key: "push",
     value: function push(value) {
-      var newNode = new Node(value);
+      var newNode = new _nodeClassDoubly.Node(value);
       if (!this.head) {
         this.head = newNode;
         this.tail = newNode;
+      } else {
+        this.tail.next = newNode;
+        newNode.previous = this.tail;
+        this.tail = newNode;
       }
+      this.length++;
+    }
+  }, {
+    key: "pop",
+    value: function pop() {
+      if (!this.head) {
+        return undefined;
+      }
+      // store the value of the initial tail
+      var initialTail = this.tail;
+      // if the length of our list is 1, just set both head and tail to null. Because otherwise, we can't continue with our else code, since there is no previous property to a 1 item list
+      if (this.length === 1) {
+        this.head = null;
+        this.tail = null;
+        // if there is more than one item. make the new tail equal to the previous property of the initial tail. and then set that new tails next property equal to null,meaning nothing is after it.
+      } else {
+        this.tail = initialTail.previous;
+        this.tail.next = null;
+      }
+      // set the initialTails previous property to null,so we cut off any previous node attachments it has when we return the initialTail
+      initialTail.previous = null;
+      this.length--;
+      return initialTail;
+    }
+  }, {
+    key: "shift",
+    value: function shift() {
+      if (!this.head) {
+        return undefined;
+      }
+      var initialHead = this.head;
+      if (this.length === 1) {
+        this.head = null;
+        this.tail = null;
+      } else {
+        this.head = initialHead.next;
+        this.head.previous = null;
+      }
+      initialHead.next = null;
+      this.length--;
+      return initialHead;
+    }
+  }, {
+    key: "unshift",
+    value: function unshift(value) {
+      var newNode = new _nodeClassDoubly.Node(value);
+      if (!this.head) {
+        this.head = newNode;
+        this.tail = newNode;
+      } else {
+        // set the previous property on our current this.head to be a reference to the new node that we created;
+        this.head.previous = newNode;
+        // now set the next property on this new node we created to be our current this.head
+        newNode.next = this.head;
+        // now all we have to do is make our new this.head equal to the reference to the newNode that we created.
+        this.head = newNode;
+      }
+      this.length++;
+      return this;
+    }
+  }, {
+    key: "get",
+    value: function get(index) {
+      if (index < 0 || index >= this.length) {
+        return null;
+      }
+      var middleIndex = Math.floor(this.length - 1 / 2);
+      var specificIndex = null;
+      if (index <= middleIndex) {
+        specificIndex = this.head;
+        for (var i = 1; i <= index; i++) {
+          specificIndex = specificIndex.next;
+        }
+      } else {
+        specificIndex = this.tail;
+        for (var _i = this.length - 2; _i >= index; _i--) {
+          specificIndex = specificIndex.previous;
+        }
+      }
+      return specificIndex;
     }
   }]);
 
   return DoublyLinkedList;
 }();
 
-var first = new Node(12);
-first.next = new Node(13);
-first.next.previous = first;
+var first = new DoublyLinkedList();
+first.push("mike");
+first.push("lol");
+first.push("jose");
+first.push("samuel");
+first.push("jackie");
+first.push("sicy");
+console.log(first.get(5));
 console.log(first);
+
+/***/ }),
+
+/***/ "./source/nodeClassDoubly.js":
+/*!***********************************!*\
+  !*** ./source/nodeClassDoubly.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Node = function Node(value) {
+  _classCallCheck(this, Node);
+
+  this.value = value;
+  this.next = null;
+  this.previous = null;
+};
+
+exports.Node = Node;
 
 /***/ }),
 
