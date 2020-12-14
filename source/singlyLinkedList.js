@@ -1,3 +1,4 @@
+import { node } from "./nodeClass.js";
 class SinglyLinkedList {
   constructor() {
     this.head = null;
