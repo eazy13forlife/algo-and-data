@@ -143,11 +143,10 @@ class SinglyLinkedList {
     let initialHead = this.head;
     this.head = this.tail;
     this.tail = initialHead;
-    let newNext = null;
     let previousNext = null;
     for (let i = 0; i < this.length; i++) {
       // save what initially comes next in our list after  initialHead,so we can use it later. in our case (27,32,71). Since the next property is an object, we are storing a reference to this object
-      newNext = initialHead.next;
+      const newNext = initialHead.next;
       // now we get the previousNext, which initially is null, because there is no number before 27. and make that the new next property of our initialHead(so we are redefining this next property,so it will be stored in a new address). so now we get (13,null) for our initialHead. Since we are only changing a property of our initialHead object, all references to initialHead will take on this change as well. If we were redefining initialHead as a whole, then a new reference to the object would be created.
       initialHead.next = previousNext;
       // now we get our initiaHead, which equals (13,null) and store a reference to that object in previousNext, so previousNext is (13,null)
@@ -162,3 +161,154 @@ class SinglyLinkedList {
     return this;
   }
 }
+
+/** Alternate Version
+class SinglyLinkedList {
+  constructor() {
+    this.head = null;
+    this.tail = null;
+    this.length = 0;
+  }
+
+  push(val) {
+    const newNode = new Node(val);
+    if (!this.head) {
+      this.head = newNode;
+      this.tail = newNode;
+    } else {
+      this.tail.next = newNode;
+      this.tail = newNode;
+    }
+    this.length++;
+  }
+  // for pop and shift, if there is nothing in our list just set a coniditon for that case and then set the else statement after it, so we dont have any confusion.
+
+  pop() {
+    if (!this.head) {
+      return undefined;
+    }
+    // We want to find the last item in our list,starting from the beginnng. So we know its the last item if this.head.next.next no longer exists. So, we run a while loop until this is the case. So, initially, we have two pointers. One of them is  newTail which for now is set to null, and another is currentNode, which is equal to this.head.
+    let currentNode = this.head;
+    let newTail = null;
+    // if the length is 1 and we are popping, just set this.head and this.tail=null
+    if (this.length === 1) {
+      this.head = null;
+      this.tail = null;
+    } else {
+      // if the next node exists, newtail equals the currentNode and then currentNode moves up one. When currentNode.next doesnt exist anymore, thats when currentNode will be at the last node in our list. and then where newTail is, will be our new tail
+      while (currentNode.next) {
+        newTail = currentNode;
+        currentNode = currentNode.next;
+      }
+      this.tail = newTail;
+      this.tail.next = null;
+    }
+    this.length -= 1;
+    return currentNode;
+  }
+
+  shift() {
+    if (!this.head) {
+      return undefined;
+    }
+    const initialHead = this.head;
+    if (this.length === 1) {
+      this.head = null;
+      this.tail = null;
+    } else {
+      this.head = this.head.next;
+    }
+    this.length--;
+    return initialHead;
+  }
+
+  unshift(val) {
+    const newNode = new Node(val);
+    if (!this.head) {
+      this.head = newNode;
+      this.tail = newNode;
+    }
+    newNode.next = this.head;
+    this.head = newNode;
+    this.length++;
+  }
+
+  get(index) {
+    if (index < 0 || index >= this.length) {
+      return undefined;
+    }
+    // the 0 index is just,specificItem aka this.head. The 1 index is this.head.next. the second index is this.head.next.next. Thats why the for loop starts at 1, so we can just do specificItem.next;
+    let specificItem = this.head;
+    for (let i = 1; i <= index; i++) {
+      specificItem = specificItem.next;
+    }
+    return specificItem;
+  }
+
+  set(index, value) {
+    // this.get already checks the condition of whether or not the index is valid, so we don't need to repeat it
+    const specificItem = this.get(index);
+    if (specificItem) {
+      specificItem.value = value;
+      return true;
+    }
+    return false;
+  }
+
+  insert(index, value) {
+    if (index < 0 || index > this.length) {
+      return null;
+    }
+    if (index === 0) {
+      this.unshift(value);
+      return true;
+    }
+    if (index === this.length) {
+      this.push(value);
+      return true;
+    }
+    const newNode = new Node(value);
+    const nodeBefore = this.get(index - 1);
+    const initialNode = this.get(index);
+    nodeBefore.next = newNode;
+    newNode.next = initialNode;
+    this.length++;
+  }
+
+  remove(index) {
+    if (index < 0 || index >= this.length) {
+      return undefined;
+    }
+    if (index === 0) {
+      this.shift();
+      return true;
+    }
+    if (index === this.length - 1) {
+      this.pop();
+      return true;
+    }
+    const initialNode = this.get(index);
+    const nodeBefore = this.get(index - 1);
+    const nodeAfter = this.get(index + 1);
+    nodeBefore.next = nodeAfter;
+    this.length--;
+    initialNode.next = null;
+    return initialNode;
+  }
+
+  reverse() {
+    let currentHead = this.head;
+    this.head = this.tail;
+    this.tail = currentHead;
+    let previousNext = null;
+
+    for (let i = 0; i < this.length; i++) {
+      const newNext = currentHead.next;
+      currentHead.next = previousNext;
+      previousNext = currentHead;
+      currentHead = newNext;
+    }
+    return this;
+  }
+}
+* */

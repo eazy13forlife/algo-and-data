@@ -4,4 +4,4 @@ class Node {
     this.next = null;
   }
 }
-export { node };
+export { Node };

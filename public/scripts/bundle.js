@@ -15721,36 +15721,6 @@ module.exports = g;
 "use strict";
 
 
-var _nodeClassDoubly = __webpack_require__(/*! ./nodeClassDoubly.js */ "./source/nodeClassDoubly.js");
-
-/***/ }),
-
-/***/ "./source/nodeClassDoubly.js":
-/*!***********************************!*\
-  !*** ./source/nodeClassDoubly.js ***!
-  \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Node = function Node(value) {
-  _classCallCheck(this, Node);
-
-  this.value = value;
-  this.next = null;
-  this.previous = null;
-};
-
-exports.Node = Node;
-
 /***/ }),
 
 /***/ 0:

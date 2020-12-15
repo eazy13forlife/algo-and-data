@@ -71,11 +71,8 @@ class DoublyLinkedList {
       this.head = newNode;
       this.tail = newNode;
     } else {
-      // set the previous property on our current this.head to be a reference to the new node that we created;
-      this.head.previous = newNode;
-      // now set the next property on this new node we created to be our current this.head
       newNode.next = this.head;
-      // now all we have to do is make our new this.head equal to the reference to the newNode that we created.
+      this.head.previous = newNode;
       this.head = newNode;
     }
     this.length++;
