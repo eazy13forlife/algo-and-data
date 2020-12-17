@@ -144,6 +144,7 @@ class SinglyLinkedList {
     this.head = this.tail;
     this.tail = initialHead;
     let previousNext = null;
+    //we are just doing this for loop for every item in our list, so we can do let i=1;i<=this.length:i++
     for (let i = 0; i < this.length; i++) {
       // save what initially comes next in our list after  initialHead,so we can use it later. in our case (27,32,71). Since the next property is an object, we are storing a reference to this object
       const newNext = initialHead.next;
@@ -302,7 +303,7 @@ class SinglyLinkedList {
     this.tail = currentHead;
     let previousNext = null;
 
-    for (let i = 0; i < this.length; i++) {
+    for (let i = 1; i <= this.length; i++) {
       const newNext = currentHead.next;
       currentHead.next = previousNext;
       previousNext = currentHead;

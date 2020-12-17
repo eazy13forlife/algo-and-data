@@ -150,4 +150,24 @@ class DoublyLinkedList {
     this.length--;
     return initialNode;
   }
+
+  reverse() {
+    if (!this.head) {
+      return undefined;
+    }
+    let currentHead = this.head;
+    this.head = this.tail;
+    this.tail = currentHead;
+    let previousNext = null;
+    for (let i = 1; i <= this.length; i++) {
+      const newNext = currentHead.next;
+      // so currentHead.next points to what came directly before it. Initially, it points to null.
+      currentHead.next = previousNext;
+      // what comes directly before each currentHead is the node right after it.
+      currentHead.previous = newNext;
+      previousNext = currentHead;
+      currentHead = newNext;
+    }
+    return this;
+  }
 }
