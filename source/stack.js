@@ -6,46 +6,49 @@ import { Node } from "./nodeClass.js";
 // }
 // }
 
-class Queue {
+class Stack {
   constructor() {
     this.first = null;
     this.last = null;
     this.size = 0;
   }
 
-  enqueue(value) {
+  push(value) {
     const newNode = new Node(value);
     if (!this.first) {
       this.first = newNode;
       this.last = newNode;
     } else {
-      this.last.next = newNode;
-      this.last = newNode;
+      newNode.next = this.first;
+      this.first = newNode;
     }
+
     return ++this.size;
   }
 
-  dequeue() {
+  pop() {
     if (!this.first) {
       return undefined;
     }
+
     const currentFirst = this.first;
+
     if (this.size === 1) {
-      this.last = null;
       this.first = null;
+      this.last = null;
     } else {
       this.first = this.first.next;
     }
-    this.size--;
     return currentFirst;
   }
 }
 
-const first = new Queue();
-console.log(first.enqueue("mike"));
-console.log(first.enqueue("jeffrey"));
-console.log(first.enqueue("siliana"));
-console.log(first.dequeue());
-console.log(first.dequeue());
-console.log(first.dequeue());
+const first = new Stack();
+console.log(first.push("mike"));
+console.log(first.push("susan"));
+console.log(first.push("trey"));
+console.log(first.pop());
+console.log(first.pop());
+console.log(first.pop());
+console.log(first.pop());
 console.log(first);

@@ -15721,6 +15721,98 @@ module.exports = g;
 "use strict";
 
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _nodeClass = __webpack_require__(/*! ./nodeClass.js */ "./source/nodeClass.js");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+// class Node {
+// constructor(value) {
+// this.value = value;
+// this.next = null;
+// }
+// }
+
+var Queue = function () {
+  function Queue() {
+    _classCallCheck(this, Queue);
+
+    this.first = null;
+    this.last = null;
+    this.size = 0;
+  }
+
+  _createClass(Queue, [{
+    key: "enqueue",
+    value: function enqueue(value) {
+      var newNode = new _nodeClass.Node(value);
+      if (!this.first) {
+        this.first = newNode;
+        this.last = newNode;
+      } else {
+        this.last.next = newNode;
+        this.last = newNode;
+      }
+      return ++this.size;
+    }
+  }, {
+    key: "dequeue",
+    value: function dequeue() {
+      if (!this.first) {
+        return undefined;
+      }
+      var currentFirst = this.first;
+      if (this.size === 1) {
+        this.last = null;
+        this.first = null;
+      } else {
+        this.first = this.first.next;
+      }
+      this.size--;
+      return currentFirst;
+    }
+  }]);
+
+  return Queue;
+}();
+
+var first = new Queue();
+console.log(first.enqueue("mike"));
+console.log(first.enqueue("jeffrey"));
+console.log(first.enqueue("siliana"));
+console.log(first.dequeue());
+console.log(first.dequeue());
+console.log(first.dequeue());
+console.log(first);
+
+/***/ }),
+
+/***/ "./source/nodeClass.js":
+/*!*****************************!*\
+  !*** ./source/nodeClass.js ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Node = function Node(value) {
+  _classCallCheck(this, Node);
+
+  this.value = value;
+  this.next = null;
+};
+
+exports.Node = Node;
+
 /***/ }),
 
 /***/ 0:
