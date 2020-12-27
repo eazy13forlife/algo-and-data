@@ -220,6 +220,7 @@ class SinglyLinkedList {
       this.head = this.head.next;
     }
     this.length--;
+    initialHead.next=null;
     return initialHead;
   }
 

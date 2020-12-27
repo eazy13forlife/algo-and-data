@@ -128,6 +128,7 @@ class DoublyLinkedList {
     newNode.next = initialNode;
     initialNode.previous = newNode;
     this.length++;
+    return this;
   }
 
   remove(index) {
