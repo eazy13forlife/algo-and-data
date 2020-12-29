@@ -81,7 +81,7 @@ class BinarySearchTree {
     const traverseTree = (node) => {
       nodeArray.push(node);
       if (node.left) {
-        traverseTree(node.left);
+        traverseTree(n    ode.left);
       }
       if (node.right) {
         traverseTree(node.right);
@@ -102,6 +102,21 @@ class BinarySearchTree {
       }
       nodeArray.push(node);
     };
+    traverseTree(this.root);
+    return nodeArray;
+  }
+
+  depthFirstSearchInOrder(){
+    const nodeArray=[];
+    const traverseTree(node)=>{
+      if(node.left){
+        traverseTree(node.left)
+      }
+      nodeArray.push(node);
+      if(node.right){
+          traverseTree(node.right)
+      }
+    }
     traverseTree(this.root);
     return nodeArray;
   }
