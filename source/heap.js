@@ -29,7 +29,4 @@ class MaxBinaryHeap {
 }
 
 let heap = new MaxBinaryHeap();
-
-heap.insert(55);
-
-console.log(heap.values);
+heap.insert(3);

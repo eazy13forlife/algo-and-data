@@ -15723,149 +15723,52 @@ module.exports = g;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _nodeBST = __webpack_require__(/*! ./nodeBST.js */ "./source/nodeBST.js");
-
-var _nodeBST2 = _interopRequireDefault(_nodeBST);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-/*
-class Node{
-  constructor(value){
-    this.value=value;
-    this.left=null;
-    this.right=null;
-  }
-}
-*/
+var MaxBinaryHeap = function () {
+  function MaxBinaryHeap() {
+    _classCallCheck(this, MaxBinaryHeap);
 
-var BST = function () {
-  function BST() {
-    _classCallCheck(this, BST);
-
-    this.root = null;
+    this.values = [];
   }
 
-  _createClass(BST, [{
+  _createClass(MaxBinaryHeap, [{
     key: "insert",
-    value: function insert(value) {
-      var newNode = new _nodeBST2.default(value);
-      if (!this.root) {
-        this.root = newNode;
-      } else {
-        var currentRoot = this.root;
-        while (true) {
-          if (value > currentRoot.value) {
-            if (currentRoot.right) {
-              currentRoot = currentRoot.right;
-            } else {
-              currentRoot.right = newNode;
-              return this;
-            }
-          } else if (value < currentRoot.value) {
-            if (currentRoot.left) {
-              currentRoot = currentRoot.left;
-            } else {
-              currentRoot.left = newNode;
-              return this;
-            }
-          } else if (value === currentRoot.value) {
-            return undefined;
-          }
-        }
-      }
-    }
-  }, {
-    key: "search",
-    value: function search(value) {
-      if (typeof value !== "number") {
-        return false;
-      }
-      if (!this.root) {
+    value: function insert(element) {
+      if (this.values.includes(element)) {
         return null;
       }
-      var currentRoot = this.root;
-      while (true) {
-        if (value === currentRoot.value) {
-          return true;
-        } else if (value < currentRoot.value) {
-          if (!currentRoot.left) {
-            return false;
-          } else {
-            currentRoot = currentRoot.left;
-          }
-        } else if (value > currentRoot.value) {
-          if (!currentRoot.right) {
-            return false;
-          } else {
-            currentRoot = currentRoot.right;
-          }
-        }
-      }
+      this.values.push(element);
+      this.bubbleUp();
     }
   }, {
-    key: "breadthFirstSearch",
-    value: function breadthFirstSearch() {
-      if (!this.root) {
-        return undefined;
+    key: "getParentIndex",
+    value: function getParentIndex(index) {
+      Math.floor((index - 1) / 2);
+    }
+  }, {
+    key: "bubbleUp",
+    value: function bubbleUp() {
+      var childIndex = this.values.length - 1;
+      var parentIndex = this.getParentIndex(childIndex);
+      while (this.values[childIndex] > this.values[parentIndex]) {
+        var parentValue = this.values[parentIndex];
+        this.values[parentIndex] = this.values[childIndex];
+        this.values[childIndex] = parentValue;
+        childIndex = parentIndex;
+        parentIndex = this.getParentIndex(childIndex);
       }
-      var checkLR = [];
-      var queue = [this.root];
-      while (queue.length !== 0) {
-        var nodeToCheck = queue.shift();
-        checkLR.push(nodeToCheck);
-        if (nodeToCheck.left) {
-          queue.push(nodeToCheck.left);
-        }
-        if (nodeToCheck.right) {
-          queue.push(nodeToCheck.right);
-        }
-      }
-      return checkLR;
     }
   }]);
 
-  return BST;
+  return MaxBinaryHeap;
 }();
 
-var first = new BST();
-first.insert(10);
-first.insert(6);
-first.insert(3);
-first.insert(8);
-first.insert(15);
-first.insert(20);
-console.log(first.breadthFirstSearch());
+var heap = new MaxBinaryHeap();
 
-/***/ }),
+heap.insert(55);
 
-/***/ "./source/nodeBST.js":
-/*!***************************!*\
-  !*** ./source/nodeBST.js ***!
-  \***************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Node = function Node(value) {
-  _classCallCheck(this, Node);
-
-  this.value = value;
-  this.right = null;
-  this.left = null;
-};
-
-exports.default = Node;
+console.log(heap.values);
 
 /***/ }),
 

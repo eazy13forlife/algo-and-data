@@ -57,7 +57,10 @@ class BinarySearchTree {
     return false;
   }
 
-  BreadthFirstSearch() {
+  breadthFirstSearch() {
+    if(!this.root){
+      return undefined;
+    }
     const checkLR = [];
     const queue = [];
     queue.push(this.root);
@@ -91,6 +94,9 @@ class BinarySearchTree {
   }
 
   depthFirstSearchPostOrder() {
+    if(!this.root){
+      return undefined;
+    }
     const nodeArray = [];
     const traverseTree = (node) => {
       if (node.left) {
@@ -106,6 +112,9 @@ class BinarySearchTree {
   }
 
   depthFirstSearchInOrder(){
+    if(!this.root){
+      return undefined;
+    }
     const nodeArray=[];
     const traverseTree(node)=>{
       if(node.left){
@@ -120,34 +129,7 @@ class BinarySearchTree {
     return nodeArray;
   }
 }
-/*
-search(value) {
-  if (typeof value !== "number") {
-    return false;
-  }
-  if (!this.root) {
-    return null;
-  }
-  let currentRoot = this.root;
-  while (true) {
-    if (value === currentRoot.value) {
-      return true;
-    } else if (value < currentRoot.value) {
-      if (!currentRoot.left) {
-        return false;
-      } else {
-        currentRoot = currentRoot.left;
-      }
-    } else if (value > currentRoot.value) {
-      if (!currentRoot.right) {
-        return false;
-      } else {
-        currentRoot = currentRoot.right;
-      }
-    }
-  }
-}
-*/
+
 
 const trees = new BinarySearchTree();
 trees.insert(9);
