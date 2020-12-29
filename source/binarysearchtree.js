@@ -58,12 +58,11 @@ class BinarySearchTree {
   }
 
   BreadthFirstSearch() {
-    let nodetoCheck;
     const checkLR = [];
     const queue = [];
     queue.push(this.root);
     while (queue.length !== 0) {
-      nodeToCheck = queue.shift();
+      const nodeToCheck = queue.shift();
       checkLR.push(nodeToCheck);
       if (nodeToCheck.left) {
         queue.push(nodeToCheck.left);

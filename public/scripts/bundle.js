@@ -15805,6 +15805,26 @@ var BST = function () {
         }
       }
     }
+  }, {
+    key: "breadthFirstSearch",
+    value: function breadthFirstSearch() {
+      if (!this.root) {
+        return undefined;
+      }
+      var checkLR = [];
+      var queue = [this.root];
+      while (queue.length !== 0) {
+        var nodeToCheck = queue.shift();
+        checkLR.push(nodeToCheck);
+        if (nodeToCheck.left) {
+          queue.push(nodeToCheck.left);
+        }
+        if (nodeToCheck.right) {
+          queue.push(nodeToCheck.right);
+        }
+      }
+      return checkLR;
+    }
   }]);
 
   return BST;
@@ -15815,7 +15835,9 @@ first.insert(10);
 first.insert(6);
 first.insert(3);
 first.insert(8);
-console.log(first.search(8));
+first.insert(15);
+first.insert(20);
+console.log(first.breadthFirstSearch());
 
 /***/ }),
 
