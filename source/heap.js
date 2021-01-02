@@ -15,14 +15,6 @@ class MaxBinaryHeap {
     return Math.floor((index - 1) / 2);
   }
 
-  getLeftChildIndex(parentIndex) {
-    return 2 * parentIndex + 1;
-  }
-
-  getRightChildIndex(parentIndex) {
-    return 2 * parentIndex + 2;
-  }
-
   swap(array, firstIndex, secondIndex) {
     const firstIndexValue = array[firstIndex];
     array[firstIndex] = array[secondIndex];
@@ -31,10 +23,17 @@ class MaxBinaryHeap {
 
   bubbleUp() {
     let childIndex = this.values.length - 1;
+    if (childIndex === 0) {
+      return;
+    }
     let parentIndex = this.getParentIndex(childIndex);
+
     while (this.values[childIndex] > this.values[parentIndex]) {
       this.swap(this.values, parentIndex, childIndex);
       childIndex = parentIndex;
+      if (childIndex === 0) {
+        break;
+      }
       parentIndex = this.getParentIndex(childIndex);
     }
   }
@@ -52,21 +51,35 @@ class MaxBinaryHeap {
 
   sinkDown() {
     let parentIndex = 0;
-    let leftChildIdx = this.getLeftChildIndex(parentIndex);
-    let rightChildIdx = this.getRightChildIndex(parentIndex);
-    while (
-      this.values[parentIndex] < this.values[leftChildIdx] ||
-      this.values[parentIndex] < this.values[rightChildIdx]
-    ) {
-      if (this.values[leftChildIdx] < this.values[rightChildIdx]) {
-        this.swap(this.values, parentIndex, rightChildIdx);
-        parentIndex = rightChildIdx;
-      } else {
-        this.swap(this.values, parentIndex, leftChildIdx);
-        parentIndex = leftChildIdx;
+    let childIndex = this.childIndexToSwap(this.values, parentIndex);
+
+
+      while (childIndex&&(this.values[parentIndex] < this.values[childIndex])) {
+        this.swap(this.values, parentIndex, childIndex);
+        parentIndex = childIndex;
+        childIndex = this.childIndexToSwap(this.values, parentIndex);
       }
-      leftChildIdx = this.getLeftChildIndex(parentIndex);
-      rightChildIdx = this.getRightChildIndex(parentIndex);
+    }
+  }
+
+  childIndexToSwap(array, parentIndex) {
+    const leftChildIdx = parentIndex * 2 + 1;
+    const rightChildIdx = parentIndex * 2 + 2;
+
+    if (array[leftChildIdx] && array[rightChildIdx]) {
+      if (array[leftChildIdx] > array[rightChildIdx]) {
+        return leftChildIdx;
+      } else {
+        return rightChildIdx;
+      }
+    }
+
+    if (array[leftChildIdx]) {
+      return leftChildIdx;
+    }
+
+    if (array[rightChildIdx]) {
+      return rightChildIdx;
     }
   }
 }

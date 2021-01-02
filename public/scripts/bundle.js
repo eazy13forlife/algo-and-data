@@ -15723,22 +15723,29 @@ module.exports = g;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _nodePriority = __webpack_require__(/*! ./nodePriority.js */ "./source/nodePriority.js");
+
+var _nodePriority2 = _interopRequireDefault(_nodePriority);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var MaxBinaryHeap = function () {
-  function MaxBinaryHeap() {
-    _classCallCheck(this, MaxBinaryHeap);
+var PriorityQueue = function () {
+  function PriorityQueue() {
+    _classCallCheck(this, PriorityQueue);
 
     this.values = [];
   }
 
-  _createClass(MaxBinaryHeap, [{
+  _createClass(PriorityQueue, [{
     key: "insert",
-    value: function insert(element) {
-      if (this.values.includes(element)) {
+    value: function insert(value, priority) {
+      var newNode = new _nodePriority2.default(value, priority);
+      if (this.values.includes(newNode.value)) {
         return null;
       }
-      this.values.push(element);
+      this.values.push(newNode);
       this.bubbleUp();
     }
   }, {
@@ -15748,13 +15755,13 @@ var MaxBinaryHeap = function () {
     }
   }, {
     key: "getLeftChildIndex",
-    value: function getLeftChildIndex(index) {
-      return 2 * index + 1;
+    value: function getLeftChildIndex(parentIndex) {
+      return 2 * parentIndex + 1;
     }
   }, {
     key: "getRightChildIndex",
-    value: function getRightChildIndex(index) {
-      return 2 * index + 2;
+    value: function getRightChildIndex(parentIndex) {
+      return 2 * parentIndex + 2;
     }
   }, {
     key: "swap",
@@ -15767,12 +15774,17 @@ var MaxBinaryHeap = function () {
     key: "bubbleUp",
     value: function bubbleUp() {
       var childIndex = this.values.length - 1;
+      if (childIndex === 0) {
+        return;
+      }
       var parentIndex = this.getParentIndex(childIndex);
-      while (this.values[childIndex] > this.values[parentIndex]) {
-        var parentValue = this.values[parentIndex];
-        this.values[parentIndex] = this.values[childIndex];
-        this.values[childIndex] = parentValue;
+
+      while (this.values[childIndex].priority > this.values[parentIndex].priority) {
+        this.swap(this.values, parentIndex, childIndex);
         childIndex = parentIndex;
+        if (childIndex === 0) {
+          break;
+        }
         parentIndex = this.getParentIndex(childIndex);
       }
     }
@@ -15792,45 +15804,75 @@ var MaxBinaryHeap = function () {
     key: "sinkDown",
     value: function sinkDown() {
       var parentIndex = 0;
-      var leftChildIdx = this.getLeftChildIndex(parentIndex);
-      var rightChildIdx = this.getRightChildIndex(parentIndex);
-      while (this.values[parentIndex] < this.values[leftChildIdx] || this.values[parentIndex] < this.values[rightChildIdx]) {
-        if (this.values[leftChildIdx] < this.values[rightChildIdx]) {
-          this.swap(this.values, parentIndex, rightChildIdx);
-          parentIndex = rightChildIdx;
+      var childIndex = this.childIndexToSwap(this.values, parentIndex);
+
+      while (childIndex && this.values[parentIndex].priority < this.values[childIndex].priority) {
+        this.swap(this.values, parentIndex, childIndex);
+        parentIndex = childIndex;
+        childIndex = this.childIndexToSwap(this.values, parentIndex);
+      }
+    }
+  }, {
+    key: "childIndexToSwap",
+    value: function childIndexToSwap(array, parentIndex) {
+      var leftChildIdx = parentIndex * 2 + 1;
+      var rightChildIdx = parentIndex * 2 + 2;
+
+      if (array[leftChildIdx] && array[rightChildIdx]) {
+        if (array[leftChildIdx].priority > array[rightChildIdx].priority) {
+          return leftChildIdx;
         } else {
-          this.swap(this.values, parentIndex, leftChildIdx);
-          parentIndex = leftChildIdx;
+          return rightChildIdx;
         }
-        leftChildIdx = this.getLeftChildIndex(parentIndex);
-        rightChildIdx = this.getRightChildIndex(parentIndex);
+      }
+
+      if (array[leftChildIdx]) {
+        return leftChildIdx;
+      }
+
+      if (array[rightChildIdx]) {
+        return rightChildIdx;
       }
     }
   }]);
 
-  return MaxBinaryHeap;
+  return PriorityQueue;
 }();
 
-var heap = new MaxBinaryHeap();
+var priority = new PriorityQueue();
+priority.insert("cat", 4);
+priority.insert("catss", 2);
+priority.insert("catssds", 12);
+priority.extractMax();
 
-heap.insert(41);
-heap.insert(39);
-heap.insert(33);
-heap.insert(18);
-heap.insert(27);
-heap.insert(12);
-heap.insert(55);
-console.log(heap.extractMax());
-console.log(heap.extractMax());
-console.log(heap.extractMax());
-console.log(heap.extractMax());
-console.log(heap.extractMax());
-console.log(heap.extractMax());
-console.log(heap.extractMax());
-console.log(heap.extractMax());
-console.log(heap.extractMax());
-console.log(heap.extractMax());
-console.log(heap.values);
+console.log(priority.values);
+
+/***/ }),
+
+/***/ "./source/nodePriority.js":
+/*!********************************!*\
+  !*** ./source/nodePriority.js ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Node = function Node(value, priority) {
+  _classCallCheck(this, Node);
+
+  this.value = value;
+  this.priority = priority;
+};
+
+exports.default = Node;
 
 /***/ }),
 
