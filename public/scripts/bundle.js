@@ -15739,14 +15739,16 @@ var PriorityQueue = function () {
   }
 
   _createClass(PriorityQueue, [{
-    key: "insert",
-    value: function insert(value, priority) {
+    key: "enqueue",
+    value: function enqueue(value, priority) {
       var newNode = new _nodePriority2.default(value, priority);
-      if (this.values.includes(newNode.value)) {
-        return null;
+      var specificValue = this.values.find(function (object) {
+        return object.value === value;
+      });
+      if (!specificValue) {
+        this.values.push(newNode);
+        this.bubbleUp();
       }
-      this.values.push(newNode);
-      this.bubbleUp();
     }
   }, {
     key: "getParentIndex",
@@ -15774,23 +15776,17 @@ var PriorityQueue = function () {
     key: "bubbleUp",
     value: function bubbleUp() {
       var childIndex = this.values.length - 1;
-      if (childIndex === 0) {
-        return;
-      }
       var parentIndex = this.getParentIndex(childIndex);
 
-      while (this.values[childIndex].priority > this.values[parentIndex].priority) {
+      while (childIndex !== 0 && this.values[childIndex].priority < this.values[parentIndex].priority) {
         this.swap(this.values, parentIndex, childIndex);
         childIndex = parentIndex;
-        if (childIndex === 0) {
-          break;
-        }
         parentIndex = this.getParentIndex(childIndex);
       }
     }
   }, {
-    key: "extractMax",
-    value: function extractMax() {
+    key: "dequeue",
+    value: function dequeue() {
       var initialMax = this.values[0];
       var lastElement = this.values.pop();
       if (this.values.length > 0) {
@@ -15806,7 +15802,7 @@ var PriorityQueue = function () {
       var parentIndex = 0;
       var childIndex = this.childIndexToSwap(this.values, parentIndex);
 
-      while (childIndex && this.values[parentIndex].priority < this.values[childIndex].priority) {
+      while (childIndex && this.values[parentIndex].priority > this.values[childIndex].priority) {
         this.swap(this.values, parentIndex, childIndex);
         parentIndex = childIndex;
         childIndex = this.childIndexToSwap(this.values, parentIndex);
@@ -15819,7 +15815,7 @@ var PriorityQueue = function () {
       var rightChildIdx = parentIndex * 2 + 2;
 
       if (array[leftChildIdx] && array[rightChildIdx]) {
-        if (array[leftChildIdx].priority > array[rightChildIdx].priority) {
+        if (array[leftChildIdx].priority < array[rightChildIdx].priority) {
           return leftChildIdx;
         } else {
           return rightChildIdx;
@@ -15840,11 +15836,13 @@ var PriorityQueue = function () {
 }();
 
 var priority = new PriorityQueue();
-priority.insert("cat", 4);
-priority.insert("catss", 2);
-priority.insert("catssds", 12);
-priority.extractMax();
-
+priority.enqueue("cat", 4);
+priority.enqueue("cadfd23stss", 4);
+priority.enqueue("catss", 2);
+priority.enqueue("cadfdstss", 9);
+priority.enqueue("cadfdstss", 9);
+priority.enqueue("catssds", 12);
+priority.dequeue();
 console.log(priority.values);
 
 /***/ }),

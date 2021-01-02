@@ -1,13 +1,13 @@
-class MaxBinaryHeap {
+import Node from "./nodePriority.js";
+
+class PriorityQueue {
   constructor() {
     this.values = [];
   }
 
-  insert(element) {
-    if (this.values.includes(element)) {
-      return null;
-    }
-    this.values.push(element);
+  enqueue(value, priority) {
+    const newNode = new Node(value, priority);
+    this.values.push(newNode);
     this.bubbleUp();
   }
 
@@ -25,14 +25,17 @@ class MaxBinaryHeap {
     let childIndex = this.values.length - 1;
     let parentIndex = this.getParentIndex(childIndex);
 
-    while (childIndex!==0&&this.values[childIndex] > this.values[parentIndex]) {
+    while (
+      childIndex !== 0 &&
+      this.values[childIndex].priority < this.values[parentIndex].priority
+    ) {
       this.swap(this.values, parentIndex, childIndex);
       childIndex = parentIndex;
       parentIndex = this.getParentIndex(childIndex);
     }
   }
 
-  extractMax() {
+  dequeue() {
     const initialMax = this.values[0];
     const lastElement = this.values.pop();
     if (this.values.length > 0) {
@@ -47,12 +50,13 @@ class MaxBinaryHeap {
     let parentIndex = 0;
     let childIndex = this.childIndexToSwap(this.values, parentIndex);
 
-
-      while (childIndex&&(this.values[parentIndex] < this.values[childIndex])) {
-        this.swap(this.values, parentIndex, childIndex);
-        parentIndex = childIndex;
-        childIndex = this.childIndexToSwap(this.values, parentIndex);
-      }
+    while (
+      childIndex &&
+      this.values[parentIndex].priority > this.values[childIndex].priority
+    ) {
+      this.swap(this.values, parentIndex, childIndex);
+      parentIndex = childIndex;
+      childIndex = this.childIndexToSwap(this.values, parentIndex);
     }
   }
 
@@ -61,7 +65,7 @@ class MaxBinaryHeap {
     const rightChildIdx = parentIndex * 2 + 2;
 
     if (array[leftChildIdx] && array[rightChildIdx]) {
-      if (array[leftChildIdx] > array[rightChildIdx]) {
+      if (array[leftChildIdx].priority < array[rightChildIdx].priority) {
         return leftChildIdx;
       } else {
         return rightChildIdx;
@@ -78,5 +82,7 @@ class MaxBinaryHeap {
   }
 }
 
-let heap = new MaxBinaryHeap();
-heap.insert(3);
+let priority = new PriorityQueue();
+priority.enqueue("cat", 4);
+priority.enqueue("cadfd23stss", 4);
+priority.dequeue();

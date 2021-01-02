@@ -5,13 +5,15 @@ class PriorityQueue {
     this.values = [];
   }
 
-  insert(value, priority) {
+  enqueue(value, priority) {
     const newNode = new Node(value, priority);
-    if (this.values.includes(newNode.value)) {
-      return null;
+    const specificValue = this.values.find((object) => {
+      return object.value === value;
+    });
+    if (!specificValue) {
+      this.values.push(newNode);
+      this.bubbleUp();
     }
-    this.values.push(newNode);
-    this.bubbleUp();
   }
 
   getParentIndex(index) {
@@ -34,24 +36,19 @@ class PriorityQueue {
 
   bubbleUp() {
     let childIndex = this.values.length - 1;
-    if (childIndex === 0) {
-      return;
-    }
     let parentIndex = this.getParentIndex(childIndex);
 
     while (
-      this.values[childIndex].priority > this.values[parentIndex].priority
+      childIndex !== 0 &&
+      this.values[childIndex].priority < this.values[parentIndex].priority
     ) {
       this.swap(this.values, parentIndex, childIndex);
       childIndex = parentIndex;
-      if (childIndex === 0) {
-        break;
-      }
       parentIndex = this.getParentIndex(childIndex);
     }
   }
 
-  extractMax() {
+  dequeue() {
     const initialMax = this.values[0];
     const lastElement = this.values.pop();
     if (this.values.length > 0) {
@@ -68,7 +65,7 @@ class PriorityQueue {
 
     while (
       childIndex &&
-      this.values[parentIndex].priority < this.values[childIndex].priority
+      this.values[parentIndex].priority > this.values[childIndex].priority
     ) {
       this.swap(this.values, parentIndex, childIndex);
       parentIndex = childIndex;
@@ -81,7 +78,7 @@ class PriorityQueue {
     const rightChildIdx = parentIndex * 2 + 2;
 
     if (array[leftChildIdx] && array[rightChildIdx]) {
-      if (array[leftChildIdx].priority > array[rightChildIdx].priority) {
+      if (array[leftChildIdx].priority < array[rightChildIdx].priority) {
         return leftChildIdx;
       } else {
         return rightChildIdx;
@@ -99,9 +96,11 @@ class PriorityQueue {
 }
 
 let priority = new PriorityQueue();
-priority.insert("cat", 4);
-priority.insert("catss", 2);
-priority.insert("catssds", 12);
-priority.extractMax();
-
+priority.enqueue("cat", 4);
+priority.enqueue("cadfd23stss", 4);
+priority.enqueue("catss", 2);
+priority.enqueue("cadfdstss", 9);
+priority.enqueue("cadfdstss", 9);
+priority.enqueue("catssds", 12);
+priority.dequeue();
 console.log(priority.values);
