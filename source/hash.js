@@ -51,4 +51,4 @@ hi.set("yellow", "#ffff00");
 hi.set("olive", "#808000");
 console.log(hi.get("olive"));
 
-console.log(hi.values());
+console.log(hi.keyMap);

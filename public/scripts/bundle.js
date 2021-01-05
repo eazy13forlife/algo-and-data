@@ -15723,154 +15723,74 @@ module.exports = g;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _nodePriority = __webpack_require__(/*! ./nodePriority.js */ "./source/nodePriority.js");
-
-var _nodePriority2 = _interopRequireDefault(_nodePriority);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var PriorityQueue = function () {
-  function PriorityQueue() {
-    _classCallCheck(this, PriorityQueue);
+var HashTable = function () {
+  function HashTable() {
+    var size = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 53;
 
-    this.values = [];
+    _classCallCheck(this, HashTable);
+
+    this.keyMap = new Array(size);
   }
 
-  _createClass(PriorityQueue, [{
-    key: "enqueue",
-    value: function enqueue(value, priority) {
-      var newNode = new _nodePriority2.default(value, priority);
-      var specificValue = this.values.find(function (object) {
-        return object.value === value;
-      });
-      if (!specificValue) {
-        this.values.push(newNode);
-        this.bubbleUp();
+  _createClass(HashTable, [{
+    key: "hash",
+    value: function hash(key) {
+      var total = 0;
+      var uniquePrime = 31;
+      for (var i = 0; i < Math.min(key.length, 100); i++) {
+        total = total * uniquePrime + (key.charCodeAt(i) - 96);
       }
+      return total % this.keyMap.length;
     }
   }, {
-    key: "getParentIndex",
-    value: function getParentIndex(index) {
-      return Math.floor((index - 1) / 2);
-    }
-  }, {
-    key: "getLeftChildIndex",
-    value: function getLeftChildIndex(parentIndex) {
-      return 2 * parentIndex + 1;
-    }
-  }, {
-    key: "getRightChildIndex",
-    value: function getRightChildIndex(parentIndex) {
-      return 2 * parentIndex + 2;
-    }
-  }, {
-    key: "swap",
-    value: function swap(array, firstIndex, secondIndex) {
-      var firstIndexValue = array[firstIndex];
-      array[firstIndex] = array[secondIndex];
-      array[secondIndex] = firstIndexValue;
-    }
-  }, {
-    key: "bubbleUp",
-    value: function bubbleUp() {
-      var childIndex = this.values.length - 1;
-      var parentIndex = this.getParentIndex(childIndex);
-
-      while (childIndex !== 0 && this.values[childIndex].priority < this.values[parentIndex].priority) {
-        this.swap(this.values, parentIndex, childIndex);
-        childIndex = parentIndex;
-        parentIndex = this.getParentIndex(childIndex);
+    key: "set",
+    value: function set(key, value) {
+      var index = this.hash(key);
+      if (!this.keyMap[index]) {
+        this.keyMap[index] = [];
       }
+      this.keyMap[index].push([key, value]);
     }
   }, {
-    key: "dequeue",
-    value: function dequeue() {
-      var initialMax = this.values[0];
-      var lastElement = this.values.pop();
-      if (this.values.length > 0) {
-        this.values[0] = lastElement;
-        this.sinkDown();
+    key: "get",
+    value: function get(key) {
+      var index = this.hash(key);
+      if (!this.keyMap[index]) {
+        return undefined;
       }
-
-      return initialMax;
-    }
-  }, {
-    key: "sinkDown",
-    value: function sinkDown() {
-      var parentIndex = 0;
-      var childIndex = this.childIndexToSwap(this.values, parentIndex);
-
-      while (childIndex && this.values[parentIndex].priority > this.values[childIndex].priority) {
-        this.swap(this.values, parentIndex, childIndex);
-        parentIndex = childIndex;
-        childIndex = this.childIndexToSwap(this.values, parentIndex);
-      }
-    }
-  }, {
-    key: "childIndexToSwap",
-    value: function childIndexToSwap(array, parentIndex) {
-      var leftChildIdx = parentIndex * 2 + 1;
-      var rightChildIdx = parentIndex * 2 + 2;
-
-      if (array[leftChildIdx] && array[rightChildIdx]) {
-        if (array[leftChildIdx].priority < array[rightChildIdx].priority) {
-          return leftChildIdx;
-        } else {
-          return rightChildIdx;
+      for (var i = 0; i < this.keyMap[index].length; i++) {
+        if (this.keyMap[index][i][0] === key) {
+          return this.keyMap[index][i][1];
         }
       }
-
-      if (array[leftChildIdx]) {
-        return leftChildIdx;
+    }
+  }, {
+    key: "values",
+    value: function values() {
+      var valueArray = [];
+      for (var i = 0; i < this.keyMap.length; i++) {
+        if (this.keyMap[i]) {
+          for (var j = 0; j < this.keyMap[i].length; j++) {
+            valueArray.push(this.keyMap[i][j][1]);
+          }
+        }
       }
-
-      if (array[rightChildIdx]) {
-        return rightChildIdx;
-      }
+      return valueArray;
     }
   }]);
 
-  return PriorityQueue;
+  return HashTable;
 }();
 
-var priority = new PriorityQueue();
-priority.enqueue("cat", 4);
-priority.enqueue("cadfd23stss", 4);
-priority.enqueue("catss", 2);
-priority.enqueue("cadfdstss", 9);
-priority.enqueue("cadfdstss", 9);
-priority.enqueue("catssds", 12);
-priority.dequeue();
-console.log(priority.values);
+var hi = new HashTable();
+hi.set("maroon", "#800000");
+hi.set("yellow", "#ffff00");
+hi.set("olive", "#808000");
+console.log(hi.get("olive"));
 
-/***/ }),
-
-/***/ "./source/nodePriority.js":
-/*!********************************!*\
-  !*** ./source/nodePriority.js ***!
-  \********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Node = function Node(value, priority) {
-  _classCallCheck(this, Node);
-
-  this.value = value;
-  this.priority = priority;
-};
-
-exports.default = Node;
+console.log(hi.values());
 
 /***/ }),
 
