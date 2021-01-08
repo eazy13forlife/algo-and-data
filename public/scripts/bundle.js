@@ -15725,72 +15725,62 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var HashTable = function () {
-  function HashTable() {
-    var size = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 53;
+var Graph = function () {
+  function Graph() {
+    _classCallCheck(this, Graph);
 
-    _classCallCheck(this, HashTable);
-
-    this.keyMap = new Array(size);
+    this.adjacencyList = {};
   }
 
-  _createClass(HashTable, [{
-    key: "hash",
-    value: function hash(key) {
-      var total = 0;
-      var uniquePrime = 31;
-      for (var i = 0; i < Math.min(key.length, 100); i++) {
-        total = total * uniquePrime + (key.charCodeAt(i) - 96);
-      }
-      return total % this.keyMap.length;
-    }
-  }, {
-    key: "set",
-    value: function set(key, value) {
-      var index = this.hash(key);
-      if (!this.keyMap[index]) {
-        this.keyMap[index] = [];
-      }
-      this.keyMap[index].push([key, value]);
-    }
-  }, {
-    key: "get",
-    value: function get(key) {
-      var index = this.hash(key);
-      if (!this.keyMap[index]) {
-        return undefined;
-      }
-      for (var i = 0; i < this.keyMap[index].length; i++) {
-        if (this.keyMap[index][i][0] === key) {
-          return this.keyMap[index][i][1];
-        }
+  _createClass(Graph, [{
+    key: "addVertex",
+    value: function addVertex(vertex) {
+      if (!this.adjacencyList[vertex]) {
+        this.adjacencyList[vertex] = [];
       }
     }
   }, {
-    key: "values",
-    value: function values() {
-      var valueArray = [];
-      for (var i = 0; i < this.keyMap.length; i++) {
-        if (this.keyMap[i]) {
-          for (var j = 0; j < this.keyMap[i].length; j++) {
-            valueArray.push(this.keyMap[i][j][1]);
-          }
-        }
+    key: "addEdge",
+    value: function addEdge(vertex1, vertex2) {
+      this.adjacencyList[vertex1].push(vertex2);
+      this.adjacencyList[vertex2].push(vertex1);
+    }
+  }, {
+    key: "removeEdge",
+    value: function removeEdge(vertex1, vertex2) {
+      this.adjacencyList[vertex1] = this.adjacencyList[vertex1].filter(function (vertex) {
+        return vertex !== vertex2;
+      });
+
+      this.adjacencyList[vertex2] = this.adjacencyList[vertex2].filter(function (vertex) {
+        return vertex !== vertex1;
+      });
+    }
+  }, {
+    key: "removeVertex",
+    value: function removeVertex(vertex) {
+      while (this.adjacencyList[vertex].length !== 0) {
+        var vertexEdge = this.adjacencyList[vertex].pop();
+        this.removeEdge(vertex, vertexEdge);
       }
-      return valueArray;
+      delete this.adjacencyList[vertex];
     }
   }]);
 
-  return HashTable;
+  return Graph;
 }();
 
-var hi = new HashTable();
-hi.set("maroon", "#800000");
-hi.set("yellow", "#ffff00");
-hi.set("olive", "#808000");
-console.log(hi.get("olive"));
-
-console.log(hi.values());
+var g = new Graph();
+g.addVertex("Dallas");
+g.addVertex("Tokyo");
+g.addVertex("Miami");
+g.addVertex("New York");
+g.addVertex("Los Angeles");
+g.addEdge("Dallas", "Tokyo");
+g.addEdge("Miami", "New York");
+g.addEdge("Dallas", "Miami");
+g.removeVertex("Dallas");
+console.log(g);
 
 /***/ }),
 
