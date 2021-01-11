@@ -83,7 +83,7 @@ class BinarySearchTree {
     const traverseTree = (node) => {
       nodeArray.push(node);
       if (node.left) {
-        traverseTree(n    ode.left);
+        traverseTree(node.left);
       }
       if (node.right) {
         traverseTree(node.right);

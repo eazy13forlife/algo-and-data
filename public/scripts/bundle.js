@@ -15723,6 +15723,8 @@ module.exports = g;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Graph = function () {
@@ -15751,8 +15753,7 @@ var Graph = function () {
       this.adjacencyList[vertex1] = this.adjacencyList[vertex1].filter(function (vertex) {
         return vertex !== vertex2;
       });
-
-      this.adjacencyList[vertex2] = this.adjacencyList[vertex2].filter(function (vertex) {
+      this.adjacencyList[vertex2] = this.adjacencyList[vertex1].filter(function (vertex) {
         return vertex !== vertex1;
       });
     }
@@ -15765,22 +15766,86 @@ var Graph = function () {
       }
       delete this.adjacencyList[vertex];
     }
+  }, {
+    key: "depthFirstRecursive",
+    value: function depthFirstRecursive(startingVertex) {
+      var _this = this;
+
+      var resultArray = [];
+      var visitedVertices = {};
+      var depthFirstSearch = function depthFirstSearch(vertex) {
+        if (!_this.adjacencyList[vertex].length) {
+          return null;
+        }
+        resultArray.push(vertex);
+        visitedVertices[vertex] = true;
+        _this.adjacencyList[vertex].forEach(function (vertexEdge) {
+          if (!visitedVertices[vertexEdge]) {
+            depthFirstSearch(vertexEdge);
+          }
+        });
+      };
+      depthFirstSearch(startingVertex);
+      return resultArray;
+    }
+  }, {
+    key: "depthFirstIterative",
+    value: function depthFirstIterative(startingVertex) {
+      var stack = [startingVertex];
+      var resultArray = [];
+      var inStack = _defineProperty({}, startingVertex, true);
+      while (stack.length) {
+        var currentVertex = stack.pop();
+        resultArray.push(currentVertex);
+        this.adjacencyList[currentVertex].forEach(function (vertexEdge) {
+          if (!inStack[vertexEdge]) {
+            stack.push(vertexEdge);
+            inStack[vertexEdge] = true;
+          }
+        });
+      }
+      return resultArray;
+    }
+  }, {
+    key: "breadthFirstIterative",
+    value: function breadthFirstIterative(startingVertex) {
+      var resultsArray = [];
+      var inQueue = _defineProperty({}, startingVertex, true);
+      var queue = [startingVertex];
+      while (queue.length) {
+        var currentVertex = queue.shift();
+        resultsArray.push(currentVertex);
+        this.adjacencyList[currentVertex].forEach(function (vertexEdge) {
+          if (!inQueue[vertexEdge]) {
+            queue.push(vertexEdge);
+            inQueue[vertexEdge] = true;
+          }
+        });
+      }
+      return resultsArray;
+    }
   }]);
 
   return Graph;
 }();
 
 var g = new Graph();
-g.addVertex("Dallas");
-g.addVertex("Tokyo");
-g.addVertex("Miami");
-g.addVertex("New York");
-g.addVertex("Los Angeles");
-g.addEdge("Dallas", "Tokyo");
-g.addEdge("Miami", "New York");
-g.addEdge("Dallas", "Miami");
-g.removeVertex("Dallas");
-console.log(g);
+g.addVertex("A");
+g.addVertex("B");
+g.addVertex("C");
+g.addVertex("D");
+g.addVertex("E");
+g.addVertex("F");
+
+g.addEdge("A", "B");
+g.addEdge("A", "C");
+g.addEdge("B", "D");
+g.addEdge("C", "E");
+g.addEdge("D", "E");
+g.addEdge("D", "F");
+g.addEdge("E", "F");
+console.log(g.depthFirstRecursive("A"));
+console.log(g.breadthFirstIterative("A"));
 
 /***/ }),
 
