@@ -1,4 +1,26 @@
-class Graph {
+import PriorityQueueBasic from "./priorityQueueDijkstras.js";
+
+/*
+class PriorityQueueBasic {
+  constructor() {
+    this.values = [];
+  }
+
+  enqueue(vertex, priority) {
+    this.values.push({ vertex, priority });
+    this.sort();
+  }
+
+  dequeue() {
+    return this.values.shift();
+  }
+
+  sort() {
+    this.values.sort((a, b) => a.priority - b.priority);
+  }
+}
+*/
+class WeightedGraph {
   constructor() {
     this.adjacencyList = {};
   }
@@ -9,83 +31,63 @@ class Graph {
     }
   }
 
-  addEdge(vertex1, vertex2) {
-    this.adjacencyList[vertex1].push(vertex2);
-    this.adjacencyList[vertex2].push(vertex1);
+  addEdge(vertex1, vertex2, weight) {
+    this.adjacencyList[vertex1].push({ vertex: vertex2, weight: weight });
+    this.adjacencyList[vertex2].push({ vertex: vertex1, weight: weight });
   }
 
-  removeEdge(vertex1, vertex2) {
-    this.adjacencyList[vertex1] = this.adjacencyList[vertex1].filter(
-      (vertex) => vertex !== vertex2
-    );
-    this.adjacencyList[vertex2] = this.adjacencyList[vertex1].filter(
-      (vertex) => vertex !== vertex1
-    );
-  }
+  Dijkstra(startVertex, endVertex) {
+    const visitedVertices = [];
+    const verticesQueue = new PriorityQueueBasic();
+    const distances = {};
+    const previous = {};
+    // build up initial state
 
-  removeVertex(vertex) {
-    while (this.adjacencyList[vertex].length !== 0) {
-      const vertexEdge = this.adjacencyList[vertex].pop();
-      this.removeEdge(vertex, vertexEdge);
-    }
-    delete this.adjacencyList[vertex];
-  }
-
-  depthFirstRecursive(startingVertex) {
-    const resultArray = [];
-    const visitedVertices = {};
-    const depthFirstSearch = (vertex) => {
-      if (!this.adjacencyList[vertex].length) {
-        return null;
+    const keys = Object.keys(this.adjacencyList);
+    const values = Object.values(this.adjacencyList);
+    for (let i = 0; i < keys.length; i++) {
+      if (keys[i] === startVertex) {
+        distances[keys[i]] = 0;
+        verticesQueue.enqueue(keys[i], 0);
+      } else {
+        distances[keys[i]] = Infinity;
+        verticesQueue.enqueue(keys[i], Infinity);
       }
-      resultArray.push(vertex);
-      visitedVertices[vertex] = true;
-      this.adjacencyList[vertex].forEach((vertexEdge) => {
-        if (!visitedVertices[vertexEdge]) {
-          depthFirstSearch(vertexEdge);
-        }
-      });
-    };
-    depthFirstSearch(startingVertex);
-    return resultArray;
-  }
-
-  depthFirstIterative(startingVertex) {
-    const stack = [startingVertex];
-    const resultArray = [];
-    const inStack = { [startingVertex]: true };
-    while (stack.length) {
-      let currentVertex = stack.pop();
-      resultArray.push(currentVertex);
-      this.adjacencyList[currentVertex].forEach((vertexEdge) => {
-        if (!inStack[vertexEdge]) {
-          stack.push(vertexEdge);
-          inStack[vertexEdge] = true;
-        }
-      });
+      previous[keys[i]] = null;
     }
-    return resultArray;
-  }
 
-  breadthFirstIterative(startingVertex) {
-    const resultsArray = [];
-    const inQueue = { [startingVertex]: true };
-    const queue = [startingVertex];
-    while (queue.length) {
-      const currentVertex = queue.shift();
-      resultsArray.push(currentVertex);
-      this.adjacencyList[currentVertex].forEach((vertexEdge) => {
-        if (!inQueue[vertexEdge]) {
-          queue.push(vertexEdge);
-          inQueue[vertexEdge] = true;
-        }
-      });
+    //we run a while loop as long as our verticesQueue is not empty
+    while (verticesQueue.values.length) {
+      const shortestPathVertex = verticesQueue.dequeue().vertex;
+      if (shortestPathVertex === endVertex) {
+        //we are done
+        //we need to build path
+      }
+
+      if (shortestPathVertex || distances[shortestPathVertex] !== Infinity) {
+        this.adjacencyList[shortestPathVertex].forEach((vertexEdge) => {
+          //calculate the new distance to the vertexEdge from our shortestPathVertex
+          let newLength =
+            distances[shortestPathVertex] + distances[vertexEdge.weight];
+            //so distances tells us the length of each vertex. so if newlength is less than distances[vertexedge.node] vertexEdge is an object, but we just the actual vertex
+            if(newLength<distances[vertexEdge.node])
+        });
+      }
     }
-    return resultsArray;
+    /*
+    for (let vertex in this.adjacencyList) {
+      if (vertex === startVertex) {
+        distances[vertex] = 0;
+      } else {
+        distances[vertex] = Infinity;
+      }
+    }
+    */
   }
 }
 
-const g = new Graph();
+const g = new WeightedGraph();
+
 g.addVertex("A");
 g.addVertex("B");
 g.addVertex("C");
@@ -93,12 +95,12 @@ g.addVertex("D");
 g.addVertex("E");
 g.addVertex("F");
 
-g.addEdge("A", "B");
-g.addEdge("A", "C");
-g.addEdge("B", "D");
-g.addEdge("C", "E");
-g.addEdge("D", "E");
-g.addEdge("D", "F");
-g.addEdge("E", "F");
-console.log(g.depthFirstRecursive("A"));
-console.log(g.breadthFirstIterative("A"));
+g.addEdge("A", "B", 4);
+g.addEdge("A", "C", 2);
+g.addEdge("B", "E", 3);
+g.addEdge("C", "D", 2);
+g.addEdge("C", "F", 4);
+g.addEdge("D", "E", 3);
+g.addEdge("D", "F", 1);
+g.addEdge("E", "F", 1);
+g.Dijkstra("A", "E");
