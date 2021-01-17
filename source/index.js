@@ -1,25 +1,5 @@
-import PriorityQueueBasic from "./priorityQueueDijkstras.js";
+import PriorityQueue from "./priorityQueue.js";
 
-/*
-class PriorityQueueBasic {
-  constructor() {
-    this.values = [];
-  }
-
-  enqueue(vertex, priority) {
-    this.values.push({ vertex, priority });
-    this.sort();
-  }
-
-  dequeue() {
-    return this.values.shift();
-  }
-
-  sort() {
-    this.values.sort((a, b) => a.priority - b.priority);
-  }
-}
-*/
 class WeightedGraph {
   constructor() {
     this.adjacencyList = {};
@@ -37,52 +17,57 @@ class WeightedGraph {
   }
 
   Dijkstra(startVertex, endVertex) {
-    const visitedVertices = [];
-    const verticesQueue = new PriorityQueueBasic();
+    const path = [];
+    const vertexQueue = new PriorityQueue();
+    // tells us the distance of each vertex from the startVertex
     const distances = {};
     const previous = {};
+
     // build up initial state
 
     const keys = Object.keys(this.adjacencyList);
-    const values = Object.values(this.adjacencyList);
+
     for (let i = 0; i < keys.length; i++) {
       if (keys[i] === startVertex) {
         distances[keys[i]] = 0;
-        verticesQueue.enqueue(keys[i], 0);
+        vertexQueue.enqueue(keys[i], 0);
       } else {
         distances[keys[i]] = Infinity;
-        verticesQueue.enqueue(keys[i], Infinity);
+        // might remove this
+        vertexQueue.enqueue(keys[i], Infinity);
       }
       previous[keys[i]] = null;
     }
 
-    //we run a while loop as long as our verticesQueue is not empty
-    while (verticesQueue.values.length) {
-      const shortestPathVertex = verticesQueue.dequeue().vertex;
+    //we run a while loop which we will manually break out of.
+    while (true) {
+      let shortestPathVertex = vertexQueue.dequeue().value;
+      //if shortestPathVertex is equal to the endVertex, we dont look at the neighbors of the shortestpathvertex. we are already at the end vertex that we need to be at.and this shortestpathvertex was already a neighbor of something else, so we already have its shortes distance from the startvertex. Because of this, we are done and we can just in return our path
       if (shortestPathVertex === endVertex) {
-        //we are done
-        //we need to build path
+        while (previous[shortestPathVertex]) {
+          path.push(shortestPathVertex);
+          shortestPathVertex = previous[shortestPathVertex];
+        }
+        //we are done, so we break just in case there are more vertices after our end vertex. we don't want to look at those ones
+        break;
       }
 
-      if (shortestPathVertex || distances[shortestPathVertex] !== Infinity) {
-        this.adjacencyList[shortestPathVertex].forEach((vertexEdge) => {
-          //calculate the new distance to the vertexEdge from our shortestPathVertex
-          let newLength =
-            distances[shortestPathVertex] + distances[vertexEdge.weight];
-            //so distances tells us the length of each vertex. so if newlength is less than distances[vertexedge.node] vertexEdge is an object, but we just the actual vertex
-            if(newLength<distances[vertexEdge.node])
-        });
-      }
+      this.adjacencyList[shortestPathVertex].forEach((vertexObject) => {
+        const vertexEdge = vertexObject.vertex;
+        const vertexEdgeWeight = vertexObject.weight;
+        //calculate the new distance to the vertexEdge from our startVertex
+        let newDistance = distances[shortestPathVertex] + vertexEdgeWeight;
+        if (newDistance < distances[vertexEdge]) {
+          //updating the  distance of our vertexEdge to be this new smaller distance.
+          distances[vertexEdge] = newDistance;
+          //update the previous property of our vertexEdge to be the shortestPathVertex, because we know if this is the new shortest distance from our startVertex to get to this vertextEdge, then its previous is shortestPathVertex.
+          previous[vertexEdge] = shortestPathVertex;
+          // enqueue in priority queue with the new priority. Yes, there will be duplicate keys, since we are not updating our keys in the queue with its new priorities, but it doesnt matter. The smaller priorities will always be dequeued first, which could then create a new shortest distance for its edges, preventing the same key with a larger priority to do so.
+          vertexQueue.enqueue(vertexEdge, newDistance);
+        }
+      });
     }
-    /*
-    for (let vertex in this.adjacencyList) {
-      if (vertex === startVertex) {
-        distances[vertex] = 0;
-      } else {
-        distances[vertex] = Infinity;
-      }
-    }
-    */
+    console.log(path.concat(startVertex).reverse());
   }
 }
 

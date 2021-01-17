@@ -15716,9 +15716,277 @@ module.exports = g;
   !*** ./source/index.js ***!
   \*************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nSyntaxError: Unexpected token (74:8)\n\n\u001b[0m \u001b[90m 72 | \u001b[39m            \u001b[90m//so distances tells us the length of each vertex. so if newlength is less than distances[vertexedge.node] vertexEdge is an object, but we just the actual vertex\u001b[39m\n \u001b[90m 73 | \u001b[39m            \u001b[36mif\u001b[39m(newLength\u001b[33m<\u001b[39m\u001b[33mdistances\u001b[39m[vertexEdge\u001b[33m.\u001b[39mnode])\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 74 | \u001b[39m        })\u001b[33m;\u001b[39m\n \u001b[90m    | \u001b[39m        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 75 | \u001b[39m      }\n \u001b[90m 76 | \u001b[39m    }\n \u001b[90m 77 | \u001b[39m    \u001b[90m/*\u001b[39m\u001b[0m\n");
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _priorityQueue = __webpack_require__(/*! ./priorityQueue.js */ "./source/priorityQueue.js");
+
+var _priorityQueue2 = _interopRequireDefault(_priorityQueue);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var WeightedGraph = function () {
+  function WeightedGraph() {
+    _classCallCheck(this, WeightedGraph);
+
+    this.adjacencyList = {};
+  }
+
+  _createClass(WeightedGraph, [{
+    key: "addVertex",
+    value: function addVertex(vertex) {
+      if (!this.adjacencyList[vertex]) {
+        this.adjacencyList[vertex] = [];
+      }
+    }
+  }, {
+    key: "addEdge",
+    value: function addEdge(vertex1, vertex2, weight) {
+      this.adjacencyList[vertex1].push({ vertex: vertex2, weight: weight });
+      this.adjacencyList[vertex2].push({ vertex: vertex1, weight: weight });
+    }
+  }, {
+    key: "Dijkstra",
+    value: function Dijkstra(startVertex, endVertex) {
+      var _this = this;
+
+      var path = [];
+      var vertexQueue = new _priorityQueue2.default();
+      // tells us the distance of each vertex from the startVertex
+      var distances = {};
+      var previous = {};
+
+      // build up initial state
+
+      var keys = Object.keys(this.adjacencyList);
+
+      for (var i = 0; i < keys.length; i++) {
+        if (keys[i] === startVertex) {
+          distances[keys[i]] = 0;
+          vertexQueue.enqueue(keys[i], 0);
+        } else {
+          distances[keys[i]] = Infinity;
+          // might remove this
+          vertexQueue.enqueue(keys[i], Infinity);
+        }
+        previous[keys[i]] = null;
+      }
+
+      //we run a while loop which we will manually break out of.
+
+      var _loop = function _loop() {
+        var shortestPathVertex = vertexQueue.dequeue().value;
+        //if shortestPathVertex is equal to the endVertex, we dont look at the neighbors of the shortestpathvertex. we are already at the end vertex that we need to be at.and this shortestpathvertex was already a neighbor of something else, so we already have its shortes distance from the startvertex. Because of this, we are done and we can just in return our path
+        if (shortestPathVertex === endVertex) {
+          while (previous[shortestPathVertex]) {
+            path.push(shortestPathVertex);
+            shortestPathVertex = previous[shortestPathVertex];
+          }
+          //we are done, so we break just in case there are more vertices after our end vertex. we don't want to look at those ones
+          return "break";
+        }
+
+        _this.adjacencyList[shortestPathVertex].forEach(function (vertexObject) {
+          var vertexEdge = vertexObject.vertex;
+          var vertexEdgeWeight = vertexObject.weight;
+          //calculate the new distance to the vertexEdge from our startVertex
+          var newDistance = distances[shortestPathVertex] + vertexEdgeWeight;
+          if (newDistance < distances[vertexEdge]) {
+            //updating the  distance of our vertexEdge to be this new smaller distance.
+            distances[vertexEdge] = newDistance;
+            //update the previous property of our vertexEdge to be the shortestPathVertex, because we know if this is the new shortest distance from our startVertex to get to this vertextEdge, then its previous is shortestPathVertex.
+            previous[vertexEdge] = shortestPathVertex;
+            // enqueue in priority queue with the new priority. Yes, there will be duplicate keys, since we are not updating our keys in the queue with its new priorities, but it doesnt matter. The smaller priorities will always be dequeued first, which could then create a new shortest distance for its edges, preventing the same key with a larger priority to do so.
+            vertexQueue.enqueue(vertexEdge, newDistance);
+          }
+        });
+      };
+
+      while (true) {
+        var _ret = _loop();
+
+        if (_ret === "break") break;
+      }
+      console.log(path.concat(startVertex).reverse());
+    }
+  }]);
+
+  return WeightedGraph;
+}();
+
+var g = new WeightedGraph();
+
+g.addVertex("A");
+g.addVertex("B");
+g.addVertex("C");
+g.addVertex("D");
+g.addVertex("E");
+g.addVertex("F");
+
+g.addEdge("A", "B", 4);
+g.addEdge("A", "C", 2);
+g.addEdge("B", "E", 3);
+g.addEdge("C", "D", 2);
+g.addEdge("C", "F", 4);
+g.addEdge("D", "E", 3);
+g.addEdge("D", "F", 1);
+g.addEdge("E", "F", 1);
+g.Dijkstra("A", "E");
+
+/***/ }),
+
+/***/ "./source/nodePriority.js":
+/*!********************************!*\
+  !*** ./source/nodePriority.js ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Node = function Node(value, priority) {
+  _classCallCheck(this, Node);
+
+  this.value = value;
+  this.priority = priority;
+};
+
+exports.default = Node;
+
+/***/ }),
+
+/***/ "./source/priorityQueue.js":
+/*!*********************************!*\
+  !*** ./source/priorityQueue.js ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _nodePriority = __webpack_require__(/*! ./nodePriority.js */ "./source/nodePriority.js");
+
+var _nodePriority2 = _interopRequireDefault(_nodePriority);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var PriorityQueue = function () {
+  function PriorityQueue() {
+    _classCallCheck(this, PriorityQueue);
+
+    this.values = [];
+  }
+
+  _createClass(PriorityQueue, [{
+    key: "enqueue",
+    value: function enqueue(value, priority) {
+      var newNode = new _nodePriority2.default(value, priority);
+      this.values.push(newNode);
+      this.bubbleUp();
+    }
+  }, {
+    key: "getParentIndex",
+    value: function getParentIndex(index) {
+      return Math.floor((index - 1) / 2);
+    }
+  }, {
+    key: "swap",
+    value: function swap(array, firstIndex, secondIndex) {
+      var firstIndexValue = array[firstIndex];
+      array[firstIndex] = array[secondIndex];
+      array[secondIndex] = firstIndexValue;
+    }
+  }, {
+    key: "bubbleUp",
+    value: function bubbleUp() {
+      var childIndex = this.values.length - 1;
+      var parentIndex = this.getParentIndex(childIndex);
+
+      while (childIndex !== 0 && this.values[childIndex].priority < this.values[parentIndex].priority) {
+        this.swap(this.values, parentIndex, childIndex);
+        childIndex = parentIndex;
+        parentIndex = this.getParentIndex(childIndex);
+      }
+    }
+  }, {
+    key: "dequeue",
+    value: function dequeue() {
+      var initialMax = this.values[0];
+      var lastElement = this.values.pop();
+      if (this.values.length > 0) {
+        this.values[0] = lastElement;
+        this.sinkDown();
+      }
+
+      return initialMax;
+    }
+  }, {
+    key: "sinkDown",
+    value: function sinkDown() {
+      var parentIndex = 0;
+      var childIndex = this.childIndexToSwap(this.values, parentIndex);
+
+      while (childIndex && this.values[parentIndex].priority > this.values[childIndex].priority) {
+        this.swap(this.values, parentIndex, childIndex);
+        parentIndex = childIndex;
+        childIndex = this.childIndexToSwap(this.values, parentIndex);
+      }
+    }
+  }, {
+    key: "childIndexToSwap",
+    value: function childIndexToSwap(array, parentIndex) {
+      var leftChildIdx = parentIndex * 2 + 1;
+      var rightChildIdx = parentIndex * 2 + 2;
+
+      if (array[leftChildIdx] && array[rightChildIdx]) {
+        if (array[leftChildIdx].priority < array[rightChildIdx].priority) {
+          return leftChildIdx;
+        } else {
+          return rightChildIdx;
+        }
+      }
+
+      if (array[leftChildIdx]) {
+        return leftChildIdx;
+      }
+
+      if (array[rightChildIdx]) {
+        return rightChildIdx;
+      }
+    }
+  }]);
+
+  return PriorityQueue;
+}();
+
+var priority = new PriorityQueue();
+priority.enqueue("cat", 4);
+priority.enqueue("cadfd23stss", 4);
+priority.dequeue();
+
+exports.default = PriorityQueue;
 
 /***/ }),
 

@@ -86,3 +86,5 @@ let priority = new PriorityQueue();
 priority.enqueue("cat", 4);
 priority.enqueue("cadfd23stss", 4);
 priority.dequeue();
+
+export default PriorityQueue;
