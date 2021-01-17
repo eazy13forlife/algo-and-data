@@ -55,8 +55,8 @@ class WeightedGraph {
       this.adjacencyList[shortestPathVertex].forEach((vertexObject) => {
         const vertexEdge = vertexObject.vertex;
         const vertexEdgeWeight = vertexObject.weight;
-        // calculate the new distance to the vertexEdge from our startVertex
-        let newDistance = distances[shortestPathVertex] + vertexEdgeWeight;
+        // calculate the new distance to the vertexEdge from our startVertex. Since the first item to be dequeued from our vertexQueue is the startVertex, any of startingVertex' neighbors distance will include the distance from the startVertex and then their neighbor's neighbors will also include this distance from the startVertex as well
+        const newDistance = distances[shortestPathVertex] + vertexEdgeWeight;
         if (newDistance < distances[vertexEdge]) {
           // updating the  distance of our vertexEdge to be this new smaller distance.
           distances[vertexEdge] = newDistance;
