@@ -177,7 +177,9 @@ class SinglyLinkedList {
       this.head = newNode;
       this.tail = newNode;
     } else {
+      // this.tail(which is equal to a reference to newNode, same as this.head) has a next property equal to the new newNode;
       this.tail.next = newNode;
+      // now we are redefining this.tail to equal something completely different, so it has a new address in reference.
       this.tail = newNode;
     }
     this.length++;
@@ -229,10 +231,14 @@ class SinglyLinkedList {
     if (!this.head) {
       this.head = newNode;
       this.tail = newNode;
+    }else{
+      // the next property on newNode equals our current this.head
+      newNode.next = this.head
+      // now we are changing this.head to equal something completely new, so it has a different address now.
+      this.head = newNode;
     }
-    newNode.next = this.head;
-    this.head = newNode;
     this.length++;
+    return this;
   }
 
   get(index) {
@@ -275,6 +281,7 @@ class SinglyLinkedList {
     nodeBefore.next = newNode;
     newNode.next = initialNode;
     this.length++;
+    return true;
   }
 
   remove(index) {
