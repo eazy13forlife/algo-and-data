@@ -84,19 +84,19 @@ class DoublyLinkedList {
       return null;
     }
     const middleIndex = Math.floor(this.length - 1 / 2);
-    let specificIndex = null;
+    let specificNode = null;
     if (index <= middleIndex) {
-      specificIndex = this.head;
+      specificNode = this.head;
       for (let i = 1; i <= index; i++) {
-        specificIndex = specificIndex.next;
+        specificNode = specificNode.next;
       }
     } else {
-      specificIndex = this.tail;
+      specificNode = this.tail;
       for (let i = this.length - 2; i >= index; i--) {
-        specificIndex = specificIndex.previous;
+        specificNode = specificNode.previous;
       }
     }
-    return specificIndex;
+    return specificNode;
   }
 
   set(index, value) {
@@ -162,9 +162,9 @@ class DoublyLinkedList {
     let previousNext = null;
     for (let i = 1; i <= this.length; i++) {
       const newNext = currentHead.next;
-      // so currentHead.next points to what came directly before it. Initially, it points to null.
+      // so currentHead.next points to what came directly before it,when we're reversing a list. Initially, it points to null.
       currentHead.next = previousNext;
-      // what comes directly before each currentHead is the node right after it.
+      // currentHead.previous points to what came directly after it, when we're reversing a list..
       currentHead.previous = newNext;
       previousNext = currentHead;
       currentHead = newNext;

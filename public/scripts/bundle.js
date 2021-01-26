@@ -15716,9 +15716,241 @@ module.exports = g;
   !*** ./source/index.js ***!
   \*************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nSyntaxError: Missing class properties transform.\n\n\u001b[0m \u001b[90m 67 | \u001b[39m    \u001b[36mreturn\u001b[39m currentHead\u001b[33m;\u001b[39m\n \u001b[90m 68 | \u001b[39m  }\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 69 | \u001b[39m  unshift\u001b[33m;\u001b[39m\n \u001b[90m    | \u001b[39m  \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 70 | \u001b[39m}\n \u001b[90m 71 | \u001b[39m\u001b[36mconst\u001b[39m list \u001b[33m=\u001b[39m \u001b[36mnew\u001b[39m doublyLinkedList()\u001b[33m;\u001b[39m\n \u001b[90m 72 | \u001b[39mlist\u001b[33m.\u001b[39mpush(\u001b[35m3\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m\n");
+"use strict";
+
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _nodeClassDoubly = __webpack_require__(/*! ./nodeClassDoubly.js */ "./source/nodeClassDoubly.js");
+
+var _nodeClassDoubly2 = _interopRequireDefault(_nodeClassDoubly);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/*
+class Node {
+  constructor(value) {
+    this.value = value;
+    this.next = null;
+    this.previous=null;
+  }
+}
+*/
+
+var doublyLinkedList = function () {
+  function doublyLinkedList() {
+    _classCallCheck(this, doublyLinkedList);
+
+    this.head = null;
+    this.tail = null;
+    this.length = 0;
+  }
+
+  _createClass(doublyLinkedList, [{
+    key: "push",
+    value: function push(value) {
+      var newNode = new _nodeClassDoubly2.default(value);
+      if (!this.head) {
+        this.head = newNode;
+        this.tail = newNode;
+      } else {
+        this.tail.next = newNode;
+        newNode.previous = this.tail;
+        this.tail = newNode;
+      }
+      this.length += 1;
+      return this;
+    }
+  }, {
+    key: "pop",
+    value: function pop() {
+      if (!this.head) {
+        return undefined;
+      }
+
+      var currentTail = this.tail;
+      if (this.length === 1) {
+        this.head = null;
+        this.tail = null;
+      } else {
+        this.tail = this.tail.previous;
+        this.tail.next = null;
+      }
+      this.length--;
+      currentTail.previous = null;
+      return currentTail;
+    }
+  }, {
+    key: "shift",
+    value: function shift() {
+      if (!this.head) {
+        return undefined;
+      }
+
+      var currentHead = this.head;
+      if (this.length === 1) {
+        this.head = null;
+        this.tail = null;
+      } else {
+        this.head = this.head.next;
+        this.head.previous = null;
+      }
+      this.length--;
+      currentHead.next = null;
+      return currentHead;
+    }
+  }, {
+    key: "unshift",
+    value: function unshift(value) {
+      var newNode = new _nodeClassDoubly2.default(value);
+      if (!this.head) {
+        this.head = newNode;
+        this.tail = newNode;
+      } else {
+        this.head.previous = newNode;
+        newNode.next = this.head;
+        this.head = newNode;
+      }
+      this.length += 1;
+      return this;
+    }
+  }, {
+    key: "get",
+    value: function get(index) {
+      if (index < 0 || index >= this.length) {
+        return undefined;
+      }
+      var specificNode = void 0;
+      var middleIndex = Math.floor((this.length - 1) / 2);
+      if (index <= middleIndex) {
+        specificNode = this.head;
+        for (var i = 1; i <= index; i++) {
+          specificNode = specificNode.next;
+        }
+      } else {
+        specificNode = this.tail;
+        for (var _i = this.length - 2; _i >= index; _i--) {
+          specificNode = specificNode.previous;
+        }
+      }
+      return specificNode;
+    }
+  }, {
+    key: "set",
+    value: function set(index, value) {
+      specificNode = this.get(index);
+      if (specificNode) {
+        specificNode.value = value;
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }, {
+    key: "insert",
+    value: function insert(index, value) {
+      if (index < 0 || index > this.length) {
+        return undefined;
+      } else if (index === 0) {
+        this.unshift(value);
+        return true;
+      } else if (index === this.length) {
+        this.push(value);
+        return true;
+      } else {
+        var newNode = new _nodeClassDoubly2.default(value);
+        var nodeBefore = this.get(index - 1);
+        var nodeAfter = this.get(index + 1);
+        nodeBefore.next = newNode;
+        newNode.previous = nodeBefore;
+        newNode.next = nodeAfter;
+        nodeAfter.previous = newNode;
+        this.length++;
+        return true;
+      }
+    }
+  }, {
+    key: "remove",
+    value: function remove(index) {
+      if (index < 0 || index >= this.length) {
+        return undefined;
+      } else if (index === 0) {
+        this.shift();
+        return true;
+      } else if (index >= this.length) {
+        this.pop();
+        return true;
+      } else {
+        var currentItem = this.get(index);
+        var nodeBefore = this.get(index);
+        var nodeAfter = this.get(index);
+        nodeBefore.next = nodeAfter;
+        nodeAfter.previous = nodeBefore;
+        this.length--;
+        currentItem.next = null;
+        currentItem.previous = null;
+        return currentItem;
+      }
+    }
+  }, {
+    key: "reverse",
+    value: function reverse() {
+      var currentHead = this.head;
+      this.head = this.tail;
+      this.tail = currentHead;
+      var previous = null;
+      var currentNext = void 0;
+      for (var i = 0; i < this.length; i++) {
+        currentNext = currentHead.next;
+        currentHead.next = _previous;
+        currentHead.previous = newNext;
+        var _previous = currentHead;
+        currentHead = currentNext;
+      }
+    }
+  }]);
+
+  return doublyLinkedList;
+}();
+
+var list = new doublyLinkedList();
+list.push(3);
+list.push(5);
+list.push(7);
+list.push(8);
+console.log(list.reverse());
+
+/***/ }),
+
+/***/ "./source/nodeClassDoubly.js":
+/*!***********************************!*\
+  !*** ./source/nodeClassDoubly.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Node = function Node(value) {
+  _classCallCheck(this, Node);
+
+  this.value = value;
+  this.next = null;
+  this.previous = null;
+};
+
+exports.default = Node;
 
 /***/ }),
 
