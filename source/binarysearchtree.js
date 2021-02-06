@@ -92,6 +92,26 @@ class BinarySearchTree {
     traverseTree(currentNode);
     return nodeArray;
   }
+  /*
+  depthFirstSearchPreOrder recursive solution
+  if (!this.root) {
+    return undefined;
+  }
+  let stack = [this.root];
+  let visited = [];
+  while (stack.length) {
+    let currentNode = stack.pop();
+    if (currentNode.right) {
+      stack.push(currentNode.right);
+    }
+    if (currentNode.left) {
+      stack.push(currentNode.left);
+    }
+    visited.push(currentNode);
+  }
+  return visited;
+}
+*/
 
   depthFirstSearchPostOrder() {
     if(!this.root){

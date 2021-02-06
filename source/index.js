@@ -1,177 +1,112 @@
-import Node from "./nodeClassDoubly.js";
-
-/*
-class Node {
-  constructor(value) {
-    this.value = value;
-    this.next = null;
-    this.previous=null;
-  }
-}
-*/
-
-class doublyLinkedList {
+class MaxBinaryHeap {
   constructor() {
-    this.head = null;
-    this.tail = null;
-    this.length = 0;
+    this.values = [];
   }
 
-  push(value) {
-    const newNode = new Node(value);
-    if (!this.head) {
-      this.head = newNode;
-      this.tail = newNode;
-    } else {
-      this.tail.next = newNode;
-      newNode.previous = this.tail;
-      this.tail = newNode;
-    }
-    this.length += 1;
-    return this;
+  insert(value) {
+    this.values.push(value);
+    this.bubbleUp();
+    return this.values;
   }
 
-  pop() {
-    if (!this.head) {
-      return undefined;
+  extractMax() {
+    const initialValue = this.values[0];
+    const lastValue = this.values.pop();
+    if (this.values.length) {
+      this.values[0] = lastValue;
+      this.sinkDown();
     }
-
-    let currentTail = this.tail;
-    if (this.length === 1) {
-      this.head = null;
-      this.tail = null;
-    } else {
-      this.tail = this.tail.previous;
-      this.tail.next = null;
-    }
-    this.length--;
-    currentTail.previous = null;
-    return currentTail;
+    return initialValue;
   }
 
-  shift() {
-    if (!this.head) {
-      return undefined;
-    }
-
-    const currentHead = this.head;
-    if (this.length === 1) {
-      this.head = null;
-      this.tail = null;
-    } else {
-      this.head = this.head.next;
-      this.head.previous = null;
-    }
-    this.length--;
-    currentHead.next = null;
-    return currentHead;
+  swap(array, index1, index2) {
+    const value1 = array[index1];
+    array[index1] = array[index2];
+    array[index2] = value1;
   }
 
-  unshift(value) {
-    const newNode = new Node(value);
-    if (!this.head) {
-      this.head = newNode;
-      this.tail = newNode;
-    } else {
-      this.head.previous = newNode;
-      newNode.next = this.head;
-      this.head = newNode;
-    }
-    this.length += 1;
-    return this;
+  getParentIndex(childIndex) {
+    return Math.floor((childIndex - 1) / 2);
   }
 
-  get(index) {
-    if (index < 0 || index >= this.length) {
-      return undefined;
+  getLeftChildIndex(parentIndex) {
+    return 2 * parentIndex + 1;
+  }
+
+  getRightChildIndex(parentIndex) {
+    return 2 * parentIndex + 2;
+  }
+
+  bubbleUp() {
+    let childIndex = this.values.length - 1;
+    let parentIndex = this.getParentIndex(childIndex);
+
+    while (
+      this.values[childIndex] > this.values[parentIndex] &&
+      parentIndex >= 0
+    ) {
+      this.swap(this.values, childIndex, parentIndex);
+      childIndex = parentIndex;
+      parentIndex = this.getParentIndex(childIndex);
     }
-    let specificNode;
-    const middleIndex = Math.floor((this.length - 1) / 2);
-    if (index <= middleIndex) {
-      specificNode = this.head;
-      for (let i = 1; i <= index; i++) {
-        specificNode = specificNode.next;
+  }
+
+  sinkDown() {
+    let parentIndex = 0;
+    let childIndex = this.getChildIndexToSwitch(this.values, parentIndex);
+
+    while (childIndex && this.values[parentIndex] < this.values[childIndex]) {
+      this.swap(this.values, parentIndex, childIndex);
+      parentIndex = childIndex;
+      childIndex = this.getChildIndexToSwitch(this.values, parentIndex);
+    }
+    /*
+    while (
+      (this.values[leftChildIndex] || this.values[rightChildIndex]) &&
+      (this.values[parentIndex] < this.values[leftChildIndex] ||
+        this.values[parentIndex] < this.values[rightChildIndex])
+    ) {
+      if (this.values[leftChildIndex] >= this.values[rightChildIndex]) {
+        this.swap(this.values, parentIndex, leftChildIndex);
+        parentIndex = leftChildIndex;
+      } else if (this.values[leftChildIndex] < this.values[rightChildIndex]) {
+        this.swap(this.values, parentIndex, rightChildIndex);
+        parentIndex = rightChildIndex;
       }
-    } else {
-      specificNode = this.tail;
-      for (let i = this.length - 2; i >= index; i--) {
-        specificNode = specificNode.previous;
+      leftChildIndex = this.getLeftChildIndex(parentIndex);
+      rightChildIndex = this.getRightChildIndex(parentIndex);
+    }
+    */
+  }
+
+  getChildIndexToSwitch(array, parentIndex) {
+    const leftChildIndex = this.getLeftChildIndex(parentIndex);
+    const rightChildIndex = this.getRightChildIndex(parentIndex);
+    if (array[leftChildIndex] && array[rightChildIndex]) {
+      if (array[leftChildIndex] > array[rightChildIndex]) {
+        return leftChildIndex;
+      } else {
+        return rightChildIndex;
       }
     }
-    return specificNode;
-  }
-
-  set(index, value) {
-    specificNode = this.get(index);
-    if (specificNode) {
-      specificNode.value = value;
-      return true;
-    } else {
-      return false;
+    if (array[leftChildIndex]) {
+      return leftChildIndex;
     }
-  }
 
-  insert(index, value) {
-    if (index < 0 || index > this.length) {
-      return undefined;
-    } else if (index === 0) {
-      this.unshift(value);
-      return true;
-    } else if (index === this.length) {
-      this.push(value);
-      return true;
-    } else {
-      const newNode = new Node(value);
-      const nodeBefore = this.get(index - 1);
-      const nodeAfter = this.get(index + 1);
-      nodeBefore.next = newNode;
-      newNode.previous = nodeBefore;
-      newNode.next = nodeAfter;
-      nodeAfter.previous = newNode;
-      this.length++;
-      return true;
-    }
-  }
-
-  remove(index) {
-    if (index < 0 || index >= this.length) {
-      return undefined;
-    } else if (index === 0) {
-      this.shift();
-      return true;
-    } else if (index >= this.length) {
-      this.pop();
-      return true;
-    } else {
-      const currentItem = this.get(index);
-      const nodeBefore = this.get(index);
-      const nodeAfter = this.get(index);
-      nodeBefore.next = nodeAfter;
-      nodeAfter.previous = nodeBefore;
-      this.length--;
-      currentItem.next = null;
-      currentItem.previous = null;
-      return currentItem;
-    }
-  }
-  reverse() {
-    let currentHead = this.head;
-    this.head = this.tail;
-    this.tail = currentHead;
-    let previous = null;
-    let currentNext;
-    for (let i = 0; i < this.length; i++) {
-      currentNext = currentHead.next;
-      currentHead.next = previous;
-      currentHead.previous = newNext;
-      let previous = currentHead;
-      currentHead = currentNext;
+    if (array[rightChildIndex]) {
+      return rightChildIndex;
     }
   }
 }
-const list = new doublyLinkedList();
-list.push(3);
-list.push(5);
-list.push(7);
-list.push(8);
-console.log(list.reverse());
+
+const heap = new MaxBinaryHeap();
+console.log(heap.insert(10));
+console.log(heap.insert(25));
+console.log(heap.insert(55));
+console.log(heap.insert(5));
+console.log(heap.insert(3));
+console.log(heap.extractMax());
+console.log(heap.extractMax());
+console.log(heap.extractMax());
+
+console.log(heap.values);

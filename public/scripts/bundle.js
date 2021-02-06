@@ -15723,234 +15723,132 @@ module.exports = g;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _nodeClassDoubly = __webpack_require__(/*! ./nodeClassDoubly.js */ "./source/nodeClassDoubly.js");
-
-var _nodeClassDoubly2 = _interopRequireDefault(_nodeClassDoubly);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-/*
-class Node {
-  constructor(value) {
-    this.value = value;
-    this.next = null;
-    this.previous=null;
-  }
-}
-*/
+var MaxBinaryHeap = function () {
+  function MaxBinaryHeap() {
+    _classCallCheck(this, MaxBinaryHeap);
 
-var doublyLinkedList = function () {
-  function doublyLinkedList() {
-    _classCallCheck(this, doublyLinkedList);
-
-    this.head = null;
-    this.tail = null;
-    this.length = 0;
+    this.values = [];
   }
 
-  _createClass(doublyLinkedList, [{
-    key: "push",
-    value: function push(value) {
-      var newNode = new _nodeClassDoubly2.default(value);
-      if (!this.head) {
-        this.head = newNode;
-        this.tail = newNode;
-      } else {
-        this.tail.next = newNode;
-        newNode.previous = this.tail;
-        this.tail = newNode;
-      }
-      this.length += 1;
-      return this;
-    }
-  }, {
-    key: "pop",
-    value: function pop() {
-      if (!this.head) {
-        return undefined;
-      }
-
-      var currentTail = this.tail;
-      if (this.length === 1) {
-        this.head = null;
-        this.tail = null;
-      } else {
-        this.tail = this.tail.previous;
-        this.tail.next = null;
-      }
-      this.length--;
-      currentTail.previous = null;
-      return currentTail;
-    }
-  }, {
-    key: "shift",
-    value: function shift() {
-      if (!this.head) {
-        return undefined;
-      }
-
-      var currentHead = this.head;
-      if (this.length === 1) {
-        this.head = null;
-        this.tail = null;
-      } else {
-        this.head = this.head.next;
-        this.head.previous = null;
-      }
-      this.length--;
-      currentHead.next = null;
-      return currentHead;
-    }
-  }, {
-    key: "unshift",
-    value: function unshift(value) {
-      var newNode = new _nodeClassDoubly2.default(value);
-      if (!this.head) {
-        this.head = newNode;
-        this.tail = newNode;
-      } else {
-        this.head.previous = newNode;
-        newNode.next = this.head;
-        this.head = newNode;
-      }
-      this.length += 1;
-      return this;
-    }
-  }, {
-    key: "get",
-    value: function get(index) {
-      if (index < 0 || index >= this.length) {
-        return undefined;
-      }
-      var specificNode = void 0;
-      var middleIndex = Math.floor((this.length - 1) / 2);
-      if (index <= middleIndex) {
-        specificNode = this.head;
-        for (var i = 1; i <= index; i++) {
-          specificNode = specificNode.next;
-        }
-      } else {
-        specificNode = this.tail;
-        for (var _i = this.length - 2; _i >= index; _i--) {
-          specificNode = specificNode.previous;
-        }
-      }
-      return specificNode;
-    }
-  }, {
-    key: "set",
-    value: function set(index, value) {
-      specificNode = this.get(index);
-      if (specificNode) {
-        specificNode.value = value;
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }, {
+  _createClass(MaxBinaryHeap, [{
     key: "insert",
-    value: function insert(index, value) {
-      if (index < 0 || index > this.length) {
-        return undefined;
-      } else if (index === 0) {
-        this.unshift(value);
-        return true;
-      } else if (index === this.length) {
-        this.push(value);
-        return true;
-      } else {
-        var newNode = new _nodeClassDoubly2.default(value);
-        var nodeBefore = this.get(index - 1);
-        var nodeAfter = this.get(index + 1);
-        nodeBefore.next = newNode;
-        newNode.previous = nodeBefore;
-        newNode.next = nodeAfter;
-        nodeAfter.previous = newNode;
-        this.length++;
-        return true;
+    value: function insert(value) {
+      this.values.push(value);
+      this.bubbleUp();
+      return this.values;
+    }
+  }, {
+    key: "extractMax",
+    value: function extractMax() {
+      var initialValue = this.values[0];
+      var lastValue = this.values.pop();
+      if (this.values.length) {
+        this.values[0] = lastValue;
+        this.sinkDown();
+      }
+      return initialValue;
+    }
+  }, {
+    key: "swap",
+    value: function swap(array, index1, index2) {
+      var value1 = array[index1];
+      array[index1] = array[index2];
+      array[index2] = value1;
+    }
+  }, {
+    key: "getParentIndex",
+    value: function getParentIndex(childIndex) {
+      return Math.floor((childIndex - 1) / 2);
+    }
+  }, {
+    key: "getLeftChildIndex",
+    value: function getLeftChildIndex(parentIndex) {
+      return 2 * parentIndex + 1;
+    }
+  }, {
+    key: "getRightChildIndex",
+    value: function getRightChildIndex(parentIndex) {
+      return 2 * parentIndex + 2;
+    }
+  }, {
+    key: "bubbleUp",
+    value: function bubbleUp() {
+      var childIndex = this.values.length - 1;
+      var parentIndex = this.getParentIndex(childIndex);
+
+      while (this.values[childIndex] > this.values[parentIndex] && parentIndex >= 0) {
+        this.swap(this.values, childIndex, parentIndex);
+        childIndex = parentIndex;
+        parentIndex = this.getParentIndex(childIndex);
       }
     }
   }, {
-    key: "remove",
-    value: function remove(index) {
-      if (index < 0 || index >= this.length) {
-        return undefined;
-      } else if (index === 0) {
-        this.shift();
-        return true;
-      } else if (index >= this.length) {
-        this.pop();
-        return true;
-      } else {
-        var currentItem = this.get(index);
-        var nodeBefore = this.get(index);
-        var nodeAfter = this.get(index);
-        nodeBefore.next = nodeAfter;
-        nodeAfter.previous = nodeBefore;
-        this.length--;
-        currentItem.next = null;
-        currentItem.previous = null;
-        return currentItem;
+    key: "sinkDown",
+    value: function sinkDown() {
+      var parentIndex = 0;
+      var childIndex = this.getChildIndexToSwitch(this.values, parentIndex);
+
+      while (childIndex && this.values[parentIndex] < this.values[childIndex]) {
+        this.swap(this.values, parentIndex, childIndex);
+        parentIndex = childIndex;
+        childIndex = this.getChildIndexToSwitch(this.values, parentIndex);
       }
+      /*
+      while (
+        (this.values[leftChildIndex] || this.values[rightChildIndex]) &&
+        (this.values[parentIndex] < this.values[leftChildIndex] ||
+          this.values[parentIndex] < this.values[rightChildIndex])
+      ) {
+        if (this.values[leftChildIndex] >= this.values[rightChildIndex]) {
+          this.swap(this.values, parentIndex, leftChildIndex);
+          parentIndex = leftChildIndex;
+        } else if (this.values[leftChildIndex] < this.values[rightChildIndex]) {
+          this.swap(this.values, parentIndex, rightChildIndex);
+          parentIndex = rightChildIndex;
+        }
+        leftChildIndex = this.getLeftChildIndex(parentIndex);
+        rightChildIndex = this.getRightChildIndex(parentIndex);
+      }
+      */
     }
   }, {
-    key: "reverse",
-    value: function reverse() {
-      var currentHead = this.head;
-      this.head = this.tail;
-      this.tail = currentHead;
-      var previous = null;
-      var currentNext = void 0;
-      for (var i = 0; i < this.length; i++) {
-        currentNext = currentHead.next;
-        currentHead.next = _previous;
-        currentHead.previous = newNext;
-        var _previous = currentHead;
-        currentHead = currentNext;
+    key: "getChildIndexToSwitch",
+    value: function getChildIndexToSwitch(array, parentIndex) {
+      var leftChildIndex = this.getLeftChildIndex(parentIndex);
+      var rightChildIndex = this.getRightChildIndex(parentIndex);
+      if (array[leftChildIndex] && array[rightChildIndex]) {
+        if (array[leftChildIndex] > array[rightChildIndex]) {
+          return leftChildIndex;
+        } else {
+          return rightChildIndex;
+        }
+      }
+      if (array[leftChildIndex]) {
+        return leftChildIndex;
+      }
+
+      if (array[rightChildIndex]) {
+        return rightChildIndex;
       }
     }
   }]);
 
-  return doublyLinkedList;
+  return MaxBinaryHeap;
 }();
 
-var list = new doublyLinkedList();
-list.push(3);
-list.push(5);
-list.push(7);
-list.push(8);
-console.log(list.reverse());
+var heap = new MaxBinaryHeap();
+console.log(heap.insert(10));
+console.log(heap.insert(25));
+console.log(heap.insert(55));
+console.log(heap.insert(5));
+console.log(heap.insert(3));
+console.log(heap.extractMax());
+console.log(heap.extractMax());
+console.log(heap.extractMax());
 
-/***/ }),
-
-/***/ "./source/nodeClassDoubly.js":
-/*!***********************************!*\
-  !*** ./source/nodeClassDoubly.js ***!
-  \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Node = function Node(value) {
-  _classCallCheck(this, Node);
-
-  this.value = value;
-  this.next = null;
-  this.previous = null;
-};
-
-exports.default = Node;
+console.log(heap.values);
 
 /***/ }),
 
