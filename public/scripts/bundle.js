@@ -15723,132 +15723,147 @@ module.exports = g;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var MaxBinaryHeap = function () {
-  function MaxBinaryHeap() {
-    _classCallCheck(this, MaxBinaryHeap);
+var Graph = function () {
+  function Graph() {
+    _classCallCheck(this, Graph);
 
-    this.values = [];
+    this.adjacencyList = {};
   }
 
-  _createClass(MaxBinaryHeap, [{
-    key: "insert",
-    value: function insert(value) {
-      this.values.push(value);
-      this.bubbleUp();
-      return this.values;
-    }
-  }, {
-    key: "extractMax",
-    value: function extractMax() {
-      var initialValue = this.values[0];
-      var lastValue = this.values.pop();
-      if (this.values.length) {
-        this.values[0] = lastValue;
-        this.sinkDown();
+  _createClass(Graph, [{
+    key: "addVertex",
+    value: function addVertex(vertex) {
+      if (!this.adjacencyList[vertex]) {
+        this.adjacencyList[vertex] = [];
       }
-      return initialValue;
     }
   }, {
-    key: "swap",
-    value: function swap(array, index1, index2) {
-      var value1 = array[index1];
-      array[index1] = array[index2];
-      array[index2] = value1;
+    key: "addEdge",
+    value: function addEdge(vertex1, vertex2) {
+      this.adjacencyList[vertex1].push(vertex2);
+      this.adjacencyList[vertex2].push(vertex1);
     }
   }, {
-    key: "getParentIndex",
-    value: function getParentIndex(childIndex) {
-      return Math.floor((childIndex - 1) / 2);
-    }
-  }, {
-    key: "getLeftChildIndex",
-    value: function getLeftChildIndex(parentIndex) {
-      return 2 * parentIndex + 1;
-    }
-  }, {
-    key: "getRightChildIndex",
-    value: function getRightChildIndex(parentIndex) {
-      return 2 * parentIndex + 2;
-    }
-  }, {
-    key: "bubbleUp",
-    value: function bubbleUp() {
-      var childIndex = this.values.length - 1;
-      var parentIndex = this.getParentIndex(childIndex);
+    key: "removeEdge",
+    value: function removeEdge(vertex1, vertex2) {
+      this.adjacencyList[vertex1] = this.adjacencyList[vertex1].filter(function (vertexEdge) {
+        return vertexEdge !== vertex2;
+      });
 
-      while (this.values[childIndex] > this.values[parentIndex] && parentIndex >= 0) {
-        this.swap(this.values, childIndex, parentIndex);
-        childIndex = parentIndex;
-        parentIndex = this.getParentIndex(childIndex);
-      }
+      this.adjacencyList[vertex2] = this.adjacencyList[vertex2].filter(function (vertexEdge) {
+        return vertexEdge !== vertex1;
+      });
     }
   }, {
-    key: "sinkDown",
-    value: function sinkDown() {
-      var parentIndex = 0;
-      var childIndex = this.getChildIndexToSwitch(this.values, parentIndex);
+    key: "removeVertex",
+    value: function removeVertex(vertex) {
+      var _this = this;
 
-      while (childIndex && this.values[parentIndex] < this.values[childIndex]) {
-        this.swap(this.values, parentIndex, childIndex);
-        parentIndex = childIndex;
-        childIndex = this.getChildIndexToSwitch(this.values, parentIndex);
+      this.adjacencyList[vertex].forEach(function (vertexEdge) {
+        return _this.removeEdge(vertexEdge, vertex);
+      });
+      delete this.adjacencyList[vertex];
+    }
+  }, {
+    key: "removeVertex2",
+    value: function removeVertex2(vertex) {
+      while (this.adjacencyList[vertex].length) {
+        var vertexEdge = this.adjacencyList[vertex].pop();
+        this.removeEdge(vertexEdge, vertex);
       }
-      /*
-      while (
-        (this.values[leftChildIndex] || this.values[rightChildIndex]) &&
-        (this.values[parentIndex] < this.values[leftChildIndex] ||
-          this.values[parentIndex] < this.values[rightChildIndex])
-      ) {
-        if (this.values[leftChildIndex] >= this.values[rightChildIndex]) {
-          this.swap(this.values, parentIndex, leftChildIndex);
-          parentIndex = leftChildIndex;
-        } else if (this.values[leftChildIndex] < this.values[rightChildIndex]) {
-          this.swap(this.values, parentIndex, rightChildIndex);
-          parentIndex = rightChildIndex;
+
+      delete this.adjacencyList[vertex];
+    }
+  }, {
+    key: "depthFirstRecursive",
+    value: function depthFirstRecursive(startingVertex) {
+      var _this2 = this;
+
+      var resultArray = [];
+      var visitedVertices = {};
+
+      var depthFirstSearch = function depthFirstSearch(vertex) {
+        if (!_this2.adjacencyList[vertex]) {
+          return undefined;
         }
-        leftChildIndex = this.getLeftChildIndex(parentIndex);
-        rightChildIndex = this.getRightChildIndex(parentIndex);
-      }
-      */
+
+        resultArray.push(vertex);
+        visitedVertices[vertex] = true;
+        _this2.adjacencyList[vertex].forEach(function (vertexEdge) {
+          if (!visitedVertices[vertexEdge]) {
+            depthFirstSearch(vertexEdge);
+          }
+        });
+      };
+
+      depthFirstSearch(startingVertex);
+      return resultArray;
     }
   }, {
-    key: "getChildIndexToSwitch",
-    value: function getChildIndexToSwitch(array, parentIndex) {
-      var leftChildIndex = this.getLeftChildIndex(parentIndex);
-      var rightChildIndex = this.getRightChildIndex(parentIndex);
-      if (array[leftChildIndex] && array[rightChildIndex]) {
-        if (array[leftChildIndex] > array[rightChildIndex]) {
-          return leftChildIndex;
-        } else {
-          return rightChildIndex;
-        }
+    key: "depthFirstIterative",
+    value: function depthFirstIterative(startingVertex) {
+      var resultArray = [];
+      var inStack = _defineProperty({}, startingVertex, true);
+      var stack = [startingVertex];
+      while (stack.length) {
+        var currentVertex = stack.pop();
+        resultArray.push(currentVertex);
+        this.adjacencyList[currentVertex].forEach(function (vertexEdge) {
+          if (!inStack[vertexEdge]) {
+            stack.push(vertexEdge);
+            inStack[vertexEdge] = true;
+          }
+        });
       }
-      if (array[leftChildIndex]) {
-        return leftChildIndex;
-      }
+      return resultArray;
+    }
+  }, {
+    key: "breadthFirstIterative",
+    value: function breadthFirstIterative(startingVertex) {
+      var resultArray = [];
+      var queue = [startingVertex];
+      var inQueue = _defineProperty({}, startingVertex, true);
 
-      if (array[rightChildIndex]) {
-        return rightChildIndex;
+      while (queue.length) {
+        var currentVertex = queue.shift();
+        resultArray.push(currentVertex);
+        this.adjacencyList[currentVertex].forEach(function (vertexEdge) {
+          if (!inQueue[vertexEdge]) {
+            queue.push(vertexEdge);
+            inQueue[vertexEdge] = true;
+          }
+        });
       }
+      return resultArray;
     }
   }]);
 
-  return MaxBinaryHeap;
+  return Graph;
 }();
 
-var heap = new MaxBinaryHeap();
-console.log(heap.insert(10));
-console.log(heap.insert(25));
-console.log(heap.insert(55));
-console.log(heap.insert(5));
-console.log(heap.insert(3));
-console.log(heap.extractMax());
-console.log(heap.extractMax());
-console.log(heap.extractMax());
+var g = new Graph();
+g.addVertex("A");
+g.addVertex("B");
+g.addVertex("C");
+g.addVertex("D");
+g.addVertex("E");
+g.addVertex("F");
 
-console.log(heap.values);
+g.addEdge("A", "B");
+g.addEdge("A", "C");
+g.addEdge("B", "D");
+g.addEdge("C", "E");
+g.addEdge("D", "E");
+g.addEdge("D", "F");
+g.addEdge("E", "F");
+
+g.removeEdge("A", "B");
+
+console.log(g.depthFirstRecursive("A"));
 
 /***/ }),
 

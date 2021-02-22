@@ -30,6 +30,14 @@ class Graph {
     }
     delete this.adjacencyList[vertex];
   }
+  /*
+  removeVertex(vertex) {
+    this.adjacencyList[vertex].forEach((vertexEdge) =>
+      this.removeEdge(vertexEdge, vertex)
+    );
+    delete this.adjacencyList[vertex];
+  }
+  */
 
   depthFirstRecursive(startingVertex) {
     const resultArray = [];
