@@ -15723,18 +15723,22 @@ module.exports = g;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+var _priorityQueue = __webpack_require__(/*! ./priorityQueue.js */ "./source/priorityQueue.js");
+
+var _priorityQueue2 = _interopRequireDefault(_priorityQueue);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Graph = function () {
-  function Graph() {
-    _classCallCheck(this, Graph);
+var WeightedGraph = function () {
+  function WeightedGraph() {
+    _classCallCheck(this, WeightedGraph);
 
     this.adjacencyList = {};
   }
 
-  _createClass(Graph, [{
+  _createClass(WeightedGraph, [{
     key: "addVertex",
     value: function addVertex(vertex) {
       if (!this.adjacencyList[vertex]) {
@@ -15743,109 +15747,68 @@ var Graph = function () {
     }
   }, {
     key: "addEdge",
-    value: function addEdge(vertex1, vertex2) {
-      this.adjacencyList[vertex1].push(vertex2);
-      this.adjacencyList[vertex2].push(vertex1);
+    value: function addEdge(vertex1, vertex2, weight) {
+      this.adjacencyList[vertex1].push({ vertex: vertex2, weight: weight });
+      this.adjacencyList[vertex2].push({ vertex: vertex1, weight: weight });
     }
   }, {
-    key: "removeEdge",
-    value: function removeEdge(vertex1, vertex2) {
-      this.adjacencyList[vertex1] = this.adjacencyList[vertex1].filter(function (vertexEdge) {
-        return vertexEdge !== vertex2;
-      });
-
-      this.adjacencyList[vertex2] = this.adjacencyList[vertex2].filter(function (vertexEdge) {
-        return vertexEdge !== vertex1;
-      });
-    }
-  }, {
-    key: "removeVertex",
-    value: function removeVertex(vertex) {
+    key: "Dijkstra",
+    value: function Dijkstra(startVertex, endVertex) {
       var _this = this;
 
-      this.adjacencyList[vertex].forEach(function (vertexEdge) {
-        return _this.removeEdge(vertexEdge, vertex);
-      });
-      delete this.adjacencyList[vertex];
-    }
-  }, {
-    key: "removeVertex2",
-    value: function removeVertex2(vertex) {
-      while (this.adjacencyList[vertex].length) {
-        var vertexEdge = this.adjacencyList[vertex].pop();
-        this.removeEdge(vertexEdge, vertex);
+      var path = [];
+      var distance = {};
+      var previous = {};
+      var confirmedShortest = {};
+      var priorityQueue = new _priorityQueue2.default();
+
+      var vertices = Object.keys(this.adjacencyList);
+      for (var i = 0; i < vertices.length; i++) {
+        if (vertices[i] === startVertex) {
+          distance[vertices[i]] = 0;
+          previous[vertices[i]] = null;
+          priorityQueue.enqueue(vertices[i], 0);
+        } else {
+          distance[vertices[i]] = Infinity;
+          previous[vertices[i]] = undefined;
+          priorityQueue.enqueue(vertices[i], Infinity);
+        }
       }
 
-      delete this.adjacencyList[vertex];
-    }
-  }, {
-    key: "depthFirstRecursive",
-    value: function depthFirstRecursive(startingVertex) {
-      var _this2 = this;
-
-      var resultArray = [];
-      var visitedVertices = {};
-
-      var depthFirstSearch = function depthFirstSearch(vertex) {
-        if (!_this2.adjacencyList[vertex]) {
-          return undefined;
-        }
-
-        resultArray.push(vertex);
-        visitedVertices[vertex] = true;
-        _this2.adjacencyList[vertex].forEach(function (vertexEdge) {
-          if (!visitedVertices[vertexEdge]) {
-            depthFirstSearch(vertexEdge);
+      var _loop = function _loop() {
+        var shortestPathVertex = priorityQueue.dequeue().value;
+        confirmedShortest[shortestPathVertex] = true;
+        if (shortestPathVertex === endVertex) {
+          while (previous[shortestPathVertex]) {
+            path.push(shortestPathVertex);
+            shortestPathVertex = previous[shortestPathVertex];
           }
-        });
+        } else {
+          _this.adjacencyList[shortestPathVertex].forEach(function (vertexEdgeObject) {
+            if (!confirmedShortest[vertexEdgeObject.vertex]) {
+              var vertexEdge = vertexEdgeObject.vertex;
+              var vertexEdgeWeight = vertexEdgeObject.weight;
+              var newDistance = distance[shortestPathVertex] + vertexEdgeWeight;
+              if (newDistace < distance[vertexEdge]) {
+                distance[vertexEdge] = newDistance;
+                previous[vertexEdge] = shortestpathVertex;
+                priorityQueue.enqueue(vertexEdge, newDistance);
+              }
+            }
+          });
+        }
       };
 
-      depthFirstSearch(startingVertex);
-      return resultArray;
-    }
-  }, {
-    key: "depthFirstIterative",
-    value: function depthFirstIterative(startingVertex) {
-      var resultArray = [];
-      var inStack = _defineProperty({}, startingVertex, true);
-      var stack = [startingVertex];
-      while (stack.length) {
-        var currentVertex = stack.pop();
-        resultArray.push(currentVertex);
-        this.adjacencyList[currentVertex].forEach(function (vertexEdge) {
-          if (!inStack[vertexEdge]) {
-            stack.push(vertexEdge);
-            inStack[vertexEdge] = true;
-          }
-        });
+      while (true) {
+        _loop();
       }
-      return resultArray;
-    }
-  }, {
-    key: "breadthFirstIterative",
-    value: function breadthFirstIterative(startingVertex) {
-      var resultArray = [];
-      var queue = [startingVertex];
-      var inQueue = _defineProperty({}, startingVertex, true);
-
-      while (queue.length) {
-        var currentVertex = queue.shift();
-        resultArray.push(currentVertex);
-        this.adjacencyList[currentVertex].forEach(function (vertexEdge) {
-          if (!inQueue[vertexEdge]) {
-            queue.push(vertexEdge);
-            inQueue[vertexEdge] = true;
-          }
-        });
-      }
-      return resultArray;
     }
   }]);
 
-  return Graph;
+  return WeightedGraph;
 }();
 
-var g = new Graph();
+var g = new WeightedGraph();
 g.addVertex("A");
 g.addVertex("B");
 g.addVertex("C");
@@ -15853,17 +15816,227 @@ g.addVertex("D");
 g.addVertex("E");
 g.addVertex("F");
 
-g.addEdge("A", "B");
-g.addEdge("A", "C");
-g.addEdge("B", "D");
-g.addEdge("C", "E");
-g.addEdge("D", "E");
-g.addEdge("D", "F");
-g.addEdge("E", "F");
+g.addEdge("A", "B", 4);
+g.addEdge("A", "C", 2);
+g.addEdge("B", "E", 3);
+g.addEdge("C", "D", 2);
+g.addEdge("C", "F", 4);
+g.addEdge("D", "E", 3);
+g.addEdge("D", "F", 1);
+g.addEdge("E", "F", 1);
+console.log(g.Dijkstra("A", "E"));
 
-g.removeEdge("A", "B");
+/*
+Dijkstra(startVertex, endVertex) {
+  const path = [];
+  const confirmedShortest = {};
+  const priorityQueue = new PriorityQueue();
+  const distances = {};
+  const previous = {};
 
-console.log(g.depthFirstRecursive("A"));
+  const keys = Object.keys(this.adjacencyList);
+  for (let i = 0; i < keys.length; i++) {
+    // if the first key is the startVertex
+    if (keys[i] === startVertex) {
+      // set its property in the distances object equal to 0 since the distance from startvertex to startVertex is 0
+      distances[keys[i]] = 0;
+      // set its property in the previous object equal to null, since nothing comes before the startVertex, there is no value;
+      previous[keys[i]] = null;
+      // add this startVertex to our priorityQueue and give it a weight of 0,(we will add all our vertices in here with their correct shortest distance from A, so that our priorityQueue which uses a binary heap will bubble shortest distance to the top)
+      priorityQueue.enqueue(keys[i], 0);
+    } else {
+      // every other vertex has a beginning shortest distance from A of infinity
+      distances[keys[i]] = Infinity;
+      // every other vertex has a previous value of undefined, since we dont know yet
+      previous[keys[i]] = undefined;
+      // we will put every other vertex in our priorityqueue as well, but with a weight of Infinity.
+      priorityQueue.enqueue(keys[i], Infinity);
+    }
+  }
+  while (true) {
+    // lets find the vertex with the shortest distance,which initially will just be the startVertex, because it has a distance of 0 to itself.
+    let shortestPathVertex = priorityQueue.dequeue().value;
+    if (shortestPathVertex === endVertex) {
+      while (previous[shortestPathVertex]) {
+        path.push(shortestPathVertex);
+        shortestPathVertex = previous[shortestPathVertex];
+      }
+      break;
+    }
+
+    // for each of the shortest path's neighbors(vertexEdge's)
+    this.adjacencyList[shortestPathVertex].forEach((vertexEdgeObject) => {
+      // we want to find the vertexEdge and its weight
+      const vertexEdge = vertexEdgeObject.vertex;
+      const vertexEdgeWeight = vertexEdgeObject.weight;
+
+      // find the distance from the current shortestPathVertex,which initially has a distance of 0(because it is the startvertex), to its vertexEdge. And remember, newDistance ends up becoming the distance of the vertexEdge in the distances object (if it is indeed the smallest distance from the startVertex) so that means the VertexEdge will always be working with its current smallest distance  from the startVertex
+      let newDistance = distances[shortestPathVertex] + vertexEdgeWeight;
+
+      // if this distance,(which is initially the startVertex(0)+ its neghbors weight) is less than the original distance of that vertexEdge(which is originally Infinity in the distances object),
+      if (newDistance < distances[vertexEdge]) {
+        // set the new distance of the vertexEdge in the distances obejct equal to this new distance, so we can correctly dequeue the next shortest distance from the startVertex next time
+        distances[vertexEdge] = newDistance;
+        // set the previous property of that vertexEdge to be the shortestPathVertex, meaning the shortest path from the startVertex to that vertexEdge is through that shortestPathVertex
+        previous[vertexEdge] = shortestPathVertex;
+        // add this vertexEdge and its new distance to the priorityQueue, which will bubble up over its previous one where it had a distance of Infinity originally. so when we dequeue, if this is the new shortest distance, it will be the one returned to us.
+        priorityQueue.enqueue(vertexEdge, newDistance);
+      }
+    });
+  }
+  // we have to add the startVertex because previous[startVertex] doest exist so our code above doesnt push it into our path array. Then we reverse so we get the correct order from startVertex to endVertex as opposed to other way.
+  return path.concat(startVertex).reverse();
+}
+*/
+
+/***/ }),
+
+/***/ "./source/nodePriority.js":
+/*!********************************!*\
+  !*** ./source/nodePriority.js ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Node = function Node(value, priority) {
+  _classCallCheck(this, Node);
+
+  this.value = value;
+  this.priority = priority;
+};
+
+exports.default = Node;
+
+/***/ }),
+
+/***/ "./source/priorityQueue.js":
+/*!*********************************!*\
+  !*** ./source/priorityQueue.js ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _nodePriority = __webpack_require__(/*! ./nodePriority.js */ "./source/nodePriority.js");
+
+var _nodePriority2 = _interopRequireDefault(_nodePriority);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var PriorityQueue = function () {
+  function PriorityQueue() {
+    _classCallCheck(this, PriorityQueue);
+
+    this.values = [];
+  }
+
+  _createClass(PriorityQueue, [{
+    key: "enqueue",
+    value: function enqueue(value, priority) {
+      var newNode = new _nodePriority2.default(value, priority);
+      this.values.push(newNode);
+      this.bubbleUp();
+    }
+  }, {
+    key: "getParentIndex",
+    value: function getParentIndex(index) {
+      return Math.floor((index - 1) / 2);
+    }
+  }, {
+    key: "swap",
+    value: function swap(array, firstIndex, secondIndex) {
+      var firstIndexValue = array[firstIndex];
+      array[firstIndex] = array[secondIndex];
+      array[secondIndex] = firstIndexValue;
+    }
+  }, {
+    key: "bubbleUp",
+    value: function bubbleUp() {
+      var childIndex = this.values.length - 1;
+      var parentIndex = this.getParentIndex(childIndex);
+
+      while (childIndex !== 0 && this.values[childIndex].priority < this.values[parentIndex].priority) {
+        this.swap(this.values, parentIndex, childIndex);
+        childIndex = parentIndex;
+        parentIndex = this.getParentIndex(childIndex);
+      }
+    }
+  }, {
+    key: "dequeue",
+    value: function dequeue() {
+      var initialMax = this.values[0];
+      var lastElement = this.values.pop();
+      if (this.values.length > 0) {
+        this.values[0] = lastElement;
+        this.sinkDown();
+      }
+
+      return initialMax;
+    }
+  }, {
+    key: "sinkDown",
+    value: function sinkDown() {
+      var parentIndex = 0;
+      var childIndex = this.childIndexToSwap(this.values, parentIndex);
+
+      while (childIndex && this.values[parentIndex].priority > this.values[childIndex].priority) {
+        this.swap(this.values, parentIndex, childIndex);
+        parentIndex = childIndex;
+        childIndex = this.childIndexToSwap(this.values, parentIndex);
+      }
+    }
+  }, {
+    key: "childIndexToSwap",
+    value: function childIndexToSwap(array, parentIndex) {
+      var leftChildIdx = parentIndex * 2 + 1;
+      var rightChildIdx = parentIndex * 2 + 2;
+
+      if (array[leftChildIdx] && array[rightChildIdx]) {
+        if (array[leftChildIdx].priority < array[rightChildIdx].priority) {
+          return leftChildIdx;
+        } else {
+          return rightChildIdx;
+        }
+      }
+
+      if (array[leftChildIdx]) {
+        return leftChildIdx;
+      }
+
+      if (array[rightChildIdx]) {
+        return rightChildIdx;
+      }
+    }
+  }]);
+
+  return PriorityQueue;
+}();
+
+var priority = new PriorityQueue();
+priority.enqueue("cat", 4);
+priority.enqueue("cadfd23stss", 4);
+priority.dequeue();
+
+exports.default = PriorityQueue;
 
 /***/ }),
 
