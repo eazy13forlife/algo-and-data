@@ -15721,54 +15721,33 @@ module.exports = g;
 "use strict";
 
 
-var anagram = function anagram(word1, word2) {
-  // if their lengths arent even the same, then it's clear that we dont even have an anagram
-  if (word1.length !== word2.length) {
-    return false;
-  }
-  var word1Frequency = {};
-  var word2Frequency = {};
+// we are writing a function called sumZero which accepts a sorted array of integers. The function should find the first pair where the sum is zero and retrun the array that includes both values that sum to zero or undefined if a pair does not exist.
 
-  // now, lets populate word1Frequency and word2Frequency objects
+//ex: [-3, -2, -1, 0, 1, 2, 3];
 
-  //for every word in word1 array
-  for (var i = 0; i < word1.length; i++) {
-    // we get its value
-    var value = word1[i];
-    // make that value a key in our word1Frequency and the actual value is 1 if that value isnt already a key in the object. if it already is, we just add 1 to the current value
-    word1Frequency[value] = word1Frequency[value] ? ++word1Frequency[value] : 1;
-  }
+// so since this is a sorted array. we can have two points. one starts at the first number and the other starts at the last number. if the sum is greater than 0, we cant move the first pointer up, because that is creating a bigger number, so we have to move the second pointer downn 1. If the sum is less than 0, we cant move the second pointer down 1, because that is creating a smaller number,so we have to move the first pointer up one
 
-  for (var _i = 0; _i < word2.length; _i++) {
-    var _value = word2[_i];
-    word2Frequency[_value] = word2Frequency[_value] ? ++word2Frequency[_value] : 1;
-  }
+var isSubsequence = function isSubsequence(string1, string2) {
+  var string1New = string1.split(" ").join("");
+  var string2New = string2.split(" ").join("");
+  var i = 0;
+  var j = 0;
 
-  //now everything is populated
-
-  //so we have to check 2 things. Every value in word1Frequency shows up the same amount of times as the value in word2Frequency AND every value in word1Frequency exists in word2Frequency
-
-  var keys1 = Object.keys(word1Frequency);
-
-  //for every key in our keys1 arrayl
-  for (var _i2 = 0; _i2 < keys1.length; _i2++) {
-    var _value2 = keys1[_i2];
-
-    // if the value doesnt even exist in our word2Frequency object, return false
-    if (!word2Frequency[_value2]) {
-      return false;
-    }
-
-    //if the number of times the value appears in word1Frequency isnt the same number of times it appears in word2Frequency, return false;
-    if (word1Frequency[_value2] !== word2Frequency[_value2]) {
-      return false;
+  while (i < string1New.length) {
+    if (string1New[i] === string2New[j]) {
+      i++;
+      j++;
+    } else if (string1New[i] !== string2New[j]) {
+      if (!string2New[j]) {
+        return false;
+      }
+      j++;
     }
   }
-
   return true;
 };
 
-console.log(anagram("car", "rbc"));
+console.log(isSubsequence("abc", "acb"));
 
 /***/ }),
 
