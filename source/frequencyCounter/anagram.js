@@ -1,3 +1,5 @@
+// whole point of a frequency counter is to compare the values and frequency of values when you have multiple pieces of data. So, an anagram is a word, phrase, or name formed by rearranging the letters of another, such as cinema and icemean. So in order for 2 inputs to be an anagram, they need to have the same values AND the the frequency of those values have to be the same. So main concept is two create two frequencyCounter objects for each word. the key is the letter in the word and the value for the key is how many times the letter shows up in the word. Then, in the end we can compare and all that.
+
 const anagram = (word1, word2) => {
   // if their lengths arent even the same, then it's clear that we dont even have an anagram
   if (word1.length !== word2.length) {
@@ -42,6 +44,7 @@ const anagram = (word1, word2) => {
     }
   }
 
+  // if the prior for loop did not return any falses, then we can return true
   return true;
 };
 
