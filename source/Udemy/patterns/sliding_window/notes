@@ -1,0 +1,10 @@
+Multiple Pointers:
+
+-only works with a sorted array;
+-have to be moving forward, backward, or to the middle. You can't alternate between the depthFirstRecursive
+
+
+Sliding Window:
+-Array doesn't have to be sorted.
+-for keeping track of a continous subset of data in an array/string.
+-Also a form of multiple pointers, because you have a starting and ending window, either stated explicitly like in our findLongestSubstring and minSubArray functions or implicitly like in our maxSubArraySum functions.
