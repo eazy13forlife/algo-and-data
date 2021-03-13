@@ -1,6 +1,6 @@
 // write a function called maxSubarraySum which accepts an array of integers and a number called n. The function should calculate the maximum sum of n consecutive elements in the array.
 
-// ex: [1,2,5,2,8,1,5],2 =>10 because 2 and 8 are two consecutive integers in the array that lead to the maximum sum in the array
+// ex: [1,2,5,2,8,1,5], 2 =>so, we need to find the maximum sum of 2 consecutive integers in our array. 10 because 2 and 8 are two consecutive integers in the array that lead to the maximum sum in the array
 
 const maxSubArraySum = (array, consecutiveNumber) => {
   let maxSum = 0;
