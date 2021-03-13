@@ -15721,48 +15721,45 @@ module.exports = g;
 "use strict";
 
 
-// write a function called findLongestSubstring which accepts a string and return sthe length of the longest consective substring with all distinct characters;
-// ex: thecatinthehat=>7 because hecatin is the longest consecutive substring of unique characters.
+// write a function called minSubArrayLenghtm which accepts two parameters. An array of positive integers and a positive integer. This function should return the minimal length of a contigous subarray of which the sum if greater than or equal to the integer passed to the function. if there isn't one, return 0 instead.
 
-var findLongestSubstring = function findLongestSubstring(string) {
-  if (!string.length) {
-    return 0;
-  }
-  // so from the getgo,  our uniqueString variable, which keeps track of our unique letters is empty.
-  var uniqueString = "";
+// ex ([2,3,1,2,4,3], 7)=>2 because 4+3 is 7 and this is the smallest length where the sum is greater than or equal to 7.2+3+1+2 is 8. which works and this length is 4. 3+1+2+4 is 10 which works, and this length is 4. 1+2+4 is 7 works and this length is 3. 2+4+3 is 9 which works and this length is 3. 4+3 is 7 which works and this length is 2, which is the answer because it is the smallest length where the sum is greater than or equal to 7.
 
-  //  current maxLength of our unique letters is 0
-  var maxLength = 0;
+var minSubArrayLength = function minSubArrayLength(array, targetNumber) {
+  // so we need a startWindow, endWindow,minArrayLength count, and sum variables;
 
-  // the startWindow is the 0 index;
+  //our startWindow will be the first item in our array, the 0 index.
   var startWindow = 0;
 
-  // the endWindow is also the 0 index. Our while loop will begin with trying to see if this 0 index is unque.
-  var endWindow = 0;
+  //our endWindow will also equal the startWindow, the first item in our array
+  var endWindow = startWindow;
 
-  while (startWindow < string.length && endWindow < string.length) {
-    // if our uniqueString variable doesn't include the value where our endWindow is at in our string variable, then we add this value to our uniqueString variable, because it is a uniqueValue. Also, if this is the first item in our uniqueString vairable, we set its maxLength equal to 1. We don't keep setting it equal to 1 when we have a uniqueString, becuase we And, then we calculate the new consecutive maxLength of the unique letters in our uniqueString. And then we go ahead and increase our endWindow by 1 so our while loop can check to see if the new window created results in a longer substring of distinct characters than before;
-    if (!uniqueString.includes(string[endWindow])) {
-      uniqueString += string[endWindow];
+  //we need a minArrayLength to return. Since we will be using Math.min, the initial minArrayLength we compare with has to be Infinity, so any number we compare it with will be the new minArrayLength. Otherwise if minArrayLength is super small already like 0, and we use Math.min, no number wwe find will be less than 0, so our code won't work
+  var minArrayLength = Infinity;
 
-      // the new maxLength is either equal to our current maxLength or equal to the length of our new window, which is endWindow-startWindow and then we add 1 so we can get length, otherwise we are dealing with index
-      maxLength = Math.max(maxLength, endWindow - startWindow + 1);
+  //we need a currentSum variable to keep track of our sums
+  var currentSum = 0;
 
-      // then we increase our endWindow by 1, so when our while loop runs again it can check to see if this new window contains a longer length of consecutive unique letter
+  // so we will run this loop while both startWindow and endWindow arent greater than the length of our array
+  while (startWindow < array.length && endWindow < array.length) {
+    // so we begin by checking if the sum of our window is less than the targetNumber. So the sum of our window is the currentSum plus the value our endWindow is at
+    if (currentSum + array[endWindow] < targetNumber) {
+      // if it less than our targetNumber, let's firs find the new currentSum with this current window. then, we can increase the size of our window by 1 because ultimately we want to find the minimum arrayLength where the currentSum is greater than or equal to our targetNumber.
+      currentSum += array[endWindow];
       endWindow += 1;
-
-      // if uniqueString does include the letter that our endWindow is at, it means our uniqueString has already reached its current maximum number of consecutive uniqueLetters. So, we increase our startWindow by 1, make our endWindow equal to our startWindow plus 1 make our unqueString variable just has the value of our startWindow in there, and then make our endWindow equal to our startWindow. This way, we are creating a whole new window just shifted up 1 from our original startWindw to find the new longest length of consecutive unique letter. And we also have to make our uniqueString empty again if our first uniqueString was the first 6 letters and the seventh letter wasnt unique, then we would start from the second letter and find how many unique letters after that and over and over.
-    } else if (uniqueString.includes(string[endWindow])) {
+      // if the currentSum is greater than or equal to our targetNumber, then we  have found one window where this is the case. So we find the length of this current window that led to the sum being greater than or equal to the targetnumber. So we can go ahead and check the next window. so we increase our startWindow up by 1, make our endWindow equal to our startWindow again and make the currentSum 0 again, so we can repeat the process.
+    } else if (currentSum + array[endWindow] >= targetNumber) {
+      minArrayLength = Math.min(minArrayLength, endWindow - startWindow + 1);
       startWindow += 1;
       endWindow = startWindow;
-      uniqueString = "";
+      currentSum = 0;
     }
   }
 
-  return maxLength;
+  return minArrayLength;
 };
 
-console.log(findLongestSubstring("rithmschool"));
+console.log(minSubArrayLength([1, 4, 16, 22, 5, 7, 8, 9, 10], 55));
 
 /***/ }),
 
