@@ -15721,33 +15721,61 @@ module.exports = g;
 "use strict";
 
 
-// write a function called maxSubarraySum which accepts an array of integers and a number called n. The function should calculate the maximum sum of n consecutive elements in the array.
+// Given a string, find the length of the longest substring in it with no more than K distinct characters.
+/*
+ Example 1:
+Input: String="araaci", K=2
+Output: 4
+Explanation: The longest substring with no more than '2' distinct characters is "araa".
+Example 2:
 
-// ex: [1,2,5,2,8,1,5], 2 =>so, we need to find the maximum sum of 2 consecutive integers in our array. 10 because 2 and 8 are two consecutive integers in the array that lead to the maximum sum in the array
+Input: String="araaci", K=1
+Output: 2
+Explanation: The longest substring with no more than '1' distinct characters is "aa".
+Example 3:
 
-var maxSubArraySum = function maxSubArraySum(array, length) {
-  var maxSum = 0;
-  var currentSum = 0;
+Input: String="cbbebi", K=3
+Output: 5
+Explanation: The longest substrings with no more than '3' distinct characters are "cbbeb" & "bbebi".
+*/
+
+var longestSubstringDistinct = function longestSubstringDistinct(array) {
   var startWindow = 0;
   var endWindow = 0;
-
+  var maxTree1 = -Infinity;
+  var maxTree2 = -Infinity;
+  var unique1 = {};
+  var unique2 = {};
   while (startWindow < array.length && endWindow < array.length) {
-    if (startWindow === array.length - 1) {
-      return maxSum;
-    } else if (endWindow < length - 1) {
-      currentSum += array[endWindow];
+    if (Object.keys(unique1).length === 1 && !unique1[array[endWindow]]) {
+      if (Object.keys(unique2).length === 1 && !unique2[array[endWindow]]) {
+        var values1 = Object.values(unique1);
+        var values2 = Object.values(unique2);
+
+        maxTree1 = Math.max(values1[0], maxTree1);
+        maxTree2 = Math.max(values2[0], maxTree2);
+        unique1 = {};
+        unique2 = {};
+        startWindow += 1;
+        endWindow = startWindow;
+      } else {
+        var _values = Object.values(unique1);
+        maxTree1 = Math.max(_values[0], maxTree1);
+        unique2[array[endWindow]] = unique2[array[endWindow]] ? ++unique2[array[endWindow]] : 1;
+        endWindow += 1;
+      }
+    } else {
+      var _values2 = Object.values(unique2);
+      maxTree2 = Math.max(_values2[0], maxTree2);
+      unique1[array[endWindow]] = unique1[array[endWindow]] ? ++unique1[array[endWindow]] : 1;
+
       endWindow += 1;
-    } else if (endWindow === length - 1) {
-      currentSum += array[endWindow];
-      maxSum = Math.max(maxSum, currentSum);
-      startWindow += 1;
-      endWindow = startWindow;
     }
   }
-
-  return maxSum;
+  return [unique1, unique2];
 };
-console.log(maxSubArraySum([1, 2, 5, 2, 8, 1, 5], 2));
+
+console.log(longestSubstringDistinct(["A", "B", "C", "A", "C"]));
 
 /***/ }),
 

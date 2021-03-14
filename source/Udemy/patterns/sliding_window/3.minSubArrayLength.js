@@ -36,4 +36,33 @@ const minSubArrayLength = (array, targetNumber) => {
   return minArrayLength;
 };
 
+// Given an array of positive numbers and a positive number ‘S,’ find the length of the smallest contiguous subarray whose sum is greater than or equal to ‘S’. Return 0 if no such subarray exists.
+// so they want continous subarray, so we will use slidingWindow;
+//they dont give us a specfic  target window, so we will have to create is as we go
+const smallestSubarrayLength = (array, targetNumber) => {
+  if (!array.length) {
+    return 0;
+  }
+  //we need to keep track of startWindow, so we need a variable for that;
+  // we need to keep track of sum so we need a variable for that;
+  // we need to track track on minArray length;
+
+  let startWindow = 0;
+  let sum = 0;
+  let minArrayLength = Infinity;
+
+  // our endWindow will initially begin at the first item in our array and end at the last item our array, because we want to test out all possibilites.
+  for (let endWindow = 0; endWindow < array.length; endWindow++) {
+    sum += array[endWindow];
+
+    // so if the sum is greater than or equal to the targetNumber, we met our rule. So we stop and reassess. we find the minArrayLength. then we want to begin creating our new window to see if we can find an even smaller window where sum is greater than or equal to targetNumber, so we want to start from the second number now and find a continous array for where sum is greater than or qual to taargetNumber. We remove the value going out of our window(which is just the value of startWindow) and inrease startWindow by 1. if this new startWindow and the same endWindow from before is still greater than or equal to the targetNumber, we repeat the while loop (aka stop and reassess) because our condition has been met again. SO, we find the new length of this array and begin creating our new window to see if there is an even smaller window where sum is greater than or equal to targetNumber. So we start at thr third number now and try to find  acontinous array for where sum is greater than or equal to targetNumber by subtracting the value of startWindow and increasing our startWindow by 1. it is only when then sum of our current window is less than or equal to targetNumber where our for loop runs again,causing our endWindow to increase by 1 and us finding the new current sum.
+    while (sum >= targetNumber) {
+      minArrayLength = Math.min(Infinity, endWindow - startWindow + 1);
+      sum -= array[startWindow];
+      startWindow += 1;
+    }
+
+    return minArrayLength;
+  }
+};
 console.log(minSubArrayLength([1, 4, 16, 22, 5, 7, 8, 9, 10], 55));

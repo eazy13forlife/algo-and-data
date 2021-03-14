@@ -1,7 +1,7 @@
 // write a function called maxSubarraySum which accepts an array of integers and a number called n. The function should calculate the maximum sum of n consecutive elements in the array.
 
 // ex: [1,2,5,2,8,1,5], 2 =>so, we need to find the maximum sum of 2 consecutive integers in our array. 10 because 2 and 8 are two consecutive integers in the array that lead to the maximum sum in the array
-
+/*
 const maxSubArraySum = (array, consecutiveNumber) => {
   let maxSum = 0;
   let tempSum = 0;
@@ -30,3 +30,30 @@ const maxSubArraySum = (array, consecutiveNumber) => {
 
   return maxSum;
 };
+*/
+
+// so they want a continous subarray so we use sliding window;
+// they give us a specific size of this window, so we can incorporate this
+const maxSubArrayK = (array, size) => {
+  // we need a variable for our startingWindow, which will be set to 0,
+  // we need to keep track of sum, so we need a variable for that,
+  // we need maximum, so we will track that too in a variable.
+  let startWindow = 0;
+  let maxSum = 0;
+  let currentSum = 0;
+
+  // we are looking for a continous subarray, so our endWindow will start at the first item in our array  and over time go all the way till we reach last item in outarray
+  for (let endWindow = 0; endWinodw < array.length; endWindow++) {
+    // whenever our for loop runs, our endWindow will increase by 1 and we will calculate the new currentSUm
+    currentSum += array[endWindow];
+
+    // if our endWindow is equal to the index of our size variable-1, we are now at the size of our window. So we first stop and reassess. We calculate the maxSum currently of this window(so we can compare with other sums of size 5). and then we will begin to create our new window. So we subtract the value going out of our window, which is whatever value of the current startWindow and then we increase the startWindow by 1. when our for loop runs again, the endWindow will increase by 1, making a new window. and since our endWindow will be greater than size-1, the if statement will run again.( so we again stop and reassess this new window of 5. we find the max sum and begin to make our new window.)
+    if (endWindow >= size - 1) {
+      maxSum = Math.max(maxSum, currentSum);
+      currentSum -= array[startWindow];
+      startWindow += 1;
+    }
+  }
+};
+
+console.log(maxSubArrayK([2, 1, 5, 1, 3, 2], 2));
