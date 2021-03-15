@@ -15721,61 +15721,62 @@ module.exports = g;
 "use strict";
 
 
-// Given a string, find the length of the longest substring in it with no more than K distinct characters.
 /*
- Example 1:
-Input: String="araaci", K=2
-Output: 4
-Explanation: The longest substring with no more than '2' distinct characters is "araa".
+Given a string with lowercase letters only, if you are allowed to replace no more than ‘k’ letters with any letter, find the length of the longest substring having the same letters after replacement.
+
+Example 1:
+
+Input: String="aabccbb", k=2
+Output: 5
+Explanation: Replace the two 'c' with 'b' to have a longest repeating substring "bbbbb".
 Example 2:
 
-Input: String="araaci", K=1
-Output: 2
-Explanation: The longest substring with no more than '1' distinct characters is "aa".
+Input: String="abbcb", k=1
+Output: 4
+Explanation: Replace the 'c' with 'b' to have a longest repeating substring "bbbb".
 Example 3:
 
-Input: String="cbbebi", K=3
-Output: 5
-Explanation: The longest substrings with no more than '3' distinct characters are "cbbeb" & "bbebi".
+Input: String="abccde", k=1
+Output: 3
+Explanation: Replace the 'b' or 'd' with 'c' to have the longest repeating substring "ccc".
 */
 
-var longestSubstringDistinct = function longestSubstringDistinct(array) {
+// so they want longest substring, so we can use sliding window;
+var longestSubstring = function longestSubstring(string, amount) {
   var startWindow = 0;
-  var endWindow = 0;
-  var maxTree1 = -Infinity;
-  var maxTree2 = -Infinity;
-  var unique1 = {};
-  var unique2 = {};
-  while (startWindow < array.length && endWindow < array.length) {
-    if (Object.keys(unique1).length === 1 && !unique1[array[endWindow]]) {
-      if (Object.keys(unique2).length === 1 && !unique2[array[endWindow]]) {
-        var values1 = Object.values(unique1);
-        var values2 = Object.values(unique2);
+  var maxLength = 0;
+  // our frequency object tells us how many of a specific letter there are
+  var frequencyObject = {};
+  // we need to know the max amount of times the letter we are looking at (which is always the first letter in our window) is repeated, so if we subtract (size of window-numbers of times first letter is repeated) we will get how many letters need to be replaced with the first letter in window to create the longest substring( because they are different from the first letter.) And if this amount is greater than the amount that we can replace we will shrink our window and check this window. Otherwise, we can find current length and increase our endWindow
+  var maxRepeatLetterCount = void 0;
 
-        maxTree1 = Math.max(values1[0], maxTree1);
-        maxTree2 = Math.max(values2[0], maxTree2);
-        unique1 = {};
-        unique2 = {};
-        startWindow += 1;
-        endWindow = startWindow;
-      } else {
-        var _values = Object.values(unique1);
-        maxTree1 = Math.max(_values[0], maxTree1);
-        unique2[array[endWindow]] = unique2[array[endWindow]] ? ++unique2[array[endWindow]] : 1;
-        endWindow += 1;
-      }
+  for (var endWindow = 0; endWindow < string.length; endWindow++) {
+    // this code adds the letter into our frequencyObject and increases its count appropriately.
+    var letter = string[endWindow];
+    if (!frequencyObject[letter]) {
+      frequencyObject[letter] = 1;
     } else {
-      var _values2 = Object.values(unique2);
-      maxTree2 = Math.max(_values2[0], maxTree2);
-      unique1[array[endWindow]] = unique1[array[endWindow]] ? ++unique1[array[endWindow]] : 1;
-
-      endWindow += 1;
+      frequencyObject[letter] += 1;
     }
-  }
-  return [unique1, unique2];
-};
 
-console.log(longestSubstringDistinct(["A", "B", "C", "A", "C"]));
+    //we have to find the count of the first letter in our startWindow.
+    maxRepeatLetterCount = frequencyObject[letter];
+
+    // the size of our window minus maxtimesthefirstletterinourwindowrepeats tells us the number of letters that are different from the first letter. so, these will have to be replaced . And if this amount is greater than the maxamount asked of us, we shrink our window, increase startWindow and find new maxRepeat of the first letter in our new window. And then our while loop runs again to find next substring lenght where we replace no more than "amount" letters to get the longest substring having the same letter.
+    while (endWindow - startWindow + 1 - maxRepeatLetterCount > amount) {
+      var startLetter = string[startWindow];
+      frequencyObject[startLetter] -= 1;
+      if (frequencyObject[startLetter] === 0) {
+        delete frequencyObject[startLetter];
+      }
+      startWindow += 1;
+      maxRepeatLetterCount = frequencyObject[string[startWindow]];
+    }
+
+    maxLength = Math.max(maxLength, endWindow - startWindow + 1);
+  }
+  return maxLength;
+};
 
 /***/ }),
 
