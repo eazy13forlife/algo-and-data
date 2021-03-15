@@ -15773,6 +15773,7 @@ var longestSubstring = function longestSubstring(string, amount) {
       maxRepeatLetterCount = frequencyObject[string[startWindow]];
     }
 
+    // if the letters to replace is less than amount,calculate the current length
     maxLength = Math.max(maxLength, endWindow - startWindow + 1);
   }
   return maxLength;
