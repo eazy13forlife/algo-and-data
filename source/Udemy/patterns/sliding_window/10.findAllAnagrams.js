@@ -1,4 +1,4 @@
-/*
+/* Look at example 9.
 Given a string and a pattern, find all anagrams of the pattern in the given string.
 
 Anagram is actually a Permutation of a string. For example, “abc” has the following six anagrams:

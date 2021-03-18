@@ -15722,80 +15722,75 @@ module.exports = g;
 
 
 /*
-Given a string and a pattern, find out if the string contains any permutation of the pattern.
+Given a string and a pattern, find all anagrams of the pattern in the given string.
 
-Permutation is defined as the re-arranging of the characters of the string. For example, “abc” has the following six permutations:
+Anagram is actually a Permutation of a string. For example, “abc” has the following six anagrams:
 
+abc
+acb
+bac
+bca
+cab
+cba
+Write a function to return a list of starting indices of the anagrams of the pattern in the given string.
 
 Example 1:
 
-Input: String="oidbcaf", Pattern="abc"
-Output: true
-Explanation: The string contains "bca" which is a permutation of the given pattern.
+Input: String="ppqp", Pattern="pq"
+Output: [1, 2]
+Explanation: The two anagrams of the pattern in the given string are "pq" and "qp".
 Example 2:
 
-Input: String="odicf", Pattern="dc"
-Output: false
-Explanation: No permutation of the pattern is present in the given string as a substring.
-Example 3:
-
-Input: String="bcdxabcdy", Pattern="bcdyabcdx"
-Output: true
-Explanation: Both the string and the pattern are a permutation of each other.
-Example 4:
-
-Input: String="aaacb", Pattern="abc"
-Output: true
-Explanation: The string contains "acb" which is a permutation of the given pattern.
-
+Input: String="abbcabc", Pattern="abc"
+Output: [2, 3, 4]
+Explanation: The three anagrams of the pattern in the given string are "bca", "cab", and "abc".
 */
 
-var permutationString = function permutationString(string, pattern) {
+var returnIndexAnagram = function returnIndexAnagram(string, pattern) {
   var startWindow = 0;
-  var patternFrequencyObject = {};
+  var resultArray = [];
+  var patternsFrequency = {};
   var keyMatch = 0;
 
-  // let us create our patternFrequencyObject for our pattern. So each letter becomes a key. And the value for the key is how many times the letter appears in our patter.
   for (var i = 0; i < pattern.length; i++) {
     var letter = pattern[i];
-    if (!patternFrequencyObject[letter]) {
-      patternFrequencyObject[letter] = 1;
+    if (!(letter in patternsFrequency)) {
+      patternsFrequency[letter] = 1;
     } else {
-      patternFrequencyObject[letter] += 1;
+      patternsFrequency[letter] += 1;
     }
   }
 
-  // then, we run our endWindow from the beginning to the end of our string
   for (var endWindow = 0; endWindow < string.length; endWindow++) {
-    // we begin by checking if patternFrequencyObject has that letter as a key. if it does, we decrement its value by 1, because if it equals 0, that means we have found every single one of that letter in our string, meaning we have a full keyMatch for that key. For example if there are 4 a's in our pattern and we have all 4as in our string, we have a keyMatch for a. But, if there are 4 a's and we only found one A, there is still 3 more to go.
     var _letter = string[endWindow];
-
-    if (_letter in patternFrequencyObject) {
-      patternFrequencyObject[_letter] -= 1;
-      if (patternFrequencyObject[_letter] === 0) {
+    if (_letter in patternsFrequency) {
+      patternsFrequency[_letter] -= 1;
+      if (patternsFrequency[_letter] === 0) {
         keyMatch += 1;
       }
     }
-    // if the number of keyMatch equals the number of keys in our patternFrequencyObject, then we have a permutation. so if our patters is aaaaccb, there are 3 keys. but for there to be a keymatch, we need to have all 4a's match for a keyMatch of a. both c's for a keymatch of c. and one b for a keymatch of b. then the number of keyMatch is 3, which is the number of keys in our patternFrequencyObject, so we are good and we have a permuation
-    if (keyMatch === Object.keys(patternFrequencyObject).length) {
-      return true;
-    }
 
-    // now if the size of our window is equal to our pattern length, and we still dont have a permutation, this means that one or more letters in our window isnt a part of the pattern. so, we shrink the window, to see if the next window contains a permutation. But the value that is going out of our window, if its  a key in our frequencyPatternObject, we need to increment its value again since we still need to account for this key in our future windows to check for a permuation. and if the key had a value of 0, meaning it was a keyMatch, we inrement the match by 1 meaning we still have to match that key since we have put it back in our frequencyObject.
+    // if the length of our window is equal to the pattern length, that means we check to see if a permuation exists, and this is checked when we compare the length of our keyMatch, the numbers of keys we have fully accounted for and the number of keys in our patternsFrequency. if they are equal, we have a permuatation. Now after we check, if there is a permuation, great. we shrink our window to see if we can find another substring. if no permutation, then obvs, one or more letters in this substring is not part of the pattern, so we shrink our substring again.
     if (endWindow - startWindow + 1 === pattern.length) {
+      if (keyMatch === Object.keys(patternsFrequency).length) {
+        resultArray.push(startWindow);
+      }
       var startLetter = string[startWindow];
       startWindow += 1;
-      if (startLetter in patternFrequencyObject) {
-        if (patternFrequencyObject[startLetter] === 0) {
+      if (startLetter in patternsFrequency) {
+        if (patternsFrequency[startLetter] === 0) {
           keyMatch -= 1;
         }
-        patternFrequencyObject[startLetter] += 1;
+        patternsFrequency[startLetter] += 1;
       }
     }
   }
-  return false;
+
+  //in the end , we want to return our results array
+  return resultArray;
 };
-console.log(permutationString("aaacb", "abc"));
+
+console.log(returnIndexAnagram("abbcabc", "abc"));
 
 /***/ }),
 
