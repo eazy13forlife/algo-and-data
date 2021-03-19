@@ -64,9 +64,9 @@ const longestDistinctLength = (string, targetNumber) => {
 // now if the length of keys is greater than our target number,we want to move our window up one. Fo example, we go araa and at that point, the maxLength is 4. Once we add c, we realize that there are more than 2 distinct characters, so we don't count this length.So now, we need to start from r and see how far we can go of finding the longest substring with no more than k distinct characters BUT we dont need to repeat everything from r. so we just remove a(the first letter), and move our startWindow up one. If from r to where our current endWindow is (c) contains no more than 2 distinct characters, then we're good and can increase our endWindow. If it does though, we're going to have to start from "a" and see how far we can go etc. But we dont want to repeat from a, so we just subtract r and move our startWindow up, so we are at a.  S
     while(Object.keys(distinctCharacters).length>targetNumber){
       const startLetter=string[startWindow];
-      distinctCharacters[startLetter]-=1;
+      distinctCharacters[startLetter]-=1; //our uniqueObject contained the frequency of the letters in our window, but since we are removing this letter from our window, we decrement it from our uniqueObject
       if(distinctCharacters[startLetter]===0){
-        delete distinctCharacters[startLetter]
+        delete distinctCharacters[startLetter]// we want to delete it if its equal to 0, so we will know that they key no longer exists and it wont be factored into our Object.keys(frequencyObject).length<target
       }
       startWindow+=1;
 

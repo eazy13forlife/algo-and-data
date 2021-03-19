@@ -34,10 +34,10 @@ const longestSubstring = (string) => {
       uniqueObjects[letter] += 1;
     }
 
-    //if that letter we just put in has a value greater than 1, we remove the letter going out of our window and increause our startWindow, so we can have a new window
+    //Now, we keep running a loop if that letter we are looking at has a value greater than one in our frequencyObject. if it does, we keep shrinking the window, until that is no longer the case. if that letter we just put in has a value greater than 1, we remove the letter going out of our window and increause our startWindow, so we can have a new window
     while (uniqueObjects[letter] > 1) {
       const startLetter = string[startWindow];
-      uniqueObjects[startLetter] -= 1;
+      uniqueObjects[startLetter] -= 1; //our uniqueObject contained the frequency of the characters in our window, but since we are removing this character from our window, we decrement it from our uniqueObject
       if (uniqueObjects[startLetter] === 0) {
         delete uniqueObjects[startLetter];
       }

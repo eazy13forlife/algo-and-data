@@ -40,7 +40,7 @@ const maxFruitsBasket = (array) => {
     // if the length of distinct keys is greater than 2, we won't find the max length. Instead, we will start from the second letter and see if there are no more than 2 distinct characters from the second letter to where our endWindow is. If there are more than 2 distinct characteers in this window, we again shrink window and recheck. If there are no more than 2 distinct characters, then we can find the maximum length and our for loop will increase endWindow by 1.
     while (Object.keys(uniqueObjects).length > 2) {
       const startLetter = array[startWindow];
-      uniqueObjects[startLetter] -= 1;
+      uniqueObjects[startLetter] -= 1; //our uniqueObjects contained the frequency of the distinct letters in our window, but since we are removing this letter from our window, we decrement it from our uniqueObject
       if (uniqueObjects[startLetter] === 0) {
         delete uniqueObjects[startLetter];
       }
