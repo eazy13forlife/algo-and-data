@@ -15722,70 +15722,38 @@ module.exports = g;
 
 
 /*
-Given a string and a list of words, find all the starting indices of substrings in the given string that are a concatenation of all the given words exactly once without any overlapping of words. It is given that all words are of the same length.
+Given a sorted array, create a new array containing squares of all the numbers of the input array in the sorted order.
 
 Example 1:
 
-Input: String="catfoxcat", Words=["cat", "fox"]
-Output: [0, 3]
-Explanation: The two substring containing both the words are "catfox" & "foxcat".
+Input: [-2, -1, 0, 2, 3]
+Output: [0, 1, 4, 4, 9]
+Example 2:
+
+Input: [-3, -1, 0, 1, 2]
+Output: [0, 1, 1, 4, 9]
 */
 
-var smallestSubstring = function smallestSubstring(string, words) {
-  var frequencyObject = {};
-  var wordLength = words[0].length;
-  var totalWords = words.length;
+// the largest squared values could be  on the ends of the array, if the array is going from negative to positive values, like [-3,-2,-1,0,1,2]. and the smaller numbers will be towards the middle. So we start from the opposite ends, using a left and right pointer. whichever squared value is bigger, we will add to our resultArray. and then we converge towards the middle, putting the greatest values first. So when we finally get to the middle number, it is the smallest value. After we are done looping we return our array in reverse, so it  goes from lowest to highest. if the array is just all positive numbers. The end value wiill always be larger, so our end pointer will keep going down till we get to the first index, at which point, we just put that value in.
+var squaringSortedArray = function squaringSortedArray(array) {
+  var left = 0;
+  var right = array.length - 1;
   var resultArray = [];
-
-  // put each word that is in the words array and its frequency in the frequencyObject.
-  for (var i = 0; i < words.length; i++) {
-    var word = words[i];
-    if (word in frequencyObject) {
-      frequencyObject[word] += 1;
-    } else {
-      frequencyObject[word] = 1;
+  while (left <= right) {
+    var leftValue = Math.pow(array[left], 2);
+    var rightValue = Math.pow(array[right], 2);
+    if (leftValue < rightValue) {
+      resultArray.push(rightValue);
+      right--;
+    } else if (leftValue >= rightValue) {
+      resultArray.push(leftValue);
+      left++;
     }
   }
-
-  // so the concept is we are looking at our string and checking for substrings of  concatenation of all the words, and also, important note, each word has same length. So, if we have 3 words and each have length of 4, then we look at the first 12 letters in our string and see if we have a concatentation. Then we look at the second 12 letters and see. Then third and so on. So we run an outler loop until we get to the index, that if we count 11 ahead(making 12) we reach the last letter in our string. So looking at our example, we have two words. cat and fox. each have a length of 3. so that is 6 letters. Our string has a length of 9. 9-6=3. so if we start from 3rd index, and count 5 ahead, (making 6) we reach the last letter in our string, making us done with our outer loop. so i begins at 0 and goes till <=string.length-(wordLength*totalWords)<--this will give us the last index we can start at and still count the number of letters needed to reach our concatenation. So this means, i will be c, a t and f.
-  for (var _i = 0; _i <= string.length - wordLength * totalWords; _i++) {
-    // since we dont want any overlapping of words, lets create a seenWords object which holds a word and how many times it is in the substring we are looking at.
-    var seenWords = {};
-
-    // each j is the word in our words Array. so we have 2 words in our words array, cat and fox.
-    for (var j = 0; j < words.length; j++) {
-      // the index of the first word in our string begins at i+(j*wordLength). So, initially it is 0+(0*3)=0. and then when we run j loop again, it is 0+(1*3)=3, so the letters c and f respectively.
-      var wordIndex = _i + j * wordLength;
-
-      // our wordIndex, tells us the index of where a word in our string begins. So once, we find that index, we can find the entire word using string.substring(wordIndex,wordIndex+wordLength), so if i is 0 and j is 0, we get wordIIndex is 0 of the first word and that substring is string.substrng(0,0+3) and we get cat. if i was 0 and j was 1, the second word in our string, would begin at the index of 3 and the substring would be fox.
-      var _word = string.substring(wordIndex, wordIndex + wordLength);
-
-      // if this word isnt in our frequencyObject we break from this inner loop because obvs a concatenation cant happen if our string doesnt even include the world. Then we start from the next i
-      if (!(_word in frequencyObject)) {
-        break;
-      }
-
-      // now since we dont want any overlap, we check if the word is in our seenWords object. If it is, we increment it (because maybe our words array has 3 of the same words so in the case we need to count all the times weve seen that word in our given substring, so when we exceed it, we know we have a problem) and otherwise we set it equal to 1
-      if (_word in seenWords) {
-        seenWords[_word] += 1;
-      } else {
-        seenWords[_word] = 1;
-      }
-
-      if (seenWords[_word] > frequencyObject[_word]) {
-        break;
-      }
-
-      // j tells us the index of the word we are on and index+1 tells us the length. so if we are at the same length of words as total Words and we havent broken out of our loop yet, add i to our resultsArray
-      if (j + 1 === totalWords) {
-        resultsArray.push(_i);
-      }
-    }
-  }
-  return resultsArray;
+  return resultArray.reverse();
 };
 
-console.log(stringPermuation("ppqp", "pq"));
+console.log(squaringSortedArray([1, 2, 3, 4, 5]));
 
 /***/ }),
 

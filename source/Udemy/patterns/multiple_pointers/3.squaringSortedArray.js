@@ -17,6 +17,7 @@ const squaringSortedArray = (array) => {
   let right = array.length - 1;
   const resultArray = [];
   while (left <= right) {
+    //since we want the square of all the numbers, at some point, the left and right index will have to be equal, so the only restriction is left cant be greater than the right pointer
     const leftValue = array[left] ** 2;
     const rightValue = array[right] ** 2;
     if (leftValue < rightValue) {
