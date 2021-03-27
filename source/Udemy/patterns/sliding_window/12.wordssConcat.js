@@ -61,5 +61,3 @@ const smallestSubstring = (string, words) => {
   }
   return resultsArray;
 };
-
-console.log(stringPermuation("ppqp", "pq"));
