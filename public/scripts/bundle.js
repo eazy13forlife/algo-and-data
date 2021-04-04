@@ -15739,33 +15739,28 @@ Explanation: There are four triplets whose sum is less than the target:
 
 */
 
-var tripletSmallerSum = function tripletSmallerSum(array, target) {
-  var result = 0;
-  array.sort(function (a, b) {
-    return a - b;
-  });
-  for (var i = 0; i <= array.length - 2; i++) {
-    var leftPointer = i + 1;
-    var rightPointer = array.length - 1;
-    var firstValue = array[i];
-    //this is the sum that array[rightPointer]+array[leftPointer] has to be so when added to firstValue, it equals the target. But since we want a total sum less than target, we want array[rightPointer]+array[leftPointer] to be less than this neededSum when we do our calculations.
-    var neededSum = target - firstValue;
+var subarraysProduct = function subarraysProduct(array, target) {
+  var startWindow = 0;
+  var resultArray = [];
+  var result = 1;
 
-    while (leftPointer < rightPointer) {
-      var sum = array[leftPointer] + array[rightPointer];
-      //if sum is less than neededSuum, we found a triplet.  Since, we are looking for triplets less than this target, If array[i]+array[leftPonter]+array[rightPointer] is less than our target, since it is a sorted array that means we can replace array[rightPonter] with any number between leftPonter and rightPointer to get a sum less than targetSum. so ex: if our array is [-1,1,2,3,4] and target is 5. if array[i] is -1, array[leftPointer] is 1, and array[rightPointer] is 4, the sum is 4, which is less than our target of 5.  if array[right] is 3, our summ will still be less than the target. If array[right] is 2 our sum will still be less than target, so there are 3 numbers that array[right] can be. so our result variable is the old result =(rightPointer-leftPointer)
-      if (sum < neededSum) {
-        result += rightPointer - leftPointer;
-        leftPointer++;
-      } else if (sum >= neededSum) {
-        rightPointer--;
-      }
+  for (var endWindow = 0; endWindow < array.length; endWindow++) {
+    var number = array[endWindow];
+    result *= number;
+    while (result >= target && startWindow < array.length) {
+      var startNumber = array[startWindow];
+      result = result / startNumber;
+      startWindow += 1; //since out startWindow is incrementing by 1 if the result is greater than or equal to target, we have to set restriction that we run this while loop while  startWindow is less than array length
     }
+    //const length=endWindow-startWindow+1
+    //result+=length  we keep adding the length of the array.
+    var subArray = array.slice(startWindow, endWindow + 1);
+    resultArray.push(subArray);
   }
-  return result;
+  return resultArray;
 };
 
-console.log(tripletSmallerSum([-1, 4, 2, 1, 3], 5));
+console.log(subarraysProduct([8, 2, 6, 5], 50));
 
 /***/ }),
 
