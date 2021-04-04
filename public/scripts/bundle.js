@@ -15722,70 +15722,50 @@ module.exports = g;
 
 
 /*
-Given an array of unsorted numbers and a target number, find a triplet in the array whose sum is as close to the target number as possible, return the sum of the triplet. If there are more than one such triplet, return the sum of the triplet with the smallest sum.
+Given an array arr of unsorted numbers and a target sum, count all triplets in it such that arr[i] + arr[j] + arr[k] < target where i, j, and k are three different indices. Write a function to return the count of such triplets.
 
 Example 1:
 
-Input: [-2, 0, 1, 2], target=2
-Output: 1
-Explanation: The triplet [-2, 1, 2] has the closest sum to the target.
+Input: [-1, 0, 2, 3], target=3
+Output: 2
+Explanation: There are two triplets whose sum is less than the target: [-1, 0, 3], [-1, 0, 2]
 Example 2:
 
-Input: [-3, -1, 1, 2], target=1
-Output: 0
-Explanation: The triplet [-3, 1, 2] has the closest sum to the target.
-Example 3:
-
-Input: [1, 0, 1, 1], target=100
-Output: 3
-Explanation: The triplet [1, 1, 1] has the closest sum to the target.
-
+Input: [-1, 4, 2, 1, 3], target=5
+Output: 4
+Explanation: There are four triplets whose sum is less than the target:
+   [-1, 1, 4], [-1, 1, 3], [-1, 1, 2], [-1, 2, 3]
 
 
 */
 
-var triplet_sum_close_to_target = function triplet_sum_close_to_target(array, target) {
+var tripletSmallerSum = function tripletSmallerSum(array, target) {
+  var result = 0;
   array.sort(function (a, b) {
     return a - b;
   });
-  var smallestDifference = Infinity;
-  for (var i = 0; i < array.length - 2; i++) {
+  for (var i = 0; i <= array.length - 2; i++) {
     var leftPointer = i + 1;
     var rightPointer = array.length - 1;
     var firstValue = array[i];
-
-    var neededSum = void 0;
-
-    neededSum = target - firstValue;
+    //this is the sum that array[rightPointer]+array[leftPointer] has to be so when added to firstValue, it equals the target. But since we want a total sum less than target, we want array[rightPointer]+array[leftPointer] to be less than this neededSum when we do our calculations.
+    var neededSum = target - firstValue;
 
     while (leftPointer < rightPointer) {
-      //so we have our targetNumber and we subtract all of our values to see the difference from the targetNumber. A difference of -1 and 1 is the same btw. So, we have to do Math.abs(targetDifference) later on.
-      var targetDifference = target - array[i] - array[leftPointer] - array[rightPointer]; // subtracting negative and positive is same. just subtract. Same with adding, just add.
-      if (targetDifference === 0) {
-        return target; //if the difference is 0,this sum is the exact same as the targetNumber, so  just return the sum of all the numbers, which is the target.
-      }
-
-      // here, we save the closest difference. A target difference of -1 and 1  is same. We use absolute value because the smallest differnec of -5 and 5 are the same in terms of difference.
-      if (Math.abs(targetDifference) < Math.abs(smallestDifference)) {
-        smallestDifference = targetDifference;
-      }
-
-      //if the target difference is less than the smallest diffrence, save that targetDifference, but if theyre equal then only save it when the targetDifference is greater than the smallestDifference without absolute value. So that when we return our sum, which is  target-smallestDifferece smallestDifference is equal to the larger sum, we will get a smaller sum
-      if (Math.abs(targetDifference) === Math.abs(smallestDifference) && targetDifference > smallestDifference) {
-        smallestDifference = targetDifference;
-      }
-
-      if (array[leftPointer] + array[rightPointer] > neededSum) {
-        rightPointer -= 1; // we need a triplet with a bigger sum
-      } else {
-        leftPointer += 1;
-        // we need a triplet with a smaller sum
+      var sum = array[leftPointer] + array[rightPointer];
+      //if sum is less than neededSuum, we found a triplet.  Since, we are looking for triplets less than this target, If array[i]+array[leftPonter]+array[rightPointer] is less than our target, since it is a sorted array that means we can replace array[rightPonter] with any number between leftPonter and rightPointer to get a sum less than targetSum. so ex: if our array is [-1,1,2,3,4] and target is 5. if array[i] is -1, array[leftPointer] is 1, and array[rightPointer] is 4, the sum is 4, which is less than our target of 5.  if array[right] is 3, our summ will still be less than the target. If array[right] is 2 our sum will still be less than target, so there are 3 numbers that array[right] can be. so our result variable is the old result =(rightPointer-leftPointer)
+      if (sum < neededSum) {
+        result += rightPointer - leftPointer;
+        leftPointer++;
+      } else if (sum >= neededSum) {
+        rightPointer--;
       }
     }
   }
-  return target - smallestDifference;
+  return result;
 };
-console.log(getSumTriplet([-3, -1, 1, 2], 1));
+
+console.log(tripletSmallerSum([-1, 4, 2, 1, 3], 5));
 
 /***/ }),
 
