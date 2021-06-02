@@ -6,7 +6,7 @@ const swap = (array, index1, index2) => {
   array[index2] = value1;
 };
 
-//best way
+// best way
 const selectionSort = (array) => {
   for (let i = 0; i < array.length - 1; i++) {
     let smallestIndex = i;
@@ -22,8 +22,8 @@ const selectionSort = (array) => {
   return array;
 };
 
-//not a good way
-const selectionSort = (array) => {
+// not a good way
+const selectionSort2 = (array) => {
   for (let i = array.length; i >= 1; i--) {
     let minIndex;
     let minValue = Infinity;
