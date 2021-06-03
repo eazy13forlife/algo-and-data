@@ -15716,9 +15716,34 @@ module.exports = g;
   !*** ./source/index.js ***!
   \*************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nDuplicate declaration \"selectionSort\"\n\n\u001b[0m \u001b[90m 24 | \u001b[39m\n \u001b[90m 25 | \u001b[39m\u001b[90m//not a good way\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 26 | \u001b[39m\u001b[36mconst\u001b[39m selectionSort \u001b[33m=\u001b[39m (array) \u001b[33m=>\u001b[39m {\n \u001b[90m    | \u001b[39m      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 27 | \u001b[39m  \u001b[36mfor\u001b[39m (let i \u001b[33m=\u001b[39m array\u001b[33m.\u001b[39mlength\u001b[33m;\u001b[39m i \u001b[33m>=\u001b[39m \u001b[35m1\u001b[39m\u001b[33m;\u001b[39m i\u001b[33m--\u001b[39m) {\n \u001b[90m 28 | \u001b[39m    let minIndex\u001b[33m;\u001b[39m\n \u001b[90m 29 | \u001b[39m    let minValue \u001b[33m=\u001b[39m \u001b[33mInfinity\u001b[39m\u001b[33m;\u001b[39m\u001b[0m\n");
+"use strict";
+
+
+var swap = function swap(array, index1, index2) {
+  var value1 = array[index1];
+  array[index1] = array[index2];
+  array[index2] = value1;
+};
+
+//best way
+var insertionSort = function insertionSort(array) {
+  for (var i = 1; i < array.length; i++) {
+    var index = i;
+    for (var j = i - 1; j >= 0; j--) {
+      if (array[index] < array[j]) {
+        swap(array, index, j);
+        index = j;
+      } else {
+        break;
+      }
+    }
+  }
+  return array;
+};
+
+console.log(insertionSort([3, 7, 4, 1, 4, 6, 0, 0.3, 0.2]));
 
 /***/ }),
 

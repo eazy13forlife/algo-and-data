@@ -1,4 +1,4 @@
-//with selectionSort, we look at each number, so i is every  number in our array. And for each number, i, j looks at every number after that number in order to find the index with that contains the smallest value.(we also make the assumption that the index with the smallest value is the current i number we are looking at) At the end of our j loop for that number, we swap the current i index with the j index that contained the smallest value. Also, since j looks at every number after i, i goes until the second to last number in our array.
+//with selectionSort, we look at each number, so i is every  number in our array. And for each number, i, j looks at every number after that number in order to find the index  that contains the smallest value.(we also make the assumption that the index with the smallest value is the current i we are looking at) At the end of our j loop for that number, we swap the current i index with the j index that contained the smallest value. Also, since j looks at every number after i, i goes until the second to last number in our array.
 
 const swap = (array, index1, index2) => {
   const value1 = array[index1];
@@ -11,7 +11,7 @@ const selectionSort = (array) => {
   for (let i = 0; i < array.length - 1; i++) {
     let smallestIndex = i;
     for (let j = i + 1; j < array.length - 1; j++) {
-      if (array[j] < array[i]) {
+      if (array[j] < array[smallestIndex]) {
         smallestIndex = j;
       }
     }
@@ -43,5 +43,7 @@ const selectionSort2 = (array) => {
   }
   return array;
 };
+
+//best case scenarior is 0(n^2) because outer loop runs o(n) times and inner loop runs o(n) times as well. There is nothing that lets us leave the loop like there is with bubbleSort and insertionSort. an if statement counts as running and a for loop counts as running.
 
 console.log(selectionSort([0, 1, 2, 3, 4, 5, 6]));
