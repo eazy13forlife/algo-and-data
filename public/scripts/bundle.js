@@ -15721,45 +15721,6 @@ module.exports = g;
 "use strict";
 
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-var mergeArrays = function mergeArrays(array1, array2) {
-  var result = [];
-  var firstPointer = 0;
-  var secondPointer = 0;
-
-  while (firstPointer < array1.length && secondPointer < array2.length) {
-    if (array1[firstPointer].name < array2[secondPointer].name) {
-      result.push(array1[firstPointer]);
-      firstPointer++;
-    } else if (array2[secondPointer].name < array1[firstPointer].name) {
-      result.push(array2[secondPointer]);
-      secondPointer++;
-    } else {
-      result.push(array1[firstPointer].name);
-      result.push(array2[secondPointer].name);
-      firstPointer++;
-      secondPointer++;
-    }
-  }
-
-  if (firstPointer >= array1.length) {
-    return [].concat(result, _toConsumableArray(array2.slice(secondPointer)));
-  } else if (secondPointer >= array2.length) {
-    return [].concat(result, _toConsumableArray(array1.slice(firstPointer)));
-  }
-};
-
-var mergeSort = function mergeSort(array) {
-  if (array.length <= 1) {
-    return array;
-  }
-  var middleIndex = Math.floor((array.length - 1) / 2);
-  var leftHalf = mergeSort(array.slice(0, middleIndex + 1));
-  var rightHalf = mergeSort(array.slice(middleIndex + 1));
-  return mergeArrays(leftHalf, rightHalf);
-};
-
 console.log(mergeSort([{
   name: "Nike Air Force 1 Crater FlyKnit",
   price: 110
@@ -15809,54 +15770,6 @@ console.log(mergeSort([{
   name: "Zion 1",
   price: 120
 }]));
-
-var swap = function swap(array, index1, index2) {
-  var value1 = array[index1];
-  array[index1] = array[index2];
-  array[index2] = value1;
-};
-
-var reorderPivotRandom = function reorderPivotRandom(array, pivot) {
-  var start = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
-  var end = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : array.length - 1;
-
-  var pivotIndex = pivot;
-  var indexSwap = pivotIndex;
-  for (var i = start; i <= end; i++) {
-    if (pivotIndex > i) {
-      if (array[i] > array[pivotIndex]) {
-        swap(array, pivotIndex, i);
-        pivotIndex = i;
-        indexSwap = pivotIndex;
-      }
-    } else if (i > pivotIndex) {
-      if (array[i] <= array[pivotIndex]) {
-        indexSwap++;
-        swap(array, indexSwap, i);
-      }
-    }
-  }
-
-  swap(array, pivot, indexSwap);
-
-  return indexSwap;
-};
-
-var quickSortRandom = function quickSortRandom(array) {
-  var start = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-  var end = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : array.length - 1;
-
-  if (start >= end) {
-    return array;
-  }
-  var randomPivot = Math.ceil(Math.random() * (end - start)) + start;
-  var index = reorderPivot(array, randomPivot, start, end);
-  quickSort(array, start, index - 1);
-  quickSort(array, index + 1, end);
-  return array;
-};
-
-console.log(quickSort([5, 6, 2, 1, 5, 7, 9, 0.3, 0.5]));
 
 /***/ }),
 

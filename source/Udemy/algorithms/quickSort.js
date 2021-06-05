@@ -30,8 +30,6 @@ const quickSort = (array, start = 0, end = array.length - 1) => {
   return array;
 };
 
-console.log(quickSort([2, 6, 4, 1, 7, 0.7, 0.5, 8]));
-
 //another way, probably easier. So quickSort2 takes in an array and chooses the last item as the pivot.(and if  array is a single element, quickSort returns this array because there is nothing else to sort.) Then it looks at our array and all the  numbers less than the pivot value, go inside a left array and all the numbers greater than the pivot value go inside a right array. Then we return an array, where the pivotValue is in the middle(aka the correct spot, since all the numbers less than it are to the left and all the numbers greater than it are to the right. So we have one element in its correct location) and we call quickSort2 on the left array and on the right array, making sure to use spread operator.(Since, it returns an array, we want to get the item out of the array). so in the end, we will have a single array where all the pivot values are in the correct order and arrays of one element are returned.
 
 //big o is o(nlogn).because on average, the pivot gets moved to the middle each time, so we compare the left and right and have less comparisons to make. But again ,for each decomposition we have to make n comparisons with the number of items in the array
@@ -72,9 +70,7 @@ const reorderPivotRandom = (
       }
     }
   }
-
-  swap(array, pivot, indexSwap);
-
+  swap(array, pivotIndex, indexSwap);
   return indexSwap;
 };
 
@@ -83,7 +79,7 @@ const quickSortRandom = (array, start = 0, end = array.length - 1) => {
     return array;
   }
   const randomPivot = Math.ceil(Math.random() * (end - start)) + start;
-  const index = reorderPivot(array, randomPivot, start, end);
+  const index = reorderPivotRandom(array, randomPivot, start, end);
   quickSort(array, start, index - 1);
   quickSort(array, index + 1, end);
   return array;
