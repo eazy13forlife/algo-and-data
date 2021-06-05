@@ -15721,29 +15721,142 @@ module.exports = g;
 "use strict";
 
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+var mergeArrays = function mergeArrays(array1, array2) {
+  var result = [];
+  var firstPointer = 0;
+  var secondPointer = 0;
+
+  while (firstPointer < array1.length && secondPointer < array2.length) {
+    if (array1[firstPointer].name < array2[secondPointer].name) {
+      result.push(array1[firstPointer]);
+      firstPointer++;
+    } else if (array2[secondPointer].name < array1[firstPointer].name) {
+      result.push(array2[secondPointer]);
+      secondPointer++;
+    } else {
+      result.push(array1[firstPointer].name);
+      result.push(array2[secondPointer].name);
+      firstPointer++;
+      secondPointer++;
+    }
+  }
+
+  if (firstPointer >= array1.length) {
+    return [].concat(result, _toConsumableArray(array2.slice(secondPointer)));
+  } else if (secondPointer >= array2.length) {
+    return [].concat(result, _toConsumableArray(array1.slice(firstPointer)));
+  }
+};
+
+var mergeSort = function mergeSort(array) {
+  if (array.length <= 1) {
+    return array;
+  }
+  var middleIndex = Math.floor((array.length - 1) / 2);
+  var leftHalf = mergeSort(array.slice(0, middleIndex + 1));
+  var rightHalf = mergeSort(array.slice(middleIndex + 1));
+  return mergeArrays(leftHalf, rightHalf);
+};
+
+console.log(mergeSort([{
+  name: "Nike Air Force 1 Crater FlyKnit",
+  price: 110
+}, {
+  name: "Air Jordan 1 Mid",
+  price: 115
+}, {
+  name: "Nike Air Max Plus",
+  price: 160
+}, {
+  name: "Nike Air Zoom Tempo NEXT%",
+  price: 200
+}, {
+  name: "Jordan MA2",
+  price: 125
+}, {
+  name: "Jordan 4 G NRG",
+  price: 200
+}, {
+  name: "KD14",
+  price: 150
+}, {
+  name: "Nike Air Max 90 Exeter Edition",
+  price: 130
+}, {
+  name: "Nike Air Raid",
+  price: 140
+}, {
+  name: "Nike Air Vapormax Evo",
+  price: 200
+}, {
+  name: "Nike Crater Impact",
+  price: 100
+}, {
+  name: "Nike Pegasus Trail 2",
+  price: 130
+}, {
+  name: "Nike SB Zoom Blazer Mid Premium",
+  price: 110
+}, {
+  name: "Nike Winflo 8",
+  price: 90
+}, {
+  name: "PG 5",
+  price: 110
+}, {
+  name: "Zion 1",
+  price: 120
+}]));
+
 var swap = function swap(array, index1, index2) {
   var value1 = array[index1];
   array[index1] = array[index2];
   array[index2] = value1;
 };
 
-//best way
-var insertionSort = function insertionSort(array) {
-  for (var i = 1; i < array.length; i++) {
-    var index = i;
-    for (var j = i - 1; j >= 0; j--) {
-      if (array[index] < array[j]) {
-        swap(array, index, j);
-        index = j;
-      } else {
-        break;
+var reorderPivotRandom = function reorderPivotRandom(array, pivot) {
+  var start = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+  var end = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : array.length - 1;
+
+  var pivotIndex = pivot;
+  var indexSwap = pivotIndex;
+  for (var i = start; i <= end; i++) {
+    if (pivotIndex > i) {
+      if (array[i] > array[pivotIndex]) {
+        swap(array, pivotIndex, i);
+        pivotIndex = i;
+        indexSwap = pivotIndex;
+      }
+    } else if (i > pivotIndex) {
+      if (array[i] <= array[pivotIndex]) {
+        indexSwap++;
+        swap(array, indexSwap, i);
       }
     }
   }
+
+  swap(array, pivot, indexSwap);
+
+  return indexSwap;
+};
+
+var quickSortRandom = function quickSortRandom(array) {
+  var start = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+  var end = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : array.length - 1;
+
+  if (start >= end) {
+    return array;
+  }
+  var randomPivot = Math.ceil(Math.random() * (end - start)) + start;
+  var index = reorderPivot(array, randomPivot, start, end);
+  quickSort(array, start, index - 1);
+  quickSort(array, index + 1, end);
   return array;
 };
 
-console.log(insertionSort([3, 7, 4, 1, 4, 6, 0, 0.3, 0.2]));
+console.log(quickSort([5, 6, 2, 1, 5, 7, 9, 0.3, 0.5]));
 
 /***/ }),
 
