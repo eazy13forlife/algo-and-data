@@ -64,26 +64,3 @@ const object = [
     price: 120,
   },
 ];
-
-const quickSort = (array) => {
-  if (array <= 1) {
-    return array;
-  }
-  const left = [];
-  const right = [];
-  const start = 0;
-  const end = array.length - 1;
-  const pivotIndex = Math.ceil(Math.random() * (end - start)) + start;
-  for (let i = 0; i < array.length; i++) {
-    if (i !== pivotIndex) {
-      if (array[i] < array[pivotIndex]) {
-        left.push(array[i]);
-      } else {
-        right.push(array[i]);
-      }
-    }
-  }
-  return [...quickSort(left), array[pivotIndex], ...quickSort(right)];
-};
-
-console.log(quickSort([3, 7, 8, 1, 2, 5, 7, 8]));

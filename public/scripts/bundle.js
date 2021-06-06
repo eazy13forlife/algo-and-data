@@ -15721,8 +15721,6 @@ module.exports = g;
 "use strict";
 
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
 var object = [{
   name: "Nike Air Force 1 Crater FlyKnit",
   price: 110
@@ -15772,29 +15770,6 @@ var object = [{
   name: "Zion 1",
   price: 120
 }];
-
-var quickSort = function quickSort(array) {
-  if (array <= 1) {
-    return array;
-  }
-  var left = [];
-  var right = [];
-  var start = 0;
-  var end = array.length - 1;
-  var pivotIndex = Math.ceil(Math.random() * (end - start)) + start;
-  for (var i = 0; i < array.length; i++) {
-    if (i !== pivotIndex) {
-      if (array[i] < array[pivotIndex]) {
-        left.push(array[i]);
-      } else {
-        right.push(array[i]);
-      }
-    }
-  }
-  return [].concat(_toConsumableArray(quickSort(left)), [array[pivotIndex]], _toConsumableArray(quickSort(right)));
-};
-
-console.log(quickSort([3, 7, 8, 1, 2, 5, 7, 8]));
 
 /***/ }),
 
