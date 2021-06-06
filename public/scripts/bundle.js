@@ -15711,6 +15711,33 @@ module.exports = g;
 
 /***/ }),
 
+/***/ "./source/Udemy/data_structures/nodeClass.js":
+/*!***************************************************!*\
+  !*** ./source/Udemy/data_structures/nodeClass.js ***!
+  \***************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Node = function Node(value) {
+  _classCallCheck(this, Node);
+
+  this.value = value;
+  this.next = null;
+};
+
+exports.default = Node;
+
+/***/ }),
+
 /***/ "./source/index.js":
 /*!*************************!*\
   !*** ./source/index.js ***!
@@ -15721,55 +15748,146 @@ module.exports = g;
 "use strict";
 
 
-var object = [{
-  name: "Nike Air Force 1 Crater FlyKnit",
-  price: 110
-}, {
-  name: "Air Jordan 1 Mid",
-  price: 115
-}, {
-  name: "Nike Air Max Plus",
-  price: 160
-}, {
-  name: "Nike Air Zoom Tempo NEXT%",
-  price: 200
-}, {
-  name: "Jordan MA2",
-  price: 125
-}, {
-  name: "Jordan 4 G NRG",
-  price: 200
-}, {
-  name: "KD14",
-  price: 150
-}, {
-  name: "Nike Air Max 90 Exeter Edition",
-  price: 130
-}, {
-  name: "Nike Air Raid",
-  price: 140
-}, {
-  name: "Nike Air Vapormax Evo",
-  price: 200
-}, {
-  name: "Nike Crater Impact",
-  price: 100
-}, {
-  name: "Nike Pegasus Trail 2",
-  price: 130
-}, {
-  name: "Nike SB Zoom Blazer Mid Premium",
-  price: 110
-}, {
-  name: "Nike Winflo 8",
-  price: 90
-}, {
-  name: "PG 5",
-  price: 110
-}, {
-  name: "Zion 1",
-  price: 120
-}];
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _nodeClass = __webpack_require__(/*! ./Udemy/data_structures/nodeClass.js */ "./source/Udemy/data_structures/nodeClass.js");
+
+var _nodeClass2 = _interopRequireDefault(_nodeClass);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var SLL = function () {
+  function SLL() {
+    _classCallCheck(this, SLL);
+
+    this.head = null;
+    this.tail = null;
+    this.length = 0;
+  }
+
+  _createClass(SLL, [{
+    key: "push",
+    value: function push(value) {
+      var newNode = new _nodeClass2.default(value);
+      if (!this.head) {
+        this.head = newNode;
+        this.tail = newNode;
+      } else {
+        this.tail.next = newNode;
+        this.tail = newNode;
+      }
+      this.length++;
+    }
+  }, {
+    key: "pop",
+    value: function pop() {
+      // if there is no head(meaning nothing in our list) and we're trying to pop something,return undefined
+      if (!this.head) {
+        return undefined;
+      }
+      //so what we want to do is iterate through our list until we get to the second to last node, so that we can make the node after it equal null and make the second to last node the new tail.
+      // create a variable called currentNode, which is equal to a reference to the this.head object, that we will end up returning later
+      var currentNode = this.head;
+      // let newTail initially equal where currentNode is
+      var newTail = currentNode;
+      while (currentNode.next) {
+        // newTail is equal to where currentNode is
+        newTail = currentNode;
+        // currentNode is equal to something completely different
+        currentNode = currentNode.next;
+      }
+      // the new this.tail is going to be newTail
+      this.tail = newTail;
+      // the next property on the new this.tail will be set to null
+      this.tail.next = null;
+      // decrement the length by 1;
+      this.length--;
+      // if the length is 1 whem we run this pop function, we still create a variable called currentNode(which we will return) which is equal to this.head,and we still end up setting this.tail equal to a reference to this.head and set this.head next property to null, so now any reference to this.head has a next property of null  and then we decrement the length so its 0. We however want this.head and this.tail to equal null, since the length is 0.
+      if (this.length === 0) {
+        this.head = null;
+        this.tail = null;
+      }
+      return currentNode;
+    }
+  }, {
+    key: "shift",
+    value: function shift() {
+      if (!this.head) {
+        return undefined;
+      }
+      var initialHead = this.head;
+      this.head = this.head.next;
+      if (this.length === 1) {
+        this.tail = null;
+      }
+      this.length--;
+      initialHead.next = null;
+      return initialHead;
+    }
+  }, {
+    key: "unshift",
+    value: function unshift(value) {
+      var newNode = new _nodeClass2.default(value);
+      if (!this.head) {
+        this.head = newNode;
+        this.tail = newNode;
+      } else {
+        var originalHead = this.head;
+        this.head = newNode;
+        this.head.next = originalHead;
+      }
+      this.length++;
+    }
+  }, {
+    key: "get",
+    value: function get(index) {
+      if (!this.head) {
+        return undefined;
+      }
+      var specificItem = this.head;
+      for (var i = 1; i <= index; i++) {
+        specificItem = specificItem.next;
+      }
+      return specificItem;
+    }
+  }, {
+    key: "insert",
+    value: function insert(index, value) {
+      if (index < 0 || index > this.length) {
+        return false;
+      }
+      if (index === 0) {
+        this.unshift(value);
+        return true;
+      }
+      if (index === this.length) {
+        this.push(value);
+        return true;
+      }
+      var newNode = new _nodeClass2.default(value);
+      var nodeBefore = this.get(index - 1);
+      var initialNode = this.get(index);
+      nodeBefore.next = newNode;
+      // if i just set newNode.next equal to this.get(index),without storing it first in nodeAfter, newNode.next will always equal a reference to the newNode that we created. and we set a next property on that reference equal to this. get so it will keep referring to itself.
+      newNode.next = initialNode;
+      this.length++;
+      return true;
+    }
+  }]);
+
+  return SLL;
+}();
+
+var list = new SLL();
+list.push(5);
+list.push(9);
+list.push(13);
+list.push(18);
+list.insert(3, "pill");
+
+console.log(list);
 
 /***/ }),
 

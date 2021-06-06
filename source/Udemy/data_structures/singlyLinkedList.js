@@ -13,6 +13,7 @@ class SinglyLinkedList {
       this.head = newNode;
       this.tail = newNode;
     } else {
+      // so this.head and this.tail equal the same newNode object in reference from when the list is empty and we pushed in one item. When we push in a second item, we want to set this.tail.next to our new newNode. So since this.head and this.tail equal the same newNode object in reference, modifying the next property on one will modify the next property on another. So, both this.head and this.tail will have their next property equal this new newNode. But, now we dont want our this.tail to equal the old newNode and  have a next property equal to this new newNode.Since it is the last item in our list, it should just equal the new newNode, so we set its entire object equal to newNode, and since we are changing the object as a whole, it is given a whole new reference in memory.
       this.tail.next = newNode;
       this.tail = newNode;
     }
@@ -24,6 +25,7 @@ class SinglyLinkedList {
     if (!this.head) {
       return undefined;
     }
+    //so what we want to do is iterate through our list until we get to the second to last node, so that we can make the node after it equal null and make the second to last node the new tail.
     // create a variable called currentNode, which is equal to a reference to the this.head object, that we will end up returning later
     let currentNode = this.head;
     // let newTail initially equal where currentNode is
@@ -48,6 +50,35 @@ class SinglyLinkedList {
     return currentNode;
   }
 
+  /*
+  pop() {
+    //if nothing in head aka our list is empty, return undefined,
+    if (!this.head) {
+      return undefined;
+    }
+
+    // otherwise, let our currentNode equal this.head. Now, we will run  a loop up until the second to last node in our last, so that we can make the actual last node after it null and set our tail equal to this second to last node. i starts from 1 because before our for loop runs, we making currentNode equal to this.head so it is essentially the  0 index. When i is 1 the new currentNode will be this.head.next which will give us the first index in our list (even though linked lists don't have indices, i am treating them as they do because i am used to for loops working with indices). In the edge case that there is 1 item in our list,our for loop will begin with  i=1 and i<=-1, so our for loop wont run. Instead, we just want to return the currentNode and set this.head and this.tail equal to null along with decrementing length. If length is 2 ,our for loop will begin with  i=1 and i<=0 so our for loop won't run either. But our code after the for loop will still run correctly
+    let currentNode = this.head;
+
+    if (this.length === 1) {
+      this.head = null;
+      this.tail = null;
+      this.length--;
+      return currentNode;
+    }
+
+    for (let i = 1; i <= this.length - 2; i++) {
+      currentNode = currentNode.next;
+    }
+
+    const lastNode = currentNode.next;
+    currentNode.next = null;
+    this.tail = currentNode;
+    this.length--;
+    return lastNode;
+  }
+  */
+
   shift() {
     if (!this.head) {
       return undefined;
@@ -59,15 +90,19 @@ class SinglyLinkedList {
     if (this.length === 0) {
       this.tail = null;
     }
+    //we want to sever any ties the originalHead had, so we set its next equal to null
+    originalHead.next = null;
     return originalHead;
   }
 
   unshift(value) {
     const newNode = new Node(value);
+    //if our head doesnt exist, just make this.head and this.tail equal to this newNode that we just created
     if (!this.head) {
       this.head = newNode;
       this.tail = newNode;
     } else {
+      // but, if this.head does exist, store the current this.head into the variable originalHead so we have it saved, so that after we make this.head equal this newNode that we created, we can make its next value equal what this.head used to be.
       const originalHead = this.head;
       this.head = newNode;
       this.head.next = originalHead;
@@ -77,9 +112,10 @@ class SinglyLinkedList {
   }
 
   get(index) {
-    if (!this.head) {
+    if (index < 0 || index >= this.length) {
       return undefined;
     }
+    // let the specificNode that we want initially equal this.head, which is essentially the 0 index in our list. Our for loop will begin with i=1, at which point the specificNode is the original specificNode(which has an index of 0).next (which will be the first index in our list and what we ultimately want). And i will continue up to the index that we specified.
     let specificNode = this.head;
     for (let i = 1; i <= index; i++) {
       specificNode = specificNode.next;
@@ -88,6 +124,7 @@ class SinglyLinkedList {
   }
 
   set(index, value) {
+    // since this.get(index) gets us the node we are looking for or return undefined if the index is out of bounds, we can just call it from the getgo. if specificNode is truthy, we can change its value to the one that we want and return true meaning it was successfull, otherwise we return false;
     const specificNode = this.get(index);
     if (specificNode) {
       specificNode.value = value;
@@ -97,6 +134,7 @@ class SinglyLinkedList {
   }
 
   insert(index, value) {
+    //insert is like splice where we start the index before the number, as opposed to at the number. so we can insert before the beginning of a list and after the end of a list. So, if we have [4,5,3,8,9] and we want to insert 6 at the 0 index, 0 index starts before 4, so we get [6,4,5,3,8,9]. And if we want to insert 12 in our original array at the fifth index, 12 comes after 9 so we get [4,5,3,8,9,12].
     if (index < 0 || index > this.length) {
       return false;
     }
@@ -109,10 +147,14 @@ class SinglyLinkedList {
       return true;
     }
     const newNode = new Node(value);
+    // we dont have to worry about this.get(index) resulting in undefined because any undefined would have been caught above and returned something already.
+
+    //so, we want to store the node before the index we want to insert in the variable nodeBefore, so that we can set its next value equal to this newNode, so that will put newNode in the correct index. And we store the node at the index we want to insert initially in the variable initialNode,  so we can set newNodes next property equal to this initialNode.
+
     const nodeBefore = this.get(index - 1);
     const initialNode = this.get(index);
     nodeBefore.next = newNode;
-    // if i just set newNode.next equal to this.get(index),without storing it first in nodeAfter, newNode.next will always equal a reference to the newNode that we created. and we set a next property on that reference equal to this. get so it will keep referring to itself.
+    // if i just set newNode.next equal to this.get(index),without storing it first in initialNode, newNode.next will always equal a reference to the newNode that we created. and we set a next property on that reference equal to this. get so it will keep referring to itself.
     newNode.next = initialNode;
     this.length++;
     return true;
@@ -135,6 +177,8 @@ class SinglyLinkedList {
     const nodeBefore = this.get(index - 1);
     nodeBefore.next = nodeAfter;
     this.length--;
+    // we want to sever ties of anything that followed this initialNode that we are removing
+    initialNode.next = null;
     return initialNode;
   }
   // 13,27,32,71<---for the example
