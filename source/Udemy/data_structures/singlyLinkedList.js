@@ -181,18 +181,50 @@ class SinglyLinkedList {
     initialNode.next = null;
     return initialNode;
   }
-  // 13,27,32,71<---for the example
+
+  // 13,27,32,71<---for the reverse example
+
+  // ANOTHER WAY OF EXPLAINING,
+  // so initial order is [13,27,32,71]
+  // we want a reverse order of [71,32,27,13]
+  // so we start from the first item, get whats before it and make it the next property of the first item. So, now  13, null becomes the previous for 27, so we make the next of 27, 13 null and now this whole thing becomes the previous for 32 so we make 32 next property 27,13,null and now this whole thing becomes the previous for 71 and 71s next property is 32,27,13 and we are done
+  //LONG STORY SHORT- we keep making the previous item of our currentHead the next property of our currentHead, and then we make this whole thing the new previous item, which we will then place after our next head.
+
+  /*
+reverse() {
+  let currentHead = this.head;
+  this.head = this.tail;
+  this.tail = currentHead;
+  let previous = null;
+  for (let i = 0; i < this.length; i++) {
+  //so we store the nextHead
+    const nextHead = currentHead.next;
+    //the next propert of our currentHead is the previous
+    currentHead.next = previous;
+    //now previous equals this entire thing, aka it equals our currentHead
+    previous = currentHead;
+    //the new currentHead is the nextHead that we stored
+    currentHead = nextHead;
+  }
+}
+*/
+
+  // MORE DETAILED
+  // so what comes before our initialHead of 13? null. so our previousNext is null and we make this the next of 13. So our new previous is 13,null.
+  // so what comes before our new initialHead of 27? well our previousNext of [13 null]. so we make the next property of 27 ,13 null and now this whole thing becomes our previousNext/
+  // so what coems before our new initialhead of 32? well it is our previous next of 27,13,null. so this becomes the new next of 32, so we get [32,27,13,null] and now this whole thing becomes our new next.
+  // now what comes before our new initialHead of 71? well our previous next of [32,27,13,null], so this becomes the new next of 71, so we get [71,32,27,13,null]
 
   reverse() {
     let initialHead = this.head;
     this.head = this.tail;
     this.tail = initialHead;
     let previousNext = null;
-    //we are just doing this for loop for every item in our list, so we can do let i=1;i<=this.length:i++
+    //we are doing this for loop for every item in our list, so we can do let i=1;i<=this.length:i++
     for (let i = 0; i < this.length; i++) {
       // save what initially comes next in our list after  initialHead,so we can use it later. in our case (27,32,71). Since the next property is an object, we are storing a reference to this object
       const newNext = initialHead.next;
-      // now we get the previousNext, which initially is null, because there is no number before 27. and make that the new next property of our initialHead(so we are redefining this next property,so it will be stored in a new address). so now we get (13,null) for our initialHead. Since we are only changing a property of our initialHead object, all references to initialHead will take on this change as well. If we were redefining initialHead as a whole, then a new reference to the object would be created.
+      // now we get the previousNext, which initially is null, because there is no number before 13. and make that the new next property of our initialHead(so we are redefining this next property,so it will be stored in a new address). so now we get (13,null) for our initialHead. Since we are only changing a property of our initialHead object, all references to initialHead will take on this change as well. If we were redefining initialHead as a whole, then a new reference to the object would be created.
       initialHead.next = previousNext;
       // now we get our initiaHead, which equals (13,null) and store a reference to that object in previousNext, so previousNext is (13,null)
       previousNext = initialHead;

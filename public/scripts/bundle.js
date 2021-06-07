@@ -15711,10 +15711,10 @@ module.exports = g;
 
 /***/ }),
 
-/***/ "./source/Udemy/data_structures/nodeClass.js":
-/*!***************************************************!*\
-  !*** ./source/Udemy/data_structures/nodeClass.js ***!
-  \***************************************************/
+/***/ "./source/Udemy/data_structures/nodeClassDoubly.js":
+/*!*********************************************************!*\
+  !*** ./source/Udemy/data_structures/nodeClassDoubly.js ***!
+  \*********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15732,6 +15732,7 @@ var Node = function Node(value) {
 
   this.value = value;
   this.next = null;
+  this.previous = null;
 };
 
 exports.default = Node;
@@ -15750,66 +15751,55 @@ exports.default = Node;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _nodeClass = __webpack_require__(/*! ./Udemy/data_structures/nodeClass.js */ "./source/Udemy/data_structures/nodeClass.js");
+var _nodeClassDoubly = __webpack_require__(/*! ./Udemy/data_structures/nodeClassDoubly.js */ "./source/Udemy/data_structures/nodeClassDoubly.js");
 
-var _nodeClass2 = _interopRequireDefault(_nodeClass);
+var _nodeClassDoubly2 = _interopRequireDefault(_nodeClassDoubly);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var SLL = function () {
-  function SLL() {
-    _classCallCheck(this, SLL);
+var DLL = function () {
+  function DLL() {
+    _classCallCheck(this, DLL);
 
     this.head = null;
     this.tail = null;
     this.length = 0;
   }
 
-  _createClass(SLL, [{
+  _createClass(DLL, [{
     key: "push",
     value: function push(value) {
-      var newNode = new _nodeClass2.default(value);
+      var newNode = new _nodeClassDoubly2.default(value);
       if (!this.head) {
         this.head = newNode;
         this.tail = newNode;
       } else {
         this.tail.next = newNode;
+        newNode.previous = this.tail;
         this.tail = newNode;
       }
       this.length++;
+      return this;
     }
   }, {
     key: "pop",
     value: function pop() {
-      // if there is no head(meaning nothing in our list) and we're trying to pop something,return undefined
       if (!this.head) {
         return undefined;
       }
-      //so what we want to do is iterate through our list until we get to the second to last node, so that we can make the node after it equal null and make the second to last node the new tail.
-      // create a variable called currentNode, which is equal to a reference to the this.head object, that we will end up returning later
-      var currentNode = this.head;
-      // let newTail initially equal where currentNode is
-      var newTail = currentNode;
-      while (currentNode.next) {
-        // newTail is equal to where currentNode is
-        newTail = currentNode;
-        // currentNode is equal to something completely different
-        currentNode = currentNode.next;
-      }
-      // the new this.tail is going to be newTail
-      this.tail = newTail;
-      // the next property on the new this.tail will be set to null
-      this.tail.next = null;
-      // decrement the length by 1;
-      this.length--;
-      // if the length is 1 whem we run this pop function, we still create a variable called currentNode(which we will return) which is equal to this.head,and we still end up setting this.tail equal to a reference to this.head and set this.head next property to null, so now any reference to this.head has a next property of null  and then we decrement the length so its 0. We however want this.head and this.tail to equal null, since the length is 0.
-      if (this.length === 0) {
+      var initialTail = this.tail;
+      if (this.length === 1) {
         this.head = null;
         this.tail = null;
+      } else {
+        var previousTail = initialTail.previous;
+        previousTail.next = null;
       }
-      return currentNode;
+      initialTail.previous = null;
+      this.length--;
+      return initialTail;
     }
   }, {
     key: "shift",
@@ -15818,9 +15808,12 @@ var SLL = function () {
         return undefined;
       }
       var initialHead = this.head;
-      this.head = this.head.next;
       if (this.length === 1) {
+        this.head = null;
         this.tail = null;
+      } else {
+        this.head = this.head.next;
+        this.head.previous = null;
       }
       this.length--;
       initialHead.next = null;
@@ -15829,63 +15822,50 @@ var SLL = function () {
   }, {
     key: "unshift",
     value: function unshift(value) {
-      var newNode = new _nodeClass2.default(value);
+      var newNode = new _nodeClassDoubly2.default(value);
       if (!this.head) {
         this.head = newNode;
         this.tail = newNode;
       } else {
-        var originalHead = this.head;
+        var initialHead = this.head;
         this.head = newNode;
-        this.head.next = originalHead;
+        this.head.next = initialHead;
+        initialHead.previous = newNode;
       }
       this.length++;
+      return this;
     }
   }, {
     key: "get",
     value: function get(index) {
-      if (!this.head) {
+      if (index < 0 || index >= this.length) {
         return undefined;
       }
-      var specificItem = this.head;
-      for (var i = 1; i <= index; i++) {
-        specificItem = specificItem.next;
+      var middleIndex = Math.floor((this.length - 1) / 2);
+      var specificItem = void 0;
+      if (index < middleIndex) {
+        specificItem = this.head;
+        for (var i = 1; i <= index; i++) {
+          specificItem = specificItem.next;
+        }
+      } else {
+        specificItem = this.tail;
+        for (var _i = array.length - 1; _i >= index; _i--) {
+          specificItem = specificItem.previous;
+        }
       }
       return specificItem;
     }
-  }, {
-    key: "insert",
-    value: function insert(index, value) {
-      if (index < 0 || index > this.length) {
-        return false;
-      }
-      if (index === 0) {
-        this.unshift(value);
-        return true;
-      }
-      if (index === this.length) {
-        this.push(value);
-        return true;
-      }
-      var newNode = new _nodeClass2.default(value);
-      var nodeBefore = this.get(index - 1);
-      var initialNode = this.get(index);
-      nodeBefore.next = newNode;
-      // if i just set newNode.next equal to this.get(index),without storing it first in nodeAfter, newNode.next will always equal a reference to the newNode that we created. and we set a next property on that reference equal to this. get so it will keep referring to itself.
-      newNode.next = initialNode;
-      this.length++;
-      return true;
-    }
   }]);
 
-  return SLL;
+  return DLL;
 }();
 
-var list = new SLL();
-list.push(5);
+var list = new DLL();
+list.push(8);
 list.push(9);
-list.push(13);
-list.push(18);
-list.insert(3, "pill");
+list.push(11);
+list.unshift("pizza");
 
 console.log(list);
 
