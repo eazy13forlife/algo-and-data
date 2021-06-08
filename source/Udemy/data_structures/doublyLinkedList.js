@@ -159,6 +159,12 @@ class DoublyLinkedList {
     this.length--;
     return initialNode;
   }
+  // if our example is 4,5,9,3,2
+  // the reverse ia 2,3,9,5,4,null
+  // so we begin with our currentHead, take what comes before it and make it our currentHead's next.
+  // then we look at our next currentHead, take whats before it and make it the next of this currentHead's next.
+  // so what comes before 5 is [4, null], so [4, null] comes after 5. it is the next of 5. Now the previous of 5 in our final reversed list is [9,3,2.]  [9,3,2] is initially the next of 5, so this is why we do currentHead.previous is the newNext that we originally saved.
+  // and we repeat this until our list is reversed.
 
   reverse() {
     if (!this.head) {
