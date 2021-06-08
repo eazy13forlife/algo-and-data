@@ -15749,125 +15749,82 @@ exports.default = Node;
 "use strict";
 
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _nodeClassDoubly = __webpack_require__(/*! ./Udemy/data_structures/nodeClassDoubly.js */ "./source/Udemy/data_structures/nodeClassDoubly.js");
 
 var _nodeClassDoubly2 = _interopRequireDefault(_nodeClassDoubly);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var DLL = function () {
-  function DLL() {
-    _classCallCheck(this, DLL);
-
-    this.head = null;
-    this.tail = null;
-    this.length = 0;
+var searchSubstring = function searchSubstring(word, sub) {
+  var left = 0;
+  var right = 0;
+  while (left < word.length) {
+    console.log(left);
+    console.log(right);
+    if (word[left] === sub[right]) {
+      left++;
+      right++;
+      if (right >= sub.length) {
+        return true;
+      }
+    } else {
+      left++;
+      right = 0;
+    }
   }
+  return false;
+};
 
-  _createClass(DLL, [{
-    key: "push",
-    value: function push(value) {
-      var newNode = new _nodeClassDoubly2.default(value);
-      if (!this.head) {
-        this.head = newNode;
-        this.tail = newNode;
-      } else {
-        this.tail.next = newNode;
-        newNode.previous = this.tail;
-        this.tail = newNode;
-      }
-      this.length++;
-      return this;
-    }
-  }, {
-    key: "pop",
-    value: function pop() {
-      if (!this.head) {
-        return undefined;
-      }
-      var initialTail = this.tail;
-      if (this.length === 1) {
-        this.head = null;
-        this.tail = null;
-      } else {
-        var previousTail = initialTail.previous;
-        previousTail.next = null;
-      }
-      initialTail.previous = null;
-      this.length--;
-      return initialTail;
-    }
-  }, {
-    key: "shift",
-    value: function shift() {
-      if (!this.head) {
-        return undefined;
-      }
-      var initialHead = this.head;
-      if (this.length === 1) {
-        this.head = null;
-        this.tail = null;
-      } else {
-        this.head = this.head.next;
-        this.head.previous = null;
-      }
-      this.length--;
-      initialHead.next = null;
-      return initialHead;
-    }
-  }, {
-    key: "unshift",
-    value: function unshift(value) {
-      var newNode = new _nodeClassDoubly2.default(value);
-      if (!this.head) {
-        this.head = newNode;
-        this.tail = newNode;
-      } else {
-        var initialHead = this.head;
-        this.head = newNode;
-        this.head.next = initialHead;
-        initialHead.previous = newNode;
-      }
-      this.length++;
-      return this;
-    }
-  }, {
-    key: "get",
-    value: function get(index) {
-      if (index < 0 || index >= this.length) {
-        return undefined;
-      }
-      var middleIndex = Math.floor((this.length - 1) / 2);
-      var specificItem = void 0;
-      if (index < middleIndex) {
-        specificItem = this.head;
-        for (var i = 1; i <= index; i++) {
-          specificItem = specificItem.next;
-        }
-      } else {
-        specificItem = this.tail;
-        for (var _i = array.length - 1; _i >= index; _i--) {
-          specificItem = specificItem.previous;
-        }
-      }
-      return specificItem;
-    }
-  }]);
-
-  return DLL;
-}();
-
-var list = new DLL();
-list.push(8);
-list.push(9);
-list.push(11);
-list.unshift("pizza");
-
-console.log(list);
+console.log(searchSubstring("wowowowomgomg", "omg"));
+var inventory = [{
+  name: "Nike Air Force 1 Crater FlyKnit",
+  price: 110
+}, {
+  name: "Air Jordan 1 Mid",
+  price: 115
+}, {
+  name: "Nike Air Max Plus",
+  price: 160
+}, {
+  name: "Nike Air Zoom Tempo NEXT%",
+  price: 200
+}, {
+  name: "Jordan MA2",
+  price: 125
+}, {
+  name: "Jordan 4 G NRG",
+  price: 200
+}, {
+  name: "KD14",
+  price: 150
+}, {
+  name: "Nike Air Max 90 Exeter Edition",
+  price: 130
+}, {
+  name: "Nike Air Raid",
+  price: 140
+}, {
+  name: "Nike Air Vapormax Evo",
+  price: 200
+}, {
+  name: "Nike Crater Impact",
+  price: 100
+}, {
+  name: "Nike Pegasus Trail 2",
+  price: 130
+}, {
+  name: "Nike SB Zoom Blazer Mid Premium",
+  price: 110
+}, {
+  name: "Nike Winflo 8",
+  price: 90
+}, {
+  name: "PG 5",
+  price: 110
+}, {
+  name: "Zion 1",
+  price: 120
+}];
 
 /***/ }),
 

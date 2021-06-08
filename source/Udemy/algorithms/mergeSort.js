@@ -29,6 +29,7 @@ const mergeArrays = (array1, array2) => {
   }
 };
 
+// so this recursive function takes an array and keeps splitting it on the left side until only one element is left, and keeps splitting it on the right side until only one element is left. Once we have both a left and right, we join the arrays using our helper function that sorts two sorted arrays.
 const mergeSort = (array) => {
   if (array.length <= 1) {
     return array;
