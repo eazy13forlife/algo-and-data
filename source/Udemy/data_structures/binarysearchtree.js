@@ -12,6 +12,7 @@ class BinarySearchTree {
     this.root = null;
   }
 
+// inserting a value into a BST
   insert(value) {
     //we begin by creating our newNode
     const newNode = new Node(value);
@@ -43,7 +44,7 @@ class BinarySearchTree {
     }
   }
 
-// for searching, we compare our search value to the value of currentRoot, which is initally the root of our tree.  If it is a match, great. we return true and we're done. Otherwise, if it is greater than the root value, we want to look at the right property of our current currentRoot to see if the search value is there, so we set our new currentRoot to be the right property of our current currentRoot and our loop runs again. If this new currentRoot is undefined, meaning there is no right property there(which means our value isn't in the tree), our while loop will break and false will be returned. Again, this works on the left side of course.
+// for searching for a value in a BST, we compare our search value to the value of currentRoot, which is initally the root of our tree.  If it is a match, great. we return true and we're done. Otherwise, if it is greater than the root value, we want to look at the right property of our current currentRoot to see if the search value is there, so we set our new currentRoot to be the right property of our current currentRoot and our loop runs again. If this new currentRoot is undefined, meaning there is no right property there(which means our value isn't in the tree), our while loop will break and false will be returned. Again, this works on the left side of course.
   search(value) {
     if (typeof value !== "number") {
       return false;
@@ -60,7 +61,7 @@ class BinarySearchTree {
     }
     return false;
   }
-  
+
   //Same as above, but just the longer verson.
 /*
 search(value) {
