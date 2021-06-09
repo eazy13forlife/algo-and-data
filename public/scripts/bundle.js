@@ -15749,33 +15749,65 @@ exports.default = Node;
 "use strict";
 
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _nodeClassDoubly = __webpack_require__(/*! ./Udemy/data_structures/nodeClassDoubly.js */ "./source/Udemy/data_structures/nodeClassDoubly.js");
 
 var _nodeClassDoubly2 = _interopRequireDefault(_nodeClassDoubly);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var searchSubstring = function searchSubstring(word, sub) {
-  var left = 0;
-  var right = 0;
-  while (left < word.length) {
-    console.log(left);
-    console.log(right);
-    if (word[left] === sub[right]) {
-      left++;
-      right++;
-      if (right >= sub.length) {
-        return true;
-      }
-    } else {
-      left++;
-      right = 0;
-    }
-  }
-  return false;
-};
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-console.log(searchSubstring("wowowowomgomg", "omg"));
+var Stack = function () {
+  function Stack() {
+    _classCallCheck(this, Stack);
+
+    this.first = null;
+    this.last = null;
+    this.size = 0;
+  }
+
+  _createClass(Stack, [{
+    key: "push",
+    value: function push(value) {
+      var newNode = new _nodeClassDoubly2.default(value);
+      if (!this.first) {
+        this.first = newNode;
+        this.last = newNode;
+      } else {
+        this.last.next = newNode;
+        newNode.previous = this.last;
+        this.last = newNode;
+      }
+      return ++this.size;
+    }
+  }, {
+    key: "pop",
+    value: function pop() {
+      if (!this.first) {
+        return undefined;
+      }
+      var initialLast = this.tail;
+      if (this.size === 1) {
+        this.first = null;
+        this.tail = null;
+      } else {
+        var previousLast = initialLast.previous;
+        previousLast.next = null;
+        this.last = previousLast;
+      }
+      this.size--;
+      initialLast.previous = null;
+      return initialLast;
+    }
+  }]);
+
+  return Stack;
+}();
+
+var stack = new Stack();
+console.log(stack.push(3));
 var inventory = [{
   name: "Nike Air Force 1 Crater FlyKnit",
   price: 110

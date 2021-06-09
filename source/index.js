@@ -1,26 +1,44 @@
 import Node from "./Udemy/data_structures/nodeClassDoubly.js";
 
-const searchSubstring = (word, sub) => {
-  let left = 0;
-  let right = 0;
-  while (left < word.length) {
-    console.log(left);
-    console.log(right);
-    if (word[left] === sub[right]) {
-      left++;
-      right++;
-      if (right >= sub.length) {
-        return true;
-      }
-    } else {
-      left++;
-      right = 0;
-    }
+class Stack {
+  constructor() {
+    this.first = null;
+    this.last = null;
+    this.size = 0;
   }
-  return false;
-};
+  push(value) {
+    const newNode = new Node(value);
+    if (!this.first) {
+      this.first = newNode;
+      this.last = newNode;
+    } else {
+      this.last.next = newNode;
+      newNode.previous = this.last;
+      this.last = newNode;
+    }
+    return ++this.size;
+  }
+  pop() {
+    if (!this.first) {
+      return undefined;
+    }
+    const initialLast = this.tail;
+    if (this.size === 1) {
+      this.first = null;
+      this.tail = null;
+    } else {
+      const previousLast = initialLast.previous;
+      previousLast.next = null;
+      this.last = previousLast;
+    }
+    this.size--;
+    initialLast.previous = null;
+    return initialLast;
+  }
+}
 
-console.log(searchSubstring("wowowowomgomg", "omg"));
+const stack = new Stack();
+console.log(stack.push(3));
 const inventory = [
   {
     name: "Nike Air Force 1 Crater FlyKnit",
