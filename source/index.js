@@ -1,44 +1,65 @@
-import Node from "./Udemy/data_structures/nodeClassDoubly.js";
+import Node from "./Udemy/data_structures/nodeBST.js";
 
-class Stack {
+class BST {
   constructor() {
-    this.first = null;
-    this.last = null;
-    this.size = 0;
+    this.root = null;
   }
-  push(value) {
+  insert(value) {
     const newNode = new Node(value);
-    if (!this.first) {
-      this.first = newNode;
-      this.last = newNode;
+    if (!this.root) {
+      this.root = newNode;
+      return;
     } else {
-      this.last.next = newNode;
-      newNode.previous = this.last;
-      this.last = newNode;
+      let currentRoot = this.root;
+      while (true) {
+        if (value > currentRoot.value) {
+          if (currentRoot.right) {
+            currentRoot = currentRoot.right;
+          } else {
+            currentRoot.right = newNode;
+            return;
+          }
+        } else if (value < currentRoot.value) {
+          if (currentRoot.left) {
+            currentRoot = currentRoot.left;
+          } else {
+            currentRoot.left = newNode;
+            return;
+          }
+        } else if (value === currentRoot.value) {
+          return "there is already that node here";
+        }
+      }
     }
-    return ++this.size;
   }
-  pop() {
-    if (!this.first) {
-      return undefined;
+  search(value) {
+    let currentRoot = this.root;
+    if (!currentRoot) {
+      return false;
     }
-    const initialLast = this.tail;
-    if (this.size === 1) {
-      this.first = null;
-      this.tail = null;
-    } else {
-      const previousLast = initialLast.previous;
-      previousLast.next = null;
-      this.last = previousLast;
+    while (true) {
+      if (this.value === currentRoot.value) {
+        return true;
+      } else if (value > currentRoot.value) {
+        if (currentRoot.right) {
+          currentRoot = currentRoot.right;
+        } else {
+          return false;
+        }
+      } else if (value < currentRoot.value) {
+        if (currentRoot.left) {
+          currentRoot = currentRoot.left;
+        } else {
+          return false;
+        }
+      }
     }
-    this.size--;
-    initialLast.previous = null;
-    return initialLast;
   }
 }
 
-const stack = new Stack();
-console.log(stack.push(3));
+const tree = new BST();
+
+console.log(tree.search(100));
 const inventory = [
   {
     name: "Nike Air Force 1 Crater FlyKnit",

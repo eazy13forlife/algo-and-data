@@ -15711,10 +15711,10 @@ module.exports = g;
 
 /***/ }),
 
-/***/ "./source/Udemy/data_structures/nodeClassDoubly.js":
-/*!*********************************************************!*\
-  !*** ./source/Udemy/data_structures/nodeClassDoubly.js ***!
-  \*********************************************************/
+/***/ "./source/Udemy/data_structures/nodeBST.js":
+/*!*************************************************!*\
+  !*** ./source/Udemy/data_structures/nodeBST.js ***!
+  \*************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15731,8 +15731,8 @@ var Node = function Node(value) {
   _classCallCheck(this, Node);
 
   this.value = value;
-  this.next = null;
-  this.previous = null;
+  this.right = null;
+  this.left = null;
 };
 
 exports.default = Node;
@@ -15751,63 +15751,84 @@ exports.default = Node;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _nodeClassDoubly = __webpack_require__(/*! ./Udemy/data_structures/nodeClassDoubly.js */ "./source/Udemy/data_structures/nodeClassDoubly.js");
+var _nodeBST = __webpack_require__(/*! ./Udemy/data_structures/nodeBST.js */ "./source/Udemy/data_structures/nodeBST.js");
 
-var _nodeClassDoubly2 = _interopRequireDefault(_nodeClassDoubly);
+var _nodeBST2 = _interopRequireDefault(_nodeBST);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Stack = function () {
-  function Stack() {
-    _classCallCheck(this, Stack);
+var BST = function () {
+  function BST() {
+    _classCallCheck(this, BST);
 
-    this.first = null;
-    this.last = null;
-    this.size = 0;
+    this.root = null;
   }
 
-  _createClass(Stack, [{
-    key: "push",
-    value: function push(value) {
-      var newNode = new _nodeClassDoubly2.default(value);
-      if (!this.first) {
-        this.first = newNode;
-        this.last = newNode;
+  _createClass(BST, [{
+    key: "insert",
+    value: function insert(value) {
+      var newNode = new _nodeBST2.default(value);
+      if (!this.root) {
+        this.root = newNode;
+        return;
       } else {
-        this.last.next = newNode;
-        newNode.previous = this.last;
-        this.last = newNode;
+        var currentRoot = this.root;
+        while (true) {
+          if (value > currentRoot.value) {
+            if (currentRoot.right) {
+              currentRoot = currentRoot.right;
+            } else {
+              currentRoot.right = newNode;
+              return;
+            }
+          } else if (value < currentRoot.value) {
+            if (currentRoot.left) {
+              currentRoot = currentRoot.left;
+            } else {
+              currentRoot.left = newNode;
+              return;
+            }
+          } else if (value === currentRoot.value) {
+            return "there is already that node here";
+          }
+        }
       }
-      return ++this.size;
     }
   }, {
-    key: "pop",
-    value: function pop() {
-      if (!this.first) {
-        return undefined;
+    key: "search",
+    value: function search(value) {
+      var currentRoot = this.root;
+      if (!currentRoot) {
+        return false;
       }
-      var initialLast = this.tail;
-      if (this.size === 1) {
-        this.first = null;
-        this.tail = null;
-      } else {
-        var previousLast = initialLast.previous;
-        previousLast.next = null;
-        this.last = previousLast;
+      while (true) {
+        if (this.value === currentRoot.value) {
+          return true;
+        } else if (value > currentRoot.value) {
+          if (currentRoot.right) {
+            currentRoot = currentRoot.right;
+          } else {
+            return false;
+          }
+        } else if (value < currentRoot.value) {
+          if (currentRoot.left) {
+            currentRoot = currentRoot.left;
+          } else {
+            return false;
+          }
+        }
       }
-      this.size--;
-      initialLast.previous = null;
-      return initialLast;
     }
   }]);
 
-  return Stack;
+  return BST;
 }();
 
-var stack = new Stack();
-console.log(stack.push(3));
+var tree = new BST();
+
+console.log(tree.search(100));
 var inventory = [{
   name: "Nike Air Force 1 Crater FlyKnit",
   price: 110
