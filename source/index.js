@@ -4,11 +4,11 @@ class BST {
   constructor() {
     this.root = null;
   }
+
   insert(value) {
     const newNode = new Node(value);
     if (!this.root) {
       this.root = newNode;
-      return;
     } else {
       let currentRoot = this.root;
       while (true) {
@@ -27,39 +27,67 @@ class BST {
             return;
           }
         } else if (value === currentRoot.value) {
-          return "there is already that node here";
+          return;
         }
       }
     }
   }
+
   search(value) {
     let currentRoot = this.root;
-    if (!currentRoot) {
-      return false;
-    }
-    while (true) {
-      if (this.value === currentRoot.value) {
-        return true;
-      } else if (value > currentRoot.value) {
-        if (currentRoot.right) {
-          currentRoot = currentRoot.right;
-        } else {
-          return false;
-        }
-      } else if (value < currentRoot.value) {
-        if (currentRoot.left) {
-          currentRoot = currentRoot.left;
-        } else {
-          return false;
-        }
+    while (currentRoot) {
+      if (value === currentRoot.value.name) {
+        return currentRoot.value;
+      } else if (value > currentRoot.value.name) {
+        currentRoot = currentRoot.right;
+      } else if (value < currentRoot.left.name) {
+        currentRoot = currentRoot.left;
       }
     }
+    return false;
+  }
+
+  BFS() {
+    if (!this.root) {
+      return undefined;
+    }
+    const queue = [this.root];
+    console.log(queue);
+    const visited = [];
+    while (queue.length) {
+      const itemRemoved = queue.shift();
+
+      queue.push(itemRemoved.left);
+
+      queue.push(itemRemoved.right);
+
+      visited.push(itemRemoved);
+      console.log(queue);
+    }
+    return visited;
+  }
+  DFSPre() {
+    if (!this.root) {
+      return undefined;
+    }
+    const stack = [this.root];
+    const visited = [];
+    while (stack.length) {
+      const itemRemoved = stack.pop();
+      visited.push(itemRemoved);
+      if (itemRemoved.right) {
+        stack.push(itemRemoved.right);
+      }
+      if (itemRemoved.left) {
+        stack.push(itemRemoved.left);
+      }
+    }
+    return visited;
   }
 }
 
 const tree = new BST();
 
-console.log(tree.search(100));
 const inventory = [
   {
     name: "Nike Air Force 1 Crater FlyKnit",
@@ -126,3 +154,12 @@ const inventory = [
     price: 120,
   },
 ];
+
+tree.insert(10);
+tree.insert(6);
+tree.insert(15);
+tree.insert(3);
+tree.insert(8);
+tree.insert(20);
+
+console.log(tree.DFSPre());

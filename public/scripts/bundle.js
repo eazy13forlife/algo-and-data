@@ -15772,7 +15772,6 @@ var BST = function () {
       var newNode = new _nodeBST2.default(value);
       if (!this.root) {
         this.root = newNode;
-        return;
       } else {
         var currentRoot = this.root;
         while (true) {
@@ -15791,7 +15790,7 @@ var BST = function () {
               return;
             }
           } else if (value === currentRoot.value) {
-            return "there is already that node here";
+            return;
           }
         }
       }
@@ -15800,26 +15799,57 @@ var BST = function () {
     key: "search",
     value: function search(value) {
       var currentRoot = this.root;
-      if (!currentRoot) {
-        return false;
-      }
-      while (true) {
-        if (this.value === currentRoot.value) {
-          return true;
-        } else if (value > currentRoot.value) {
-          if (currentRoot.right) {
-            currentRoot = currentRoot.right;
-          } else {
-            return false;
-          }
-        } else if (value < currentRoot.value) {
-          if (currentRoot.left) {
-            currentRoot = currentRoot.left;
-          } else {
-            return false;
-          }
+      while (currentRoot) {
+        if (value === currentRoot.value.name) {
+          return currentRoot.value;
+        } else if (value > currentRoot.value.name) {
+          currentRoot = currentRoot.right;
+        } else if (value < currentRoot.left.name) {
+          currentRoot = currentRoot.left;
         }
       }
+      return false;
+    }
+  }, {
+    key: "BFS",
+    value: function BFS() {
+      if (!this.root) {
+        return undefined;
+      }
+      var queue = [this.root];
+      console.log(queue);
+      var visited = [];
+      while (queue.length) {
+        var itemRemoved = queue.shift();
+
+        queue.push(itemRemoved.left);
+
+        queue.push(itemRemoved.right);
+
+        visited.push(itemRemoved);
+        console.log(queue);
+      }
+      return visited;
+    }
+  }, {
+    key: "DFSPre",
+    value: function DFSPre() {
+      if (!this.root) {
+        return undefined;
+      }
+      var stack = [this.root];
+      var visited = [];
+      while (stack.length) {
+        var itemRemoved = stack.pop();
+        visited.push(itemRemoved);
+        if (itemRemoved.right) {
+          stack.push(itemRemoved.right);
+        }
+        if (itemRemoved.left) {
+          stack.push(itemRemoved.left);
+        }
+      }
+      return visited;
     }
   }]);
 
@@ -15828,7 +15858,6 @@ var BST = function () {
 
 var tree = new BST();
 
-console.log(tree.search(100));
 var inventory = [{
   name: "Nike Air Force 1 Crater FlyKnit",
   price: 110
@@ -15878,6 +15907,15 @@ var inventory = [{
   name: "Zion 1",
   price: 120
 }];
+
+tree.insert(10);
+tree.insert(6);
+tree.insert(15);
+tree.insert(3);
+tree.insert(8);
+tree.insert(20);
+
+console.log(tree.DFSPre());
 
 /***/ }),
 

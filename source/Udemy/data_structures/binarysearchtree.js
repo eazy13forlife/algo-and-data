@@ -88,30 +88,36 @@ search(value) {
   }
 }
 */
+
+// we are using BST to show code for different ways to traverse a tree, so that we dont have to create a new tree class or duplicate code. But these methods for traversing a tree work for any tree.
+
+//So, we have a queue, where we are waiting to check a node's left and right nodes. Once we are done checking a node's left and right we add that node to our visited array. we return this visited array at the end of our function, which contains the correct order of our traversal in a breadth first search.
   breadthFirstSearch() {
     if(!this.root){
       return undefined;
     }
-    const checkLR = [];
+    const visited= [];
     const queue = [];
-    queue.push(this.root);
-    while (queue.length !== 0) {
-      const nodeToCheck = queue.shift();
-      checkLR.push(nodeToCheck);
+    queue.push(this.root);//the root is the only item in our queue initially.
+    while (queue.length) {
+      const nodeToCheck = queue.shift();//we remove an item from our queue using shift. then we check it's left and right in order to add them to the queue. Once we are done checking its left and right, we add that item to the visited array, meaning we are done with it. So, we will ultimately get a pattern of left right left right being dequeued from our queue, which is what we want
       if (nodeToCheck.left) {
         queue.push(nodeToCheck.left);
       }
       if (nodeToCheck.right) {
         queue.push(nodeToCheck.right);
       }
+        visited.push(nodeToCheck);
     }
-    return checkLR;
+    return visited;
   }
 
   depthFirstSearchPreOrder() {
     const nodeArray = [];
-    const currentNode = this.head;
     const traverseTree = (node) => {
+      if(!node){
+        return undefined;
+      }
       nodeArray.push(node);
       if (node.left) {
         traverseTree(node.left);
