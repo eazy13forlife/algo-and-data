@@ -15711,34 +15711,6 @@ module.exports = g;
 
 /***/ }),
 
-/***/ "./source/Udemy/data_structures/nodeBST.js":
-/*!*************************************************!*\
-  !*** ./source/Udemy/data_structures/nodeBST.js ***!
-  \*************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Node = function Node(value) {
-  _classCallCheck(this, Node);
-
-  this.value = value;
-  this.right = null;
-  this.left = null;
-};
-
-exports.default = Node;
-
-/***/ }),
-
 /***/ "./source/index.js":
 /*!*************************!*\
   !*** ./source/index.js ***!
@@ -15751,171 +15723,145 @@ exports.default = Node;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _nodeBST = __webpack_require__(/*! ./Udemy/data_structures/nodeBST.js */ "./source/Udemy/data_structures/nodeBST.js");
-
-var _nodeBST2 = _interopRequireDefault(_nodeBST);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var BST = function () {
-  function BST() {
-    _classCallCheck(this, BST);
+var MaxBinaryHeap = function () {
+  function MaxBinaryHeap() {
+    _classCallCheck(this, MaxBinaryHeap);
 
-    this.root = null;
+    this.values = [];
   }
 
-  _createClass(BST, [{
+  _createClass(MaxBinaryHeap, [{
     key: "insert",
     value: function insert(value) {
-      var newNode = new _nodeBST2.default(value);
-      if (!this.root) {
-        this.root = newNode;
+      this.values.push(value);
+      this.bubbleUp();
+      return this.values;
+    }
+  }, {
+    key: "getParentIndex",
+    value: function getParentIndex(childIndex) {
+      return Math.floor((childIndex - 1) / 2);
+    }
+  }, {
+    key: "getLeftChildIndex",
+    value: function getLeftChildIndex(parentIndex) {
+      return 2 * parentIndex + 1;
+    }
+  }, {
+    key: "getRightChildIndex",
+    value: function getRightChildIndex(parentIndex) {
+      return 2 * parentIndex + 2;
+    }
+  }, {
+    key: "swap",
+    value: function swap(array, index1, index2) {
+      var value1 = array[index1];
+      array[index1] = array[index2];
+      array[index2] = value1;
+    }
+  }, {
+    key: "bubbleUp",
+    value: function bubbleUp() {
+      var childIndex = this.values.length - 1;
+      var parentIndex = this.getParentIndex(childIndex);
+      while (parentIndex >= 0 && this.values[parentIndex] < this.values[childIndex]) {
+        this.swap(this.values, parentIndex, childIndex);
+        childIndex = parentIndex;
+        parentIndex = this.getParentIndex(childIndex);
+      }
+    }
+  }, {
+    key: "extractMax",
+    value: function extractMax() {
+      if (this.values.length === 1) {
+        return [];
       } else {
-        var currentRoot = this.root;
-        while (true) {
-          if (value > currentRoot.value) {
-            if (currentRoot.right) {
-              currentRoot = currentRoot.right;
-            } else {
-              currentRoot.right = newNode;
-              return;
-            }
-          } else if (value < currentRoot.value) {
-            if (currentRoot.left) {
-              currentRoot = currentRoot.left;
-            } else {
-              currentRoot.left = newNode;
-              return;
-            }
-          } else if (value === currentRoot.value) {
-            return;
-          }
-        }
+        var lastItem = this.values.pop();
+        this.values[0] = lastItem;
+        this.sinkDown();
+        return this;
       }
     }
   }, {
-    key: "search",
-    value: function search(value) {
-      var currentRoot = this.root;
-      while (currentRoot) {
-        if (value === currentRoot.value.name) {
-          return currentRoot.value;
-        } else if (value > currentRoot.value.name) {
-          currentRoot = currentRoot.right;
-        } else if (value < currentRoot.left.name) {
-          currentRoot = currentRoot.left;
-        }
+    key: "sinkDown",
+    value: function sinkDown() {
+      var parentIndex = 0;
+      var childToSwitch = this.childToSwitch(parentIndex);
+      while (childToSwitch && this.values[parentIndex] < this.values[childToSwitch]) {
+        this.swap(this.values, parentIndex, childToSwitch);
+        parentIndex = childToSwitch;
+        childToSwitch = this.childToSwitch(parentIndex);
       }
-      return false;
     }
-  }, {
-    key: "BFS",
-    value: function BFS() {
-      if (!this.root) {
-        return undefined;
+    /*
+    sinkDown() {
+    let parentIndex = 0;
+    let leftChildIndex = getLeftChildIndex(parentIndex);
+    let rightChildIndex = getRightChildIndex(parentIndex);
+    while (parentIndex < this.values.length) {
+      if (
+        leftChildIndex >= this.values.length &&
+        rightChildIndex >= this.values.length
+      ) {
+        return;
+      } else if (
+        leftChildIndex >= this.values.length &&
+        rightChildIndex < this.values.length
+      ) {
+        parentIndex = rightChildIndex;
+      } else if (
+        rightChildIndex >= this.values.length &&
+        leftChildIndex < this.values.length
+      ) {
+        parentIndex = leftChildIndex;
+      } else {
+        if (this.values[leftChildIndex] > this.values[rightChildIndex]) {
+          parentIndex = leftChildIndex;
+        } else {
+          parentIndex = rightChildIndex;
+        }
       }
-      var queue = [this.root];
-      console.log(queue);
-      var visited = [];
-      while (queue.length) {
-        var itemRemoved = queue.shift();
-
-        queue.push(itemRemoved.left);
-
-        queue.push(itemRemoved.right);
-
-        visited.push(itemRemoved);
-        console.log(queue);
-      }
-      return visited;
+      leftChildIndex = getLeftChildIndex(parentIndex);
+      rightChildIndex = getRightChildIndex(parentIndex);
     }
+    }
+    */
+    //need a function that finds out which item our parent switches with.
+    // functions determines if left child and right child exists and if only one doesm switch wiith the one that exists, which one is greater so parent should switch with
+
   }, {
-    key: "DFSPre",
-    value: function DFSPre() {
-      if (!this.root) {
-        return undefined;
+    key: "childToSwitch",
+    value: function childToSwitch(parentIndex) {
+      var leftChildIndex = this.getLeftChildIndex(parentIndex);
+      var rightChildIndex = this.getRightChildIndex(parentIndex);
+
+      if (leftChildIndex >= this.values.length && rightChildIndex >= this.values.length) {
+        return;
+      } else if (leftChildIndex >= this.values.length) {
+        return rightChildIndex;
+      } else if (rightChildIndex >= this.values.length) {
+        return leftChildIndex;
       }
-      var stack = [this.root];
-      var visited = [];
-      while (stack.length) {
-        var itemRemoved = stack.pop();
-        visited.push(itemRemoved);
-        if (itemRemoved.right) {
-          stack.push(itemRemoved.right);
-        }
-        if (itemRemoved.left) {
-          stack.push(itemRemoved.left);
-        }
+
+      if (this.values[leftChildIndex] > this.values[rightChildIndex]) {
+        return leftChildIndex;
+      } else {
+        return rightChildIndex;
       }
-      return visited;
     }
   }]);
 
-  return BST;
+  return MaxBinaryHeap;
 }();
 
-var tree = new BST();
-
-var inventory = [{
-  name: "Nike Air Force 1 Crater FlyKnit",
-  price: 110
-}, {
-  name: "Air Jordan 1 Mid",
-  price: 115
-}, {
-  name: "Nike Air Max Plus",
-  price: 160
-}, {
-  name: "Nike Air Zoom Tempo NEXT%",
-  price: 200
-}, {
-  name: "Jordan MA2",
-  price: 125
-}, {
-  name: "Jordan 4 G NRG",
-  price: 200
-}, {
-  name: "KD14",
-  price: 150
-}, {
-  name: "Nike Air Max 90 Exeter Edition",
-  price: 130
-}, {
-  name: "Nike Air Raid",
-  price: 140
-}, {
-  name: "Nike Air Vapormax Evo",
-  price: 200
-}, {
-  name: "Nike Crater Impact",
-  price: 100
-}, {
-  name: "Nike Pegasus Trail 2",
-  price: 130
-}, {
-  name: "Nike SB Zoom Blazer Mid Premium",
-  price: 110
-}, {
-  name: "Nike Winflo 8",
-  price: 90
-}, {
-  name: "PG 5",
-  price: 110
-}, {
-  name: "Zion 1",
-  price: 120
-}];
-
-tree.insert(10);
-tree.insert(6);
-tree.insert(15);
-tree.insert(3);
-tree.insert(8);
-tree.insert(20);
-
-console.log(tree.DFSPre());
+var binary = new MaxBinaryHeap();
+binary.insert(9);
+console.log(binary.insert(13));
+console.log(binary.insert(1));
+console.log(binary.insert(19));
+console.log(binary.extractMax());
 
 /***/ }),
 
