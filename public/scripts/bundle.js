@@ -15721,16 +15721,71 @@ module.exports = g;
 "use strict";
 
 
-var hash = function hash(string, arrayLenghth) {
-  var total = 0;
-  var charCode = void 0;
-  for (var i = 0; i < string.length; i++) {
-    charCode = string.charCodeAt(i) - 96;
-    total += charCode;
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var HashTable = function () {
+  function HashTable() {
+    var arraySize = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 53;
+
+    _classCallCheck(this, HashTable);
+
+    this.keyMap = new Array(arraySize);
   }
-  return total;
-};
-console.log(hash("hello"));
+
+  _createClass(HashTable, [{
+    key: "hash",
+    value: function hash(key) {
+      var total = 0;
+      var uniquePrime = 31;
+      var charCode = void 0;
+      for (var i = 0; i < Math.min(key.length, 100); i++) {
+        charCode = key.charCodeAt(i) - 96;
+        total = total * uniquePrime + charCode;
+      }
+      return total % this.keyMap.length;
+    }
+  }, {
+    key: "set",
+    value: function set(key, value) {
+      var index = this.hash(key);
+      if (!this.keyMap[index]) {
+        this.keyMap[index] = [];
+      }
+      this.keyMap.push([key, value]);
+    }
+  }, {
+    key: "get",
+    value: function get(key) {
+      var index = this.hash(key);
+      if (!this.keyMap[index]) {
+        return undefined;
+      } else {
+        for (var i = 0; i < this.keyMap[index].length; i++) {
+          if (this.keyMap[index][i][0] === key) {
+            return this.keyMap[index][i][1];
+          }
+        }
+      }
+    }
+  }, {
+    key: "values",
+    value: function values() {
+      var results = [];
+      for (var i = 0; i < this.keyMap.length; i++) {
+        if (this.keyMap[i]) {
+          for (var j = 0; j < this.keyMap[i].length; j++) {
+            results.push(this.keyMap[i][j][1]);
+          }
+        }
+      }
+      return results;
+    }
+  }]);
+
+  return HashTable;
+}();
 
 /***/ }),
 

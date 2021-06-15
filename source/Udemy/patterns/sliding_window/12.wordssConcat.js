@@ -31,7 +31,7 @@ const smallestSubstring = (string, words) => {
 
     // each j is the word in our words Array. so we have 2 words in our words array, cat and fox.
     for (let j = 0; j < words.length; j++) {
-      // the index of the first word in our string begins at i+(j*wordLength). So, initially it is 0+(0*3)=0. and then when we run j loop again, it is 0+(1*3)=3, so the letters c and f respectively.
+      // the index of the first word in our string begins at i+(j*wordLength). j is the idnex of our first word and we want the length of that word. and then we add it to our current index. So, initially it is 0+(0*3)=0. and then when we run j loop again, it is 0+(1*3)=3, so the letters c and f respectively.
       const wordIndex = i + j * wordLength;
 
       // our wordIndex, tells us the index of where a word in our string begins. So once, we find that index, we can find the entire word using string.substring(wordIndex,wordIndex+wordLength), so if i is 0 and j is 0, we get wordIIndex is 0 of the first word and that substring is string.substrng(0,0+3) and we get cat. if i was 0 and j was 1, the second word in our string, would begin at the index of 3 and the substring would be fox.
