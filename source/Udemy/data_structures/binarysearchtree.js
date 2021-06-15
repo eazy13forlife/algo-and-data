@@ -12,7 +12,7 @@ class BinarySearchTree {
     this.root = null;
   }
 
-// inserting a value into a BST
+  // inserting a value into a BST
   insert(value) {
     //we begin by creating our newNode
     const newNode = new Node(value);
@@ -44,7 +44,7 @@ class BinarySearchTree {
     }
   }
 
-// for searching for a value in a BST, we compare our search value to the value of currentRoot, which is initally the root of our tree.  If it is a match, great. we return true and we're done. Otherwise, if it is greater than the root value, we want to look at the right property of our current currentRoot to see if the search value is there, so we set our new currentRoot to be the right property of our current currentRoot and our loop runs again. If this new currentRoot is undefined, meaning there is no right property there(which means our value isn't in the tree), our while loop will break and false will be returned. Again, this works on the left side of course.
+  // for searching for a value in a BST, we compare our search value to the value of currentRoot, which is initally the root of our tree.  If it is a match, great. we return true and we're done. Otherwise, if it is greater than the root value, we want to look at the right property of our current currentRoot to see if the search value is there, so we set our new currentRoot to be the right property of our current currentRoot and our loop runs again. If this new currentRoot is undefined, meaning there is no right property there(which means our value isn't in the tree), our while loop will break and false will be returned. Again, this works on the left side of course.
   search(value) {
     if (typeof value !== "number") {
       return false;
@@ -63,7 +63,7 @@ class BinarySearchTree {
   }
 
   //Same as above, but just the longer verson.
-/*
+  /*
 search(value) {
   let currentRoot = this.root;
   if (!currentRoot) {
@@ -89,25 +89,25 @@ search(value) {
 }
 */
 
-// we are using BST to show code for different ways to traverse a tree, so that we dont have to create a new tree class or duplicate code. But these methods for traversing a tree work for any tree.
+  // we are using BST to show code for different ways to traverse a tree, so that we dont have to create a new tree class or duplicate code. But these methods for traversing a tree work for any tree.
 
-//So, we have a queue, where we are waiting to check a node's left and right nodes. Once we are done checking a node's left and right we add that node to our visited array. we return this visited array at the end of our function, which contains the correct order of our traversal in a breadth first search.
+  //So, we have a queue, where we are waiting to check a node's left and right nodes. Once we are done checking a node's left and right we add that node to our visited array. we return this visited array at the end of our function, which contains the correct order of our traversal in a breadth first search.
   breadthFirstSearch() {
-    if(!this.root){
+    if (!this.root) {
       return undefined;
     }
-    const visited= [];
+    const visited = [];
     const queue = [];
-    queue.push(this.root);//the root is the only item in our queue initially.
+    queue.push(this.root); //the root is the only item in our queue initially.
     while (queue.length) {
-      const nodeToCheck = queue.shift();//we remove an item from our queue using shift. then we check it's left and right in order to add them to the queue. Once we are done checking its left and right, we add that item to the visited array, meaning we are done with it. So, we will ultimately get a pattern of left right left right being dequeued from our queue, which is what we want
+      const nodeToCheck = queue.shift(); //we remove an item from our queue using shift. then we check it's left and right in order to add them to the queue. Once we are done checking its left and right, we add that item to the visited array, meaning we are done with it. So, we will ultimately get a pattern of left right left right being dequeued from our queue, which is what we want
       if (nodeToCheck.left) {
         queue.push(nodeToCheck.left);
       }
       if (nodeToCheck.right) {
         queue.push(nodeToCheck.right);
       }
-        visited.push(nodeToCheck);
+      visited.push(nodeToCheck);
     }
     return visited;
   }
@@ -115,7 +115,7 @@ search(value) {
   depthFirstSearchPreOrder() {
     const nodeArray = [];
     const traverseTree = (node) => {
-      if(!node){
+      if (!node) {
         return undefined;
       }
       nodeArray.push(node);
@@ -129,6 +129,21 @@ search(value) {
     traverseTree(currentNode);
     return nodeArray;
   }
+  /* alternative solution
+  DFSPre() {
+    let result = [];
+    const traverse = (node) => {
+      if (!node) {
+        return undefined;
+      }
+      result.push(node);
+      traverse(node.left);
+      traverse(node.right);
+    };
+    traverse(this.root);
+    return result;
+  }
+  */
   /*
   depthFirstSearchPreOrder recursive solution
   if (!this.root) {
@@ -151,7 +166,7 @@ search(value) {
 */
 
   depthFirstSearchPostOrder() {
-    if(!this.root){
+    if (!this.root) {
       return undefined;
     }
     const nodeArray = [];
@@ -168,26 +183,24 @@ search(value) {
     return nodeArray;
   }
 
-  depthFirstSearchInOrder(){
-    if(!this.root){
+  depthFirstSearchInOrder() {
+    if (!this.root) {
       return undefined;
     }
-    const nodeArray=[];
-    const traverseTree(node)=>{
-      if(node.left){
-        traverseTree(node.left)
+    const nodeArray = [];
+    const traverseTree = (node) => {
+      if (node.left) {
+        traverseTree(node.left);
       }
       nodeArray.push(node);
-      if(node.right){
-          traverseTree(node.right)
+      if (node.right) {
+        traverseTree(node.right);
       }
-    }
+    };
     traverseTree(this.root);
     return nodeArray;
   }
 }
-
-
 const trees = new BinarySearchTree();
 trees.insert(9);
 trees.insert(4);

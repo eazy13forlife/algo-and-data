@@ -15721,147 +15721,16 @@ module.exports = g;
 "use strict";
 
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var MaxBinaryHeap = function () {
-  function MaxBinaryHeap() {
-    _classCallCheck(this, MaxBinaryHeap);
-
-    this.values = [];
+var hash = function hash(string, arrayLenghth) {
+  var total = 0;
+  var charCode = void 0;
+  for (var i = 0; i < string.length; i++) {
+    charCode = string.charCodeAt(i) - 96;
+    total += charCode;
   }
-
-  _createClass(MaxBinaryHeap, [{
-    key: "insert",
-    value: function insert(value) {
-      this.values.push(value);
-      this.bubbleUp();
-      return this.values;
-    }
-  }, {
-    key: "getParentIndex",
-    value: function getParentIndex(childIndex) {
-      return Math.floor((childIndex - 1) / 2);
-    }
-  }, {
-    key: "getLeftChildIndex",
-    value: function getLeftChildIndex(parentIndex) {
-      return 2 * parentIndex + 1;
-    }
-  }, {
-    key: "getRightChildIndex",
-    value: function getRightChildIndex(parentIndex) {
-      return 2 * parentIndex + 2;
-    }
-  }, {
-    key: "swap",
-    value: function swap(array, index1, index2) {
-      var value1 = array[index1];
-      array[index1] = array[index2];
-      array[index2] = value1;
-    }
-  }, {
-    key: "bubbleUp",
-    value: function bubbleUp() {
-      var childIndex = this.values.length - 1;
-      var parentIndex = this.getParentIndex(childIndex);
-      while (parentIndex >= 0 && this.values[parentIndex] < this.values[childIndex]) {
-        this.swap(this.values, parentIndex, childIndex);
-        childIndex = parentIndex;
-        parentIndex = this.getParentIndex(childIndex);
-      }
-    }
-  }, {
-    key: "extractMax",
-    value: function extractMax() {
-      if (this.values.length === 1) {
-        return [];
-      } else {
-        var lastItem = this.values.pop();
-        this.values[0] = lastItem;
-        this.sinkDown();
-        return this;
-      }
-    }
-  }, {
-    key: "sinkDown",
-    value: function sinkDown() {
-      var parentIndex = 0;
-      var childToSwitch = this.childToSwitch(parentIndex);
-      while (childToSwitch && this.values[parentIndex] < this.values[childToSwitch]) {
-        this.swap(this.values, parentIndex, childToSwitch);
-        parentIndex = childToSwitch;
-        childToSwitch = this.childToSwitch(parentIndex);
-      }
-    }
-    /*
-    sinkDown() {
-    let parentIndex = 0;
-    let leftChildIndex = getLeftChildIndex(parentIndex);
-    let rightChildIndex = getRightChildIndex(parentIndex);
-    while (parentIndex < this.values.length) {
-      if (
-        leftChildIndex >= this.values.length &&
-        rightChildIndex >= this.values.length
-      ) {
-        return;
-      } else if (
-        leftChildIndex >= this.values.length &&
-        rightChildIndex < this.values.length
-      ) {
-        parentIndex = rightChildIndex;
-      } else if (
-        rightChildIndex >= this.values.length &&
-        leftChildIndex < this.values.length
-      ) {
-        parentIndex = leftChildIndex;
-      } else {
-        if (this.values[leftChildIndex] > this.values[rightChildIndex]) {
-          parentIndex = leftChildIndex;
-        } else {
-          parentIndex = rightChildIndex;
-        }
-      }
-      leftChildIndex = getLeftChildIndex(parentIndex);
-      rightChildIndex = getRightChildIndex(parentIndex);
-    }
-    }
-    */
-    //need a function that finds out which item our parent switches with.
-    // functions determines if left child and right child exists and if only one doesm switch wiith the one that exists, which one is greater so parent should switch with
-
-  }, {
-    key: "childToSwitch",
-    value: function childToSwitch(parentIndex) {
-      var leftChildIndex = this.getLeftChildIndex(parentIndex);
-      var rightChildIndex = this.getRightChildIndex(parentIndex);
-
-      if (leftChildIndex >= this.values.length && rightChildIndex >= this.values.length) {
-        return;
-      } else if (leftChildIndex >= this.values.length) {
-        return rightChildIndex;
-      } else if (rightChildIndex >= this.values.length) {
-        return leftChildIndex;
-      }
-
-      if (this.values[leftChildIndex] > this.values[rightChildIndex]) {
-        return leftChildIndex;
-      } else {
-        return rightChildIndex;
-      }
-    }
-  }]);
-
-  return MaxBinaryHeap;
-}();
-
-var binary = new MaxBinaryHeap();
-binary.insert(9);
-console.log(binary.insert(13));
-console.log(binary.insert(1));
-console.log(binary.insert(19));
-console.log(binary.extractMax());
+  return total;
+};
+console.log(hash("hello"));
 
 /***/ }),
 
