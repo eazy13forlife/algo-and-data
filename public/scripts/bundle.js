@@ -15725,67 +15725,90 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var HashTable = function () {
-  function HashTable() {
-    var arraySize = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 53;
+var Graph = function () {
+  function Graph() {
+    _classCallCheck(this, Graph);
 
-    _classCallCheck(this, HashTable);
-
-    this.keyMap = new Array(arraySize);
+    this.adjacencyList = {};
   }
 
-  _createClass(HashTable, [{
-    key: "hash",
-    value: function hash(key) {
-      var total = 0;
-      var uniquePrime = 31;
-      var charCode = void 0;
-      for (var i = 0; i < Math.min(key.length, 100); i++) {
-        charCode = key.charCodeAt(i) - 96;
-        total = total * uniquePrime + charCode;
+  _createClass(Graph, [{
+    key: "addVertex",
+    value: function addVertex(vertex) {
+      if (!this.adjacencyList[vertex]) {
+        this.adjacencyList[vertex] = [];
       }
-      return total % this.keyMap.length;
     }
   }, {
-    key: "set",
-    value: function set(key, value) {
-      var index = this.hash(key);
-      if (!this.keyMap[index]) {
-        this.keyMap[index] = [];
-      }
-      this.keyMap.push([key, value]);
-    }
-  }, {
-    key: "get",
-    value: function get(key) {
-      var index = this.hash(key);
-      if (!this.keyMap[index]) {
+    key: "addEdge",
+    value: function addEdge(v1, v2) {
+      if (!this.adjacencyList[v1] || !this.adjacencyList[v2]) {
         return undefined;
-      } else {
-        for (var i = 0; i < this.keyMap[index].length; i++) {
-          if (this.keyMap[index][i][0] === key) {
-            return this.keyMap[index][i][1];
+      }
+      this.adjacencyList[v1].push(v2);
+      this.adjacencyList[v2].push(v1);
+    }
+
+    //this works but it is 0(n2). only data structure that should have o(n2) is hashtable when we are looking for a specific value
+
+  }, {
+    key: "removeVertex",
+    value: function removeVertex(vertex) {
+      //we get all the keys
+      var keys = Object.keys(this.adjacencyList);
+      //we loop through each key
+      for (var i = 0; i < keys.length; i++) {
+        //for each key we want to loop through all the items in the array for that key, that is why we do this.adjacencyList[key[i]].length
+        for (var j = 0; j < this.adjacencyList[keys[i]].length; j++) {
+          //we see if that item equals the vertex and we remove it in place
+          if (this.adjacencyList[keys[i]][j] === vertex) {
+            this.adjacencyList[keys[i]].splice(j, 1);
           }
         }
       }
+      //then we want to actually delete that vertex from our adjacencyList
+      delete this.adjacencyList[vertex];
     }
   }, {
-    key: "values",
-    value: function values() {
-      var results = [];
-      for (var i = 0; i < this.keyMap.length; i++) {
-        if (this.keyMap[i]) {
-          for (var j = 0; j < this.keyMap[i].length; j++) {
-            results.push(this.keyMap[i][j][1]);
-          }
+    key: "removeEdge",
+    value: function removeEdge(vertex1, vertex2) {
+      var newVertex1Value = this.adjacencyList[vertex1].filter(function (item, index) {
+        if (item !== vertex2) {
+          return true;
         }
+      });
+
+      var newVertex2Value = this.adjacencyList[vertex2].filter(function (edge, index) {
+        if (edge !== vertex1) {
+          return true;
+        }
+      });
+      this.adjacencyList[vertex1] = newVertex1Value;
+      this.adjacencyList[vertex2] = newVertex2Value;
+    }
+  }, {
+    key: "removeVertex",
+    value: function removeVertex(vertex) {
+      while (this.adjacencyList[vertex].length) {
+        var edgeRemoved = this.adjacencyList[vertex].pop;
+        this.removeEdge(edgeRemoved, vertex);
       }
-      return results;
+      delete this.adjacencyList[vertex];
     }
   }]);
 
-  return HashTable;
+  return Graph;
 }();
+
+var graph = new Graph();
+graph.addVertex(2);
+graph.addVertex(4);
+graph.addVertex(6);
+graph.addVertex(8);
+graph.addEdge(6, 8);
+graph.addEdge(4, 2);
+graph.removeVertex(2);
+console.log(graph);
 
 /***/ }),
 
