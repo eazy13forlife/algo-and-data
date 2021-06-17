@@ -16,7 +16,7 @@ class Graph {
   }
 
   //this works but it is 0(n2). only data structure that should have o(n2) is hashtable when we are looking for a specific value
-  removeVertex(vertex) {
+  removeVertex2(vertex) {
     //we get all the keys
     const keys = Object.keys(this.adjacencyList);
     //we loop through each key
@@ -54,19 +54,63 @@ class Graph {
 
   removeVertex(vertex) {
     while (this.adjacencyList[vertex].length) {
-      const edgeRemoved = this.adjacencyList[vertex].pop;
+      const edgeRemoved = this.adjacencyList[vertex].pop();
       this.removeEdge(edgeRemoved, vertex);
     }
     delete this.adjacencyList[vertex];
   }
+
+  depthFirstSearch(startingVertex) {
+    const results = [];
+    const visited = {};
+    const addToResults = (vertex) => {
+      if (!this.adjacencyList[vertex].length) {
+        return null;
+      }
+      results.push(vertex);
+      visited[vertex] = true;
+      this.adjacencyList[vertex].forEach((edge, index) => {
+        if (!visited[edge]) {
+          addToResults(edge);
+        }
+      });
+    };
+    addToResults(startingVertex);
+    return results;
+  }
+  breadthFirstSearch(vertex) {
+    queue = [vertex];
+    const inQueue = { [vertex]: true };
+    const results = [];
+    while (queue.length) {
+      const firstVertex = queue.shift();
+      results.push(firstVertex);
+      this.adjacencyList[firstVertex].forEach((edge, index) => {
+        if (!inQueue[edge]) {
+          queue.push(edge);
+          inQueue[edge] = true;
+        }
+      });
+    }
+    return results;
+  }
 }
 
-const graph = new Graph();
-graph.addVertex(2);
-graph.addVertex(4);
-graph.addVertex(6);
-graph.addVertex(8);
-graph.addEdge(6, 8);
-graph.addEdge(4, 2);
-graph.removeVertex(2);
-console.log(graph);
+const g = new Graph();
+g.addVertex("A");
+g.addVertex("B");
+g.addVertex("C");
+g.addVertex("D");
+g.addVertex("E");
+g.addVertex("F");
+
+g.addEdge("A", "B");
+g.addEdge("A", "C");
+g.addEdge("B", "D");
+g.addEdge("C", "E");
+g.addEdge("D", "E");
+g.addEdge("D", "F");
+g.addEdge("E", "F");
+
+console.log(g);
+console.log(g.depthFirstSearch("B"));

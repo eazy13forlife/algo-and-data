@@ -47,21 +47,26 @@ class Graph {
   }
   */
 
+  //so depthfirstsearch begins at any vertex, and we keep following the neighbors(edge) of one of the edges of that starting vertex until we reach a dead end, before following the vertex edge of the most recent vertex that still has edges left to visit
   depthFirstRecursive(startingVertex) {
     const resultArray = [];
     const visitedVertices = {};
+    //so our recursive function takes in a vertex and if it has no edges, then we return null, we are done because nothing to visit.
     const depthFirstSearch = (vertex) => {
       if (!this.adjacencyList[vertex].length) {
         return null;
       }
+      // otherwise, we push in that vertex to our resultArray now that we have visited it and we also set its property in our visitedVertices object to true, so we know never to visit this vertex again.
       resultArray.push(vertex);
       visitedVertices[vertex] = true;
+      // now, we want to look at each edge of this vertex and if it hasnt already been visited, we want to call our recursive function, which will push this vertex in our resultArray and also set its property to true in our visitedVertices object before looking at its edges and doing the same thing. So when its all said and done, this recursive function will take a vertex and  keep following its neighbors neighbor until we hit a dead end(no more edges to visit), before visiting the vertexEdge of the most recent vertex that still has edges left to visit.
       this.adjacencyList[vertex].forEach((vertexEdge) => {
         if (!visitedVertices[vertexEdge]) {
           depthFirstSearch(vertexEdge);
         }
       });
     };
+    // we need to call this recursive function initially;
     depthFirstSearch(startingVertex);
     return resultArray;
   }
@@ -83,6 +88,7 @@ class Graph {
     return resultArray;
   }
 
+  // for breadth first we will store each edge in a queue. So we always get the first item back from the queue and add its edges to the queue. This will give us the horizontal-like look we are going for. So we start with a vertex and  we  push in all of its edges of the same height into our queue. and Then when we shift, we get one of the edges of the same height and add all of its edges to the queue. When we shift again, we get another one of the edges of the same height and add all of its edges to the queue, and this will keep happening till we finish all of the edges of one height. And then shift will look at all of the edges of the other height(one by one) and add all of its edges and so on.
   breadthFirstIterative(startingVertex) {
     const resultsArray = [];
     const inQueue = { [startingVertex]: true };

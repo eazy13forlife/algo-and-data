@@ -15723,6 +15723,8 @@ module.exports = g;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Graph = function () {
@@ -15752,8 +15754,8 @@ var Graph = function () {
     //this works but it is 0(n2). only data structure that should have o(n2) is hashtable when we are looking for a specific value
 
   }, {
-    key: "removeVertex",
-    value: function removeVertex(vertex) {
+    key: "removeVertex2",
+    value: function removeVertex2(vertex) {
       //we get all the keys
       var keys = Object.keys(this.adjacencyList);
       //we loop through each key
@@ -15790,25 +15792,74 @@ var Graph = function () {
     key: "removeVertex",
     value: function removeVertex(vertex) {
       while (this.adjacencyList[vertex].length) {
-        var edgeRemoved = this.adjacencyList[vertex].pop;
+        var edgeRemoved = this.adjacencyList[vertex].pop();
         this.removeEdge(edgeRemoved, vertex);
       }
       delete this.adjacencyList[vertex];
+    }
+  }, {
+    key: "depthFirstSearch",
+    value: function depthFirstSearch(startingVertex) {
+      var _this = this;
+
+      var results = [];
+      var visited = {};
+      var addToResults = function addToResults(vertex) {
+        if (!_this.adjacencyList[vertex].length) {
+          return null;
+        }
+        results.push(vertex);
+        visited[vertex] = true;
+        _this.adjacencyList[vertex].forEach(function (edge, index) {
+          if (!visited[edge]) {
+            addToResults(edge);
+          }
+        });
+      };
+      addToResults(startingVertex);
+      return results;
+    }
+  }, {
+    key: "breadthFirstSearch",
+    value: function breadthFirstSearch(vertex) {
+      queue = [vertex];
+      var inQueue = _defineProperty({}, vertex, true);
+      var results = [];
+      while (queue.length) {
+        var firstVertex = queue.shift();
+        results.push(firstVertex);
+        this.adjacencyList[firstVertex].forEach(function (edge, index) {
+          if (!inQueue[edge]) {
+            queue.push(edge);
+            inQueue[edge] = true;
+          }
+        });
+      }
+      return results;
     }
   }]);
 
   return Graph;
 }();
 
-var graph = new Graph();
-graph.addVertex(2);
-graph.addVertex(4);
-graph.addVertex(6);
-graph.addVertex(8);
-graph.addEdge(6, 8);
-graph.addEdge(4, 2);
-graph.removeVertex(2);
-console.log(graph);
+var g = new Graph();
+g.addVertex("A");
+g.addVertex("B");
+g.addVertex("C");
+g.addVertex("D");
+g.addVertex("E");
+g.addVertex("F");
+
+g.addEdge("A", "B");
+g.addEdge("A", "C");
+g.addEdge("B", "D");
+g.addEdge("C", "E");
+g.addEdge("D", "E");
+g.addEdge("D", "F");
+g.addEdge("E", "F");
+
+console.log(g);
+console.log(g.depthFirstSearch("B"));
 
 /***/ }),
 
