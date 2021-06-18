@@ -5,7 +5,7 @@ class WeightedGraph {
     this.adjacencyList = {};
   }
 
-  addVertex() {
+  addVertex(vertex) {
     if (!this.adjacencyList[vertex]) {
       this.adjacencyList[vertex] = [];
     }
@@ -51,6 +51,20 @@ class WeightedGraph {
         // we are done, so we break just in case there are more vertices after our end vertex. we don't want to look at those ones
         break;
       }
+      /*
+      if (shortestPathVertex === endVertex) {
+      //so we push in the shortestPathVertex,since it is the last one
+        path.push(shortestPathVertex);
+        //while it's previous exists
+        while (previous[shortestPathVertex]) {
+        //we push in the previous value
+          path.push(previous[smallestVertex]);
+          // now we set our ShorestPathVertex to equal its previous
+          shortestPathVertex = previous[smallestVertex];
+        }
+        break; now, when we finish we just reverse the list, we don't have to concat the start, because it was already added. Only a null value isn't added
+      }
+      */
 
       this.adjacencyList[shortestPathVertex].forEach((vertexObject) => {
         const vertexEdge = vertexObject.vertex;
@@ -69,73 +83,74 @@ class WeightedGraph {
     }
     console.log(path.concat(startVertex).reverse());
   }
-  /*
-  Dijkstra(startVertex, endVertex) {
-    const path = [];
-    const confirmedShortest = {};
-    const priorityQueue = new PriorityQueue();
+}
+
+/*
+class WeightedGraph {
+  constructor() {
+    this.adjacencyList = {};
+  }
+
+  addVertex(vertex) {
+    if (!this.adjacencyList[vertex]) {
+      this.adjacencyList[vertex] = [];
+    }
+  }
+
+  addEdge(vertex1, vertex2, weight) {
+    this.adjacencyList[vertex1].push({ vertex: vertex2, weight: weight });
+    this.adjacencyList[vertex2].push({ vertex: vertex1, weight: weight });
+  }
+
+  Dijkstras(startVertex, endVertex) {
     const distances = {};
     const previous = {};
-
-    const keys = Object.keys(this.adjacencyList);
-    for (let i = 0; i < keys.length; i++) {
-      // if the first key is the startVertex
-      if (keys[i] === startVertex) {
-        // set its property in the distances object equal to 0 since the distance from startvertex to startVertex is 0
-        distances[keys[i]] = 0;
-        // set its property in the previous object equal to null, since nothing comes before the startVertex, there is no value;
-        previous[keys[i]] = null;
-        // add this startVertex to our priorityQueue and give it a weight of 0,(we will add all our vertices in here with their correct shortest distance from A, so that our priorityQueue which uses a binary heap will bubble shortest distance to the top)
-        priorityQueue.enqueue(keys[i], 0);
+    const path = [];
+    const vertexQueue = new PriorityQueue();
+    const vertices = Object.keys(this.adjacencyList);
+    vertices.forEach((vertex) => {
+      if (vertex !== startVertex) {
+        distances[vertex] = Infinity;
+        vertexQueue.enqueue(vertex, Infinity);
       } else {
-        // every other vertex has a beginning shortest distance from A of infinity
-        distances[keys[i]] = Infinity;
-        // every other vertex has a previous value of undefined, since we dont know yet
-        previous[keys[i]] = undefined;
-        // we will put every other vertex in our priorityqueue as well, but with a weight of Infinity.
-        priorityQueue.enqueue(keys[i], Infinity);
+        distances[vertex] = 0;
+        vertexQueue.enqueue(vertex, 0);
       }
-    }
+      previous[vertex] = null;
+    });
+
     while (true) {
-      // lets find the vertex with the shortest distance,which initially will just be the startVertex, because it has a distance of 0 to itself. Remember, when we dequeue it, its removed from our queue so we cant get that same shortestPathVertex,unless we re-add the vertex again but i accounted for this by providing in the code below if the vertex has already been confirmed the shortest, dont run all the extra shit
-      let shortestPathVertex = priorityQueue.dequeue().value;
-      confirmedShortest[shortestPathVertex] = true;
-      if (shortestPathVertex === endVertex) {
-        while (previous[shortestPathVertex]) {
-          path.push(shortestPathVertex);
-          shortestPathVertex = previous[shortestPathVertex];
+      // dequeue to get the vertex with the smallest distance from the start vertex
+      let smallestVertex = vertexQueue.dequeue().value;
+      // look at this vertex's edges to find the possibilities for the next smallest length
+      if (smallestVertex === endVertex) {
+        path.push(smallestVertex);
+        while (previous[smallestVertex]) {
+          path.push(previous[smallestVertex]);
+          smallestVertex = previous[smallestVertex];
         }
         break;
       }
+      this.adjacencyList[smallestVertex].forEach((vertexEdgeObject, index) => {
+        //get the vertex and its weight and its current shortest distance from the startVertex
+        const vertex = vertexEdgeObject.vertex;
+        const vertexEdgeWeight = vertexEdgeObject.weight;
+        const currentVertexDistance = distances[vertex];
 
-      // for each of the shortest path's neighbors(vertexEdge's)
-      this.adjacencyList[shortestPathVertex].forEach((vertexEdgeObject) => {
-        // if the vertex was already at some point the shortest distance from the startVertex, we dont need to find its distance and do all that again.
-        if (!confirmedShortest[vertexEdgeObject.vertex]) {
-          // we want to find the vertexEdge and its weight
-          const vertexEdge = vertexEdgeObject.vertex;
-          const vertexEdgeWeight = vertexEdgeObject.weight;
-
-          // find the distance from the current shortestPathVertex,which initially has a distance of 0(because it is the startvertex), to its vertexEdge. And remember, newDistance ends up becoming the distance of the vertexEdge in the distances object (if it is indeed the smallest distance from the startVertex) so that means the VertexEdge will always be working with its current smallest distance  from the startVertex
-          let newDistance = distances[shortestPathVertex] + vertexEdgeWeight;
-
-          // if this distance,(which is initially the startVertex(0)+ its neghbors weight) is less than the original distance of that vertexEdge(which is originally Infinity in the distances object),
-          if (newDistance < distances[vertexEdge]) {
-            // set the new distance of the vertexEdge in the distances obejct equal to this new distance,which is its own weight plus the shortestPathDistance it took to get to this vertexEdge, so we can correctly dequeue the next shortest distance from the startVertex next time
-            distances[vertexEdge] = newDistance;
-            // set the previous property of that vertexEdge to be the shortestPathVertex, meaning the shortest path from the startVertex to that vertexEdge is through that shortestPathVertex
-            previous[vertexEdge] = shortestPathVertex;
-            // add this vertexEdge and its new distance to the priorityQueue, which will bubble up over its previous one where it had a distance of Infinity originally. so when we dequeue, if this is the new shortest distance, it will be the one returned to us,not the one with infinity. In fact, the ones with infinity will never be returned to us because there will always be a smaller priority in our queue.
-            priorityQueue.enqueue(vertexEdge, newDistance);
-          }
+        //get its new distance from the startVertex, which is weight of startVertex plus this vertices weight
+        const newVertexDistance = distances[smallestVertex] + vertexEdgeWeight;
+        if (newVertexDistance < currentVertexDistance) {
+          distances[vertex] = newVertexDistance;
+          previous[vertex] = smallestVertex;
+          vertexQueue.enqueue(vertex, newVertexDistance);
         }
       });
     }
-    // we have to add the startVertex because previous[startVertex] doest exist so our code above doesnt push it into our path array. Then we reverse so we get the correct order from startVertex to endVertex as opposed to other way.
-    return path.concat(startVertex).reverse();
+
+    return path.reverse();
   }
-  */
 }
+*/
 
 const g = new WeightedGraph();
 

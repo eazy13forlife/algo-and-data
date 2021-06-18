@@ -1,102 +1,71 @@
-class Graph {
+import PriorityQueue from "../../algo-and-data/source/Udemy/data_structures/priorityQueue.js";
+
+class WeightedGraph {
   constructor() {
     this.adjacencyList = {};
   }
+
   addVertex(vertex) {
     if (!this.adjacencyList[vertex]) {
       this.adjacencyList[vertex] = [];
     }
   }
-  addEdge(v1, v2) {
-    if (!this.adjacencyList[v1] || !this.adjacencyList[v2]) {
-      return undefined;
-    }
-    this.adjacencyList[v1].push(v2);
-    this.adjacencyList[v2].push(v1);
+
+  addEdge(vertex1, vertex2, weight) {
+    this.adjacencyList[vertex1].push({ vertex: vertex2, weight: weight });
+    this.adjacencyList[vertex2].push({ vertex: vertex1, weight: weight });
   }
 
-  //this works but it is 0(n2). only data structure that should have o(n2) is hashtable when we are looking for a specific value
-  removeVertex2(vertex) {
-    //we get all the keys
-    const keys = Object.keys(this.adjacencyList);
-    //we loop through each key
-    for (let i = 0; i < keys.length; i++) {
-      //for each key we want to loop through all the items in the array for that key, that is why we do this.adjacencyList[key[i]].length
-      for (let j = 0; j < this.adjacencyList[keys[i]].length; j++) {
-        //we see if that item equals the vertex and we remove it in place
-        if (this.adjacencyList[keys[i]][j] === vertex) {
-          this.adjacencyList[keys[i]].splice(j, 1);
-        }
+  Dijkstras(startVertex, endVertex) {
+    const distances = {};
+    const previous = {};
+    const path = [];
+    const vertexQueue = new PriorityQueue();
+    const vertices = Object.keys(this.adjacencyList);
+    vertices.forEach((vertex) => {
+      if (vertex !== startVertex) {
+        distances[vertex] = Infinity;
+        vertexQueue.enqueue(vertex, Infinity);
+      } else {
+        distances[vertex] = 0;
+        vertexQueue.enqueue(vertex, 0);
       }
-    }
-    //then we want to actually delete that vertex from our adjacencyList
-    delete this.adjacencyList[vertex];
-  }
-  removeEdge(vertex1, vertex2) {
-    const newVertex1Value = this.adjacencyList[vertex1].filter(
-      (item, index) => {
-        if (item !== vertex2) {
-          return true;
-        }
-      }
-    );
+      previous[vertex] = null;
+    });
 
-    const newVertex2Value = this.adjacencyList[vertex2].filter(
-      (edge, index) => {
-        if (edge !== vertex1) {
-          return true;
+    while (true) {
+      // dequeue to get the vertex with the smallest distance from the start vertex
+      let smallestVertex = vertexQueue.dequeue().value;
+      // look at this vertex's edges to find the possibilities for the next smallest length
+      if (smallestVertex === endVertex) {
+        path.push(smallestVertex);
+        while (previous[smallestVertex]) {
+          path.push(previous[smallestVertex]);
+          smallestVertex = previous[smallestVertex];
         }
+        break;
       }
-    );
-    this.adjacencyList[vertex1] = newVertex1Value;
-    this.adjacencyList[vertex2] = newVertex2Value;
-  }
+      this.adjacencyList[smallestVertex].forEach((vertexEdgeObject, index) => {
+        //get the vertex and its weight and its current shortest distance from the startVertex
+        const vertex = vertexEdgeObject.vertex;
+        const vertexEdgeWeight = vertexEdgeObject.weight;
+        const currentVertexDistance = distances[vertex];
 
-  removeVertex(vertex) {
-    while (this.adjacencyList[vertex].length) {
-      const edgeRemoved = this.adjacencyList[vertex].pop();
-      this.removeEdge(edgeRemoved, vertex);
-    }
-    delete this.adjacencyList[vertex];
-  }
-
-  depthFirstSearch(startingVertex) {
-    const results = [];
-    const visited = {};
-    const addToResults = (vertex) => {
-      if (!this.adjacencyList[vertex].length) {
-        return null;
-      }
-      results.push(vertex);
-      visited[vertex] = true;
-      this.adjacencyList[vertex].forEach((edge, index) => {
-        if (!visited[edge]) {
-          addToResults(edge);
-        }
-      });
-    };
-    addToResults(startingVertex);
-    return results;
-  }
-  breadthFirstSearch(vertex) {
-    queue = [vertex];
-    const inQueue = { [vertex]: true };
-    const results = [];
-    while (queue.length) {
-      const firstVertex = queue.shift();
-      results.push(firstVertex);
-      this.adjacencyList[firstVertex].forEach((edge, index) => {
-        if (!inQueue[edge]) {
-          queue.push(edge);
-          inQueue[edge] = true;
+        //get its new distance from the startVertex, which is weight of startVertex plus this vertices weight
+        const newVertexDistance = distances[smallestVertex] + vertexEdgeWeight;
+        if (newVertexDistance < currentVertexDistance) {
+          distances[vertex] = newVertexDistance;
+          previous[vertex] = smallestVertex;
+          vertexQueue.enqueue(vertex, newVertexDistance);
         }
       });
     }
-    return results;
+
+    return path.reverse();
   }
 }
 
-const g = new Graph();
+const g = new WeightedGraph();
 g.addVertex("A");
 g.addVertex("B");
 g.addVertex("C");
@@ -104,13 +73,12 @@ g.addVertex("D");
 g.addVertex("E");
 g.addVertex("F");
 
-g.addEdge("A", "B");
-g.addEdge("A", "C");
-g.addEdge("B", "D");
-g.addEdge("C", "E");
-g.addEdge("D", "E");
-g.addEdge("D", "F");
-g.addEdge("E", "F");
-
-console.log(g);
-console.log(g.depthFirstSearch("B"));
+g.addEdge("A", "B", 4);
+g.addEdge("A", "C", 2);
+g.addEdge("B", "E", 3);
+g.addEdge("C", "D", 2);
+g.addEdge("C", "F", 4);
+g.addEdge("D", "E", 3);
+g.addEdge("D", "F", 1);
+g.addEdge("E", "F", 1);
+console.log(g.Dijkstras("A", "E"));

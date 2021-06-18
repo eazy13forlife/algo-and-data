@@ -15711,6 +15711,155 @@ module.exports = g;
 
 /***/ }),
 
+/***/ "./source/Udemy/data_structures/nodePriority.js":
+/*!******************************************************!*\
+  !*** ./source/Udemy/data_structures/nodePriority.js ***!
+  \******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Node = function Node(value, priority) {
+  _classCallCheck(this, Node);
+
+  this.value = value;
+  this.priority = priority;
+};
+
+exports.default = Node;
+
+/***/ }),
+
+/***/ "./source/Udemy/data_structures/priorityQueue.js":
+/*!*******************************************************!*\
+  !*** ./source/Udemy/data_structures/priorityQueue.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _nodePriority = __webpack_require__(/*! ./nodePriority.js */ "./source/Udemy/data_structures/nodePriority.js");
+
+var _nodePriority2 = _interopRequireDefault(_nodePriority);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var PriorityQueue = function () {
+  function PriorityQueue() {
+    _classCallCheck(this, PriorityQueue);
+
+    this.values = [];
+  }
+
+  _createClass(PriorityQueue, [{
+    key: "enqueue",
+    value: function enqueue(value, priority) {
+      var newNode = new _nodePriority2.default(value, priority);
+      this.values.push(newNode);
+      this.bubbleUp();
+    }
+  }, {
+    key: "getParentIndex",
+    value: function getParentIndex(index) {
+      return Math.floor((index - 1) / 2);
+    }
+  }, {
+    key: "swap",
+    value: function swap(array, firstIndex, secondIndex) {
+      var firstIndexValue = array[firstIndex];
+      array[firstIndex] = array[secondIndex];
+      array[secondIndex] = firstIndexValue;
+    }
+  }, {
+    key: "bubbleUp",
+    value: function bubbleUp() {
+      var childIndex = this.values.length - 1;
+      var parentIndex = this.getParentIndex(childIndex);
+
+      while (childIndex !== 0 && this.values[childIndex].priority < this.values[parentIndex].priority) {
+        this.swap(this.values, parentIndex, childIndex);
+        childIndex = parentIndex;
+        parentIndex = this.getParentIndex(childIndex);
+      }
+    }
+  }, {
+    key: "dequeue",
+    value: function dequeue() {
+      var initialMax = this.values[0];
+      var lastElement = this.values.pop();
+      if (this.values.length > 0) {
+        this.values[0] = lastElement;
+        this.sinkDown();
+      }
+
+      return initialMax;
+    }
+  }, {
+    key: "sinkDown",
+    value: function sinkDown() {
+      var parentIndex = 0;
+      var childIndex = this.childIndexToSwap(this.values, parentIndex);
+
+      while (childIndex && this.values[parentIndex].priority > this.values[childIndex].priority) {
+        this.swap(this.values, parentIndex, childIndex);
+        parentIndex = childIndex;
+        childIndex = this.childIndexToSwap(this.values, parentIndex);
+      }
+    }
+  }, {
+    key: "childIndexToSwap",
+    value: function childIndexToSwap(array, parentIndex) {
+      var leftChildIdx = parentIndex * 2 + 1;
+      var rightChildIdx = parentIndex * 2 + 2;
+
+      if (array[leftChildIdx] && array[rightChildIdx]) {
+        if (array[leftChildIdx].priority < array[rightChildIdx].priority) {
+          return leftChildIdx;
+        } else {
+          return rightChildIdx;
+        }
+      }
+
+      if (array[leftChildIdx]) {
+        return leftChildIdx;
+      }
+
+      if (array[rightChildIdx]) {
+        return rightChildIdx;
+      }
+    }
+  }]);
+
+  return PriorityQueue;
+}();
+
+var priority = new PriorityQueue();
+priority.enqueue("cat", 4);
+priority.enqueue("cadfd23stss", 4);
+priority.dequeue();
+
+exports.default = PriorityQueue;
+
+/***/ }),
+
 /***/ "./source/index.js":
 /*!*************************!*\
   !*** ./source/index.js ***!
@@ -15723,18 +15872,22 @@ module.exports = g;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+var _priorityQueue = __webpack_require__(/*! ../../algo-and-data/source/Udemy/data_structures/priorityQueue.js */ "./source/Udemy/data_structures/priorityQueue.js");
+
+var _priorityQueue2 = _interopRequireDefault(_priorityQueue);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Graph = function () {
-  function Graph() {
-    _classCallCheck(this, Graph);
+var WeightedGraph = function () {
+  function WeightedGraph() {
+    _classCallCheck(this, WeightedGraph);
 
     this.adjacencyList = {};
   }
 
-  _createClass(Graph, [{
+  _createClass(WeightedGraph, [{
     key: "addVertex",
     value: function addVertex(vertex) {
       if (!this.adjacencyList[vertex]) {
@@ -15743,106 +15896,73 @@ var Graph = function () {
     }
   }, {
     key: "addEdge",
-    value: function addEdge(v1, v2) {
-      if (!this.adjacencyList[v1] || !this.adjacencyList[v2]) {
-        return undefined;
-      }
-      this.adjacencyList[v1].push(v2);
-      this.adjacencyList[v2].push(v1);
-    }
-
-    //this works but it is 0(n2). only data structure that should have o(n2) is hashtable when we are looking for a specific value
-
-  }, {
-    key: "removeVertex2",
-    value: function removeVertex2(vertex) {
-      //we get all the keys
-      var keys = Object.keys(this.adjacencyList);
-      //we loop through each key
-      for (var i = 0; i < keys.length; i++) {
-        //for each key we want to loop through all the items in the array for that key, that is why we do this.adjacencyList[key[i]].length
-        for (var j = 0; j < this.adjacencyList[keys[i]].length; j++) {
-          //we see if that item equals the vertex and we remove it in place
-          if (this.adjacencyList[keys[i]][j] === vertex) {
-            this.adjacencyList[keys[i]].splice(j, 1);
-          }
-        }
-      }
-      //then we want to actually delete that vertex from our adjacencyList
-      delete this.adjacencyList[vertex];
+    value: function addEdge(vertex1, vertex2, weight) {
+      this.adjacencyList[vertex1].push({ vertex: vertex2, weight: weight });
+      this.adjacencyList[vertex2].push({ vertex: vertex1, weight: weight });
     }
   }, {
-    key: "removeEdge",
-    value: function removeEdge(vertex1, vertex2) {
-      var newVertex1Value = this.adjacencyList[vertex1].filter(function (item, index) {
-        if (item !== vertex2) {
-          return true;
-        }
-      });
-
-      var newVertex2Value = this.adjacencyList[vertex2].filter(function (edge, index) {
-        if (edge !== vertex1) {
-          return true;
-        }
-      });
-      this.adjacencyList[vertex1] = newVertex1Value;
-      this.adjacencyList[vertex2] = newVertex2Value;
-    }
-  }, {
-    key: "removeVertex",
-    value: function removeVertex(vertex) {
-      while (this.adjacencyList[vertex].length) {
-        var edgeRemoved = this.adjacencyList[vertex].pop();
-        this.removeEdge(edgeRemoved, vertex);
-      }
-      delete this.adjacencyList[vertex];
-    }
-  }, {
-    key: "depthFirstSearch",
-    value: function depthFirstSearch(startingVertex) {
+    key: "Dijkstras",
+    value: function Dijkstras(startVertex, endVertex) {
       var _this = this;
 
-      var results = [];
-      var visited = {};
-      var addToResults = function addToResults(vertex) {
-        if (!_this.adjacencyList[vertex].length) {
-          return null;
+      var distances = {};
+      var previous = {};
+      var path = [];
+      var vertexQueue = new _priorityQueue2.default();
+      var vertices = Object.keys(this.adjacencyList);
+      vertices.forEach(function (vertex) {
+        if (vertex !== startVertex) {
+          distances[vertex] = Infinity;
+          vertexQueue.enqueue(vertex, Infinity);
+        } else {
+          distances[vertex] = 0;
+          vertexQueue.enqueue(vertex, 0);
         }
-        results.push(vertex);
-        visited[vertex] = true;
-        _this.adjacencyList[vertex].forEach(function (edge, index) {
-          if (!visited[edge]) {
-            addToResults(edge);
+        previous[vertex] = null;
+      });
+
+      var _loop = function _loop() {
+        // dequeue to get the vertex with the smallest distance from the start vertex
+        var smallestVertex = vertexQueue.dequeue().value;
+        // look at this vertex's edges to find the possibilities for the next smallest length
+        if (smallestVertex === endVertex) {
+          path.push(smallestVertex);
+          while (previous[smallestVertex]) {
+            path.push(previous[smallestVertex]);
+            smallestVertex = previous[smallestVertex];
+          }
+          return "break";
+        }
+        _this.adjacencyList[smallestVertex].forEach(function (vertexEdgeObject, index) {
+          //get the vertex and its weight and its current shortest distance from the startVertex
+          var vertex = vertexEdgeObject.vertex;
+          var vertexEdgeWeight = vertexEdgeObject.weight;
+          var currentVertexDistance = distances[vertex];
+
+          //get its new distance from the startVertex, which is weight of startVertex plus this vertices weight
+          var newVertexDistance = distances[smallestVertex] + vertexEdgeWeight;
+          if (newVertexDistance < currentVertexDistance) {
+            distances[vertex] = newVertexDistance;
+            previous[vertex] = smallestVertex;
+            vertexQueue.enqueue(vertex, newVertexDistance);
           }
         });
       };
-      addToResults(startingVertex);
-      return results;
-    }
-  }, {
-    key: "breadthFirstSearch",
-    value: function breadthFirstSearch(vertex) {
-      queue = [vertex];
-      var inQueue = _defineProperty({}, vertex, true);
-      var results = [];
-      while (queue.length) {
-        var firstVertex = queue.shift();
-        results.push(firstVertex);
-        this.adjacencyList[firstVertex].forEach(function (edge, index) {
-          if (!inQueue[edge]) {
-            queue.push(edge);
-            inQueue[edge] = true;
-          }
-        });
+
+      while (true) {
+        var _ret = _loop();
+
+        if (_ret === "break") break;
       }
-      return results;
+
+      return path.reverse();
     }
   }]);
 
-  return Graph;
+  return WeightedGraph;
 }();
 
-var g = new Graph();
+var g = new WeightedGraph();
 g.addVertex("A");
 g.addVertex("B");
 g.addVertex("C");
@@ -15850,16 +15970,15 @@ g.addVertex("D");
 g.addVertex("E");
 g.addVertex("F");
 
-g.addEdge("A", "B");
-g.addEdge("A", "C");
-g.addEdge("B", "D");
-g.addEdge("C", "E");
-g.addEdge("D", "E");
-g.addEdge("D", "F");
-g.addEdge("E", "F");
-
-console.log(g);
-console.log(g.depthFirstSearch("B"));
+g.addEdge("A", "B", 4);
+g.addEdge("A", "C", 2);
+g.addEdge("B", "E", 3);
+g.addEdge("C", "D", 2);
+g.addEdge("C", "F", 4);
+g.addEdge("D", "E", 3);
+g.addEdge("D", "F", 1);
+g.addEdge("E", "F", 1);
+console.log(g.Dijkstras("A", "E"));
 
 /***/ }),
 
