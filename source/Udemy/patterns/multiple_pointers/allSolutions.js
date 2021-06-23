@@ -85,4 +85,3 @@ const uniqueTriplets0 = (array) => {
   }
   return results;
 };
-console.log(uniqueTriplets0([-1, -1, -1, 0, 0, 0, 1, 1, 1]));

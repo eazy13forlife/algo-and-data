@@ -15711,155 +15711,6 @@ module.exports = g;
 
 /***/ }),
 
-/***/ "./source/Udemy/data_structures/nodePriority.js":
-/*!******************************************************!*\
-  !*** ./source/Udemy/data_structures/nodePriority.js ***!
-  \******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Node = function Node(value, priority) {
-  _classCallCheck(this, Node);
-
-  this.value = value;
-  this.priority = priority;
-};
-
-exports.default = Node;
-
-/***/ }),
-
-/***/ "./source/Udemy/data_structures/priorityQueue.js":
-/*!*******************************************************!*\
-  !*** ./source/Udemy/data_structures/priorityQueue.js ***!
-  \*******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _nodePriority = __webpack_require__(/*! ./nodePriority.js */ "./source/Udemy/data_structures/nodePriority.js");
-
-var _nodePriority2 = _interopRequireDefault(_nodePriority);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var PriorityQueue = function () {
-  function PriorityQueue() {
-    _classCallCheck(this, PriorityQueue);
-
-    this.values = [];
-  }
-
-  _createClass(PriorityQueue, [{
-    key: "enqueue",
-    value: function enqueue(value, priority) {
-      var newNode = new _nodePriority2.default(value, priority);
-      this.values.push(newNode);
-      this.bubbleUp();
-    }
-  }, {
-    key: "getParentIndex",
-    value: function getParentIndex(index) {
-      return Math.floor((index - 1) / 2);
-    }
-  }, {
-    key: "swap",
-    value: function swap(array, firstIndex, secondIndex) {
-      var firstIndexValue = array[firstIndex];
-      array[firstIndex] = array[secondIndex];
-      array[secondIndex] = firstIndexValue;
-    }
-  }, {
-    key: "bubbleUp",
-    value: function bubbleUp() {
-      var childIndex = this.values.length - 1;
-      var parentIndex = this.getParentIndex(childIndex);
-
-      while (childIndex !== 0 && this.values[childIndex].priority < this.values[parentIndex].priority) {
-        this.swap(this.values, parentIndex, childIndex);
-        childIndex = parentIndex;
-        parentIndex = this.getParentIndex(childIndex);
-      }
-    }
-  }, {
-    key: "dequeue",
-    value: function dequeue() {
-      var initialMax = this.values[0];
-      var lastElement = this.values.pop();
-      if (this.values.length > 0) {
-        this.values[0] = lastElement;
-        this.sinkDown();
-      }
-
-      return initialMax;
-    }
-  }, {
-    key: "sinkDown",
-    value: function sinkDown() {
-      var parentIndex = 0;
-      var childIndex = this.childIndexToSwap(this.values, parentIndex);
-
-      while (childIndex && this.values[parentIndex].priority > this.values[childIndex].priority) {
-        this.swap(this.values, parentIndex, childIndex);
-        parentIndex = childIndex;
-        childIndex = this.childIndexToSwap(this.values, parentIndex);
-      }
-    }
-  }, {
-    key: "childIndexToSwap",
-    value: function childIndexToSwap(array, parentIndex) {
-      var leftChildIdx = parentIndex * 2 + 1;
-      var rightChildIdx = parentIndex * 2 + 2;
-
-      if (array[leftChildIdx] && array[rightChildIdx]) {
-        if (array[leftChildIdx].priority < array[rightChildIdx].priority) {
-          return leftChildIdx;
-        } else {
-          return rightChildIdx;
-        }
-      }
-
-      if (array[leftChildIdx]) {
-        return leftChildIdx;
-      }
-
-      if (array[rightChildIdx]) {
-        return rightChildIdx;
-      }
-    }
-  }]);
-
-  return PriorityQueue;
-}();
-
-var priority = new PriorityQueue();
-priority.enqueue("cat", 4);
-priority.enqueue("cadfd23stss", 4);
-priority.dequeue();
-
-exports.default = PriorityQueue;
-
-/***/ }),
-
 /***/ "./source/index.js":
 /*!*************************!*\
   !*** ./source/index.js ***!
@@ -15870,115 +15721,94 @@ exports.default = PriorityQueue;
 "use strict";
 
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _priorityQueue = __webpack_require__(/*! ../../algo-and-data/source/Udemy/data_structures/priorityQueue.js */ "./source/Udemy/data_structures/priorityQueue.js");
-
-var _priorityQueue2 = _interopRequireDefault(_priorityQueue);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var WeightedGraph = function () {
-  function WeightedGraph() {
-    _classCallCheck(this, WeightedGraph);
-
-    this.adjacencyList = {};
+var pairEqualsTarget = function pairEqualsTarget(array, target) {
+  var left = 0;
+  var right = array.length - 1;
+  var results = [];
+  while (left < right) {
+    if (array[left] + array[right] === target) {
+      results.push(left, right);
+      break;
+    } else {
+      if (array[left] + array[right] > target) {
+        right--;
+      } else if (array[left] + array[right] < target) {
+        left++;
+      }
+    }
   }
+  return results;
+};
 
-  _createClass(WeightedGraph, [{
-    key: "addVertex",
-    value: function addVertex(vertex) {
-      if (!this.adjacencyList[vertex]) {
-        this.adjacencyList[vertex] = [];
+var removeDuplicates = function removeDuplicates(array) {
+  var left = 0;
+  var right = 0;
+  while (right < array.length) {
+    if (array[left] === array[right]) {
+      right++;
+    } else if (array[left] !== array[right]) {
+      left++;
+      array[left] = array[right];
+      right++;
+    }
+  }
+  return left + 1;
+};
+
+var squaresOfAllNumbers = function squaresOfAllNumbers(array) {
+  var result = [];
+  var left = 0;
+  var right = array.length - 1;
+  while (left <= right) {
+    var leftValue = Math.pow(array[left], 2);
+    var rightValue = Math.pow(array[right], 2);
+    if (rightValue >= leftValue) {
+      result.unshift(rightValue);
+      right--;
+    } else if (leftValue > rightValue) {
+      result.unshift(leftValue);
+      left++;
+    }
+  }
+  return result;
+};
+
+var uniqueTriplets0 = function uniqueTriplets0(array) {
+  array.sort(function (a, b) {
+    return a - b;
+  });
+  var results = [];
+
+  for (var i = 0; i < array.length - 2; i++) {
+    if (array[i] === array[i - 1]) {
+      continue;
+    }
+    var left = i + 1;
+    var right = array.length - 1;
+    var value = array[i];
+    var sumOtherTwo = value * -1;
+
+    while (left < right) {
+      if (array[left] + array[right] === sumOtherTwo) {
+        results.push([array[i], array[left], array[right]]);
+        left++;
+        while (array[left] === array[left - 1]) {
+          left++;
+        }
+        right--;
+        while (array[right] === array[right] + 1) {
+          right--;
+        }
+      } else if (array[left] + array[right] > sumOtherTwo) {
+        right--;
+      } else if (array[left] + array[right] < sumOtherTwo) {
+        left++;
       }
     }
-  }, {
-    key: "addEdge",
-    value: function addEdge(vertex1, vertex2, weight) {
-      this.adjacencyList[vertex1].push({ vertex: vertex2, weight: weight });
-      this.adjacencyList[vertex2].push({ vertex: vertex1, weight: weight });
-    }
-  }, {
-    key: "Dijkstras",
-    value: function Dijkstras(startVertex, endVertex) {
-      var _this = this;
-
-      var distances = {};
-      var previous = {};
-      var path = [];
-      var vertexQueue = new _priorityQueue2.default();
-      var vertices = Object.keys(this.adjacencyList);
-      vertices.forEach(function (vertex) {
-        if (vertex !== startVertex) {
-          distances[vertex] = Infinity;
-          vertexQueue.enqueue(vertex, Infinity);
-        } else {
-          distances[vertex] = 0;
-          vertexQueue.enqueue(vertex, 0);
-        }
-        previous[vertex] = null;
-      });
-
-      var _loop = function _loop() {
-        // dequeue to get the vertex with the smallest distance from the start vertex
-        var smallestVertex = vertexQueue.dequeue().value;
-        // look at this vertex's edges to find the possibilities for the next smallest length
-        if (smallestVertex === endVertex) {
-          path.push(smallestVertex);
-          while (previous[smallestVertex]) {
-            path.push(previous[smallestVertex]);
-            smallestVertex = previous[smallestVertex];
-          }
-          return "break";
-        }
-        _this.adjacencyList[smallestVertex].forEach(function (vertexEdgeObject, index) {
-          //get the vertex and its weight and its current shortest distance from the startVertex
-          var vertex = vertexEdgeObject.vertex;
-          var vertexEdgeWeight = vertexEdgeObject.weight;
-          var currentVertexDistance = distances[vertex];
-
-          //get its new distance from the startVertex, which is weight of startVertex plus this vertices weight
-          var newVertexDistance = distances[smallestVertex] + vertexEdgeWeight;
-          if (newVertexDistance < currentVertexDistance) {
-            distances[vertex] = newVertexDistance;
-            previous[vertex] = smallestVertex;
-            vertexQueue.enqueue(vertex, newVertexDistance);
-          }
-        });
-      };
-
-      while (true) {
-        var _ret = _loop();
-
-        if (_ret === "break") break;
-      }
-
-      return path.reverse();
-    }
-  }]);
-
-  return WeightedGraph;
-}();
-
-var g = new WeightedGraph();
-g.addVertex("A");
-g.addVertex("B");
-g.addVertex("C");
-g.addVertex("D");
-g.addVertex("E");
-g.addVertex("F");
-
-g.addEdge("A", "B", 4);
-g.addEdge("A", "C", 2);
-g.addEdge("B", "E", 3);
-g.addEdge("C", "D", 2);
-g.addEdge("C", "F", 4);
-g.addEdge("D", "E", 3);
-g.addEdge("D", "F", 1);
-g.addEdge("E", "F", 1);
-console.log(g.Dijkstras("A", "E"));
+  }
+  return results;
+};
+console.log(uniqueTriplets0([-1, -1, -1, 0, 0, 0, 1, 1, 1]));
 
 /***/ }),
 
