@@ -15721,94 +15721,60 @@ module.exports = g;
 "use strict";
 
 
-var pairEqualsTarget = function pairEqualsTarget(array, target) {
-  var left = 0;
-  var right = array.length - 1;
-  var results = [];
-  while (left < right) {
-    if (array[left] + array[right] === target) {
-      results.push(left, right);
-      break;
-    } else {
-      if (array[left] + array[right] > target) {
-        right--;
-      } else if (array[left] + array[right] < target) {
-        left++;
-      }
-    }
-  }
-  return results;
-};
-
-var removeDuplicates = function removeDuplicates(array) {
-  var left = 0;
-  var right = 0;
-  while (right < array.length) {
-    if (array[left] === array[right]) {
-      right++;
-    } else if (array[left] !== array[right]) {
-      left++;
-      array[left] = array[right];
-      right++;
-    }
-  }
-  return left + 1;
-};
-
-var squaresOfAllNumbers = function squaresOfAllNumbers(array) {
-  var result = [];
-  var left = 0;
-  var right = array.length - 1;
-  while (left <= right) {
-    var leftValue = Math.pow(array[left], 2);
-    var rightValue = Math.pow(array[right], 2);
-    if (rightValue >= leftValue) {
-      result.unshift(rightValue);
-      right--;
-    } else if (leftValue > rightValue) {
-      result.unshift(leftValue);
-      left++;
-    }
-  }
-  return result;
-};
-
-var uniqueTriplets0 = function uniqueTriplets0(array) {
+var tripletSumCloseTarget = function tripletSumCloseTarget(array, target) {
   array.sort(function (a, b) {
     return a - b;
   });
-  var results = [];
-
+  var smallestDifference = Infinity;
+  var smallestSum = Infinity;
+  var result = [];
   for (var i = 0; i < array.length - 2; i++) {
-    if (array[i] === array[i - 1]) {
-      continue;
-    }
+    var number = array[i];
     var left = i + 1;
     var right = array.length - 1;
-    var value = array[i];
-    var sumOtherTwo = value * -1;
-
+    var sumToTarget = target - number;
     while (left < right) {
-      if (array[left] + array[right] === sumOtherTwo) {
-        results.push([array[i], array[left], array[right]]);
+      var tripletSum = array[i] + array[left] + array[right];
+      result.push({
+        array: [array[i], array[left], array[right]],
+        sum: tripletSum,
+        difference: Math.abs(target - tripletSum)
+      });
+      if (array[left] + array[right] === sumToTarget) {
         left++;
-        while (array[left] === array[left - 1]) {
-          left++;
-        }
         right--;
-        while (array[right] === array[right] + 1) {
-          right--;
-        }
-      } else if (array[left] + array[right] > sumOtherTwo) {
+        //or we could just return target since this is the closese sum to the target, hell it is the target.
+      } else if (array[right] + array[left] > sumToTarget) {
         right--;
-      } else if (array[left] + array[right] < sumOtherTwo) {
+      } else if (array[right] + array[left] < sumToTarget) {
         left++;
       }
     }
   }
-  return results;
+
+  //look in our results and find the smallest difference
+  result.forEach(function (object) {
+    smallestDifference = Math.min(smallestDifference, object.difference);
+  });
+
+  //get all the objects with this same smallest difference and put them in newResult
+  var newResult = result.filter(function (object, index) {
+    return object.difference === smallestDifference;
+  });
+
+  //if length is 1, we just return the sum of the item in there
+  if (newResult.length === 1) {
+    return newResult[0].sum;
+  } else {
+    // if length is not 1, we look at each object and find the smallest sum
+    newResult.forEach(function (object) {
+      smallestSum = Math.min(smallestSum, object.sum);
+    }); //we return the smallest sum
+    return smallestSum;
+  }
 };
-console.log(uniqueTriplets0([-1, -1, -1, 0, 0, 0, 1, 1, 1]));
+
+console.log(tripletSumCloseTarget([-2, 0, 1, 2], 2));
 
 /***/ }),
 
