@@ -38,7 +38,7 @@ const findSubarrays = (array, targetNumber) => {
     //since the product of all numbers from left to right in current window is less than the tagret, all subarrays fromm left to right will have a product less than the target too. We start from endWindow and go down to startWindow because for our example if we start from startWindow. and use push instead of unshift, we first push in 2 to results Array. and then when our window is [2,5], we push in 2 again and add that to resultsArray before pushing in 5 and then 2,5 gets added because we join and split. That is a duplicate we dont want. So ths way. we first unshift 5. and then when window is [2,5], we unshift 2 first.
     for (let i = endWindow; i >= startWindow; i--) {
       tempList.unshift(array[i]);
-      resultsArray.push(tempList.join("").split(""));
+      resultsArray.push(tempList.join("x").split("x"));
     }
   }
   return resultsArray;

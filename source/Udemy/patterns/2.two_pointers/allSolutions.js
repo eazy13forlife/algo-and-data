@@ -224,3 +224,71 @@ const tripletsWithSmallerSum = (array, target) => {
   }
   return results;
 };
+
+//6
+const findSubarrays = (array, targetNumber) => {
+  let startWindow = 0;
+  let results = 0;
+  let resultsArray = [];
+  let product = 1;
+  for (let endWindow = 0; endWindow < array.length; endWindow++) {
+    let firstNumber = array[endWindow];
+    product *= firstNumber;
+
+    // if product  is greater than or eequal to targetNumber, this doesnt meet our requirement, so we want to shrink our window. However if our startWindow exceeds our endWindow, we need to
+    while (product >= targetNumber && startWindow < endWindow) {
+      let firstNumber = array[startWindow];
+      product /= firstNumber;
+      startWindow += 1;
+    }
+
+    let tempList = [];
+
+    for (let i = endWindow; i >= startWindow; i--) {
+      tempList.unshift(array[i]);
+      resultsArray.push(tempList.join("x").split("x"));
+    }
+  }
+  return resultsArray;
+};
+
+//6 unorthodox way
+const findSubarrays2 = (array, target) => {
+  const result = [];
+  const newResult = [];
+  for (let i = 0; i < array.length; i++) {
+    for (let j = 0; j < array.length; j++) {
+      if (i <= j) {
+        result.push(array.slice(i, j + 1));
+      }
+    }
+  }
+  result.forEach((array) => {
+    const product = array.reduce((total, number) => {
+      return total * number;
+    });
+    if (product < target) {
+      newResult.push(array);
+    }
+  });
+  return newResult;
+};
+
+const dutch = (array) => {
+  let left = 0;
+  let right = array.length - 1;
+  let i = 0;
+  while (i <= right) {
+    if (array[i] === 0) {
+      swap(array, left, i);
+      left++;
+      i++;
+    } else if (array[i] === 2) {
+      swap(array, right, i);
+      right--;
+    } else {
+      i++;
+    }
+  }
+  return array;
+};
