@@ -22,7 +22,7 @@ const lengthOfCycle = (head) => {
 };
 
 const startOfLoop = (head) => {
-  const length = lengthOfCycle(head);
+  const length = lengthOfCycle(head); //we could also let lenghOfCycle return the meetingPoint, as opposed to length, so we could set endPointer equal to that meetingPoint right away instead of having to do the i loop
   let startPointer = head;
   let endPointer = head;
   for (let i = 1; i <= length; i++) {
