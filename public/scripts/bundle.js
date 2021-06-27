@@ -15721,6 +15721,139 @@ module.exports = g;
 "use strict";
 
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+var compareStrings = function compareStrings(string1, string2) {
+  "    let left = 0;\n    let right = 0;\n    while (left < string1.length && right < string2.length) {\n      if (string1[left] === string2[right]) {\n        left++;\n        right++;\n      } else if (string1[left] === \"#\" && string2[right] !== \"#\") {\n        left++;\n      } else if (string1[left] !== \"#\" && string2[right] === \"#\") {\n        right++;\n      } else {\n        return false;\n      }\n    }\n    return true;";
+};
+
+var removeBackspace = function removeBackspace(string) {
+  var stringArray = string.split("");
+  var left = 0;
+  var right = 1;
+  while (right < stringArray.length) {
+    if (stringArray[right] !== "#") {
+      left++;
+      right++;
+    } else {
+      stringArray.splice(left, 2);
+      left -= 1;
+      right = left + 1;
+    }
+  }
+  return stringArray.join("");
+};
+
+var checkEqual = function checkEqual(string1, string2) {
+  var word1 = removeBackspace(string1);
+  var word2 = removeBackspace(string2);
+  if (word1 === word2) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+var checkSorted = function checkSorted(actualArray, subArray, startWindow, endWindow) {
+  subArray.sort(function (a, b) {
+    return a - b;
+  });
+  var left = actualArray.slice(0, startWindow);
+  console.log(left);
+  var middle = subArray;
+  console.log(middle);
+  var right = actualArray.slice(endWindow + 1);
+  console.log(right);
+  var newArray = [].concat(_toConsumableArray(left), _toConsumableArray(middle), _toConsumableArray(right));
+
+  for (var i = 0; i < newArray.length; i++) {
+    if (i > 0) {
+      if (newArray[i] >= newArray[i - 1]) {
+        continue;
+      } else {
+        return false;
+      }
+    }
+  }
+  return true;
+};
+
+var lengthSmallestArray = function lengthSmallestArray(array) {};
+
+/*
+const left = actualArray.slice(0, startWindow);
+const middle = subArray;
+const right = actualArray.slice(endWindow + 1);
+const newArray = [...left, ...middle, ...right];
+for (let i = 0; i < newArray.length; i++) {
+  if (i > 0) {
+    if (newArray[i] >= newArray[i - 1]) {
+      continue;
+    } else {
+      return false;
+    }
+  }
+}
+return true;
+};
+
+const shortest_window_sort = function(array) {
+ let smallestLength = Infinity;
+let startWindow = 0;
+const result = [];
+for (let endWindow = 0; endWindow < array.length; endWindow++) {
+  result.push(endWindow);
+  let sorted = checkSorted(array, result, startWindow, endWindow);
+  while (sorted) {
+    smallestLength = Math.min(smallestLength, endWindow-startWindow+1);
+    result.shift();
+    startWindow++;
+    sorted = checkSorted(array, result, startWindow, endWindow);
+  }
+}
+return smallestLength;
+*/
+
+var lengthSmallestSub = function lengthSmallestSub(array) {
+  var startWindow = 0;
+  var endWindow = array.length - 1;
+  var min = Infinity;
+  var max = -Infinity;
+  while (startWindow <= endWindow) {
+    if (array[startWindow + 1] > array[startWindow]) {
+      startWindow++;
+    } else {
+      break;
+    }
+  }
+
+  while (startWindow <= endWindow) {
+    if (array[endWindow - 1] < array[endWindow]) {
+      endWindow--;
+    } else {
+      break;
+    }
+  }
+
+  for (var i = startWindow; i <= endWindow; i++) {
+    min = Math.min(min, array[i]);
+    max = Math.max(max, array[i]);
+  }
+
+  for (var _i = startWindow - 1; _i >= 0; _i--) {
+    if (array[_i] > min) {
+      startWindow = _i;
+    }
+  }
+  for (var _i2 = endWindow + 1; _i2 < array.length; _i2++) {
+    if (array[_i2] < max) {
+      endWindow = _i2;
+    }
+  }
+  return endWindow - startWindow + 1;
+};
+console.log(lengthSmallestSub([1, 2, 5, 3, 0, 12, 13, 8, 15, 18]));
+
 /***/ }),
 
 /***/ 0:

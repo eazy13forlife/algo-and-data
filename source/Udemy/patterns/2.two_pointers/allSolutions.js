@@ -274,6 +274,7 @@ const findSubarrays2 = (array, target) => {
   return newResult;
 };
 
+//7
 const dutch = (array) => {
   let left = 0;
   let right = array.length - 1;
@@ -291,4 +292,114 @@ const dutch = (array) => {
     }
   }
   return array;
+};
+
+//8
+const quadruplets2 = (array, target) => {
+  array.sort((a, b) => {
+    return a - b;
+  });
+  const result = [];
+  for (let i = 0; i < array.length - 3; i++) {
+    if (i > 0 && array[i] === array[i - 1]) {
+      continue;
+    }
+    const number = array[i];
+    for (let j = i + 1; j < array.length - 2; j++) {
+      if (j > 0 && array[j] === array[j - 1]) {
+        continue;
+      }
+      let left = j + 1;
+      let right = array.length - 1;
+      while (left < right) {
+        let sumToTarget = target - (number + array[j]);
+        if (array[left] + array[right] === sumToTarget) {
+          result.push([array[i], array[j], array[left], array[right]]);
+          //when we push left up and right down, left might overtake right
+          left++;
+          while (array[left] === array[left - 1]) {
+            left++;
+          }
+          right--;
+          while (array[right] === array[right + 1]) {
+            right--;
+          }
+        } else if (array[left] + array[right] < sumToTarget) {
+          left++;
+        } else if (array[left] + array[right] > sumToTarget) {
+          right--;
+        }
+      }
+    }
+  }
+  return result;
+};
+
+//9 PART A
+const removeBackspace = (string) => {
+  const stringArray = string.split("");
+  let left = 0;
+  let right = 1;
+  while (right < stringArray.length) {
+    if (stringArray[right] !== "#") {
+      left++;
+      right++;
+    } else {
+      stringArray.splice(left, 2);
+      left -= 1;
+      right = left + 1;
+    }
+  }
+  return stringArray.join("");
+};
+
+//9 PART B
+const checkEqual = (string1, string2) => {
+  const word1 = removeBackspace(string1);
+  const word2 = removeBackspace(string2);
+  if (word1 === word2) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+//10
+const lengthSmallestSub = (array) => {
+  let startWindow = 0;
+  let endWindow = array.length - 1;
+  let min = Infinity;
+  let max = -Infinity;
+  while (startWindow <= endWindow) {
+    if (array[startWindow + 1] > array[startWindow]) {
+      startWindow++;
+    } else {
+      break;
+    }
+  }
+
+  while (startWindow <= endWindow) {
+    if (array[endWindow - 1] < array[endWindow]) {
+      endWindow--;
+    } else {
+      break;
+    }
+  }
+
+  for (let i = startWindow; i <= endWindow; i++) {
+    min = Math.min(min, array[i]);
+    max = Math.max(max, array[i]);
+  }
+
+  for (let i = startWindow - 1; i >= 0; i--) {
+    if (array[i] > min) {
+      startWindow = i;
+    }
+  }
+  for (let i = endWindow + 1; i < array.length; i++) {
+    if (array[i] < max) {
+      endWindow = i;
+    }
+  }
+  return endWindow - startWindow + 1;
 };
