@@ -403,3 +403,46 @@ const lengthSmallestSub = (array) => {
   }
   return endWindow - startWindow + 1;
 };
+
+//10 alternate
+const checkSorted = (actualArray, subArray, startWindow, endWindow) => {
+  subArray.sort((a, b) => {
+    return a - b;
+  });
+  const left = actualArray.slice(0, startWindow);
+  const middle = subArray;
+  const right = actualArray.slice(endWindow + 1);
+  const newArray = [...left, ...middle, ...right];
+  for (let i = 0; i < newArray.length; i++) {
+    if (i > 0) {
+      if (newArray[i] >= newArray[i - 1]) {
+        continue;
+      } else {
+        return false;
+      }
+    }
+  }
+  return true;
+};
+
+const shortest_window_sort = (array) => {
+  const sorted = checkSorted(array, [], 0, 0);
+  if (sorted) {
+    return 0;
+  }
+  let smallestLength = Infinity;
+  let startWindow = 0;
+  const subArray = [];
+  for (let endWindow = 0; endWindow < array.length; endWindow++) {
+    subArray.push(array[endWindow]);
+    //checkSorted sorts my subarray in place and its the same array stored in reference so it will modify my results array, which i don't want. That is why i do[...subarray]
+    let sorted = checkSorted(array, [...subArray], startWindow, endWindow);
+    while (sorted && startWindow <= endWindow) {
+      smallestLength = Math.min(smallestLength, endWindow - startWindow + 1);
+      subArray.shift();
+      startWindow++;
+      sorted = checkSorted(array, [...subArray], startWindow, endWindow);
+    }
+  }
+  return smallestLength;
+};
