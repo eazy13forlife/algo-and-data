@@ -1,9 +1,8 @@
 const lengthOfCycle = (head) => {
   let fast = head;
   let slow = head;
-  // so the current fast needs to exists and its next needs to exist too. If it's next doesn't exist, then it is cleary not a cycle. and if the current fast doesn't exist, then its clearly not a cycle either.
+  // so the current fast needs to exist,otherwise we clearly don't have a cycle and its next needs to exist too(because if its next doesn't exist, when we move up 2 and do fast.next.next,it won't work because we can't do next of null).
   while (fast !== null && fast.next !== null) {
-    //while(fast!==null) works as well
     fast = fast.next.next;
     slow = slow.next;
     if (fast === slow) {
@@ -22,14 +21,14 @@ const lengthOfCycle = (head) => {
 };
 
 const startOfLoop = (head) => {
-  const length = lengthOfCycle(head); //we could also let lenghOfCycle return the meetingPoint, as opposed to length, so we could set endPointer equal to that meetingPoint right away instead of having to do the i loop
+  const length = lengthOfCycle(head); //we could also let lenghOfCycle return the meetingPoint(which is shown in the example bleo), as opposed to length, so we could set endPointer equal to that meetingPoint right away instead of having to do the i loop
   let startPointer = head;
   let endPointer = head;
   for (let i = 1; i <= length; i++) {
     endPointer = endPointer.next;
   }
   while (startPointer !== endPointer) {
-    //so when this while loop sees that startPointer and endPointer are equal, thats when we stop the loop and either return startPointer or endPointer
+    //so when this while loop sees that startPointer and endPointer are equal, thats when we stop the loop and either return startPointer or endPointer.Doesn't matter because they equal the same thing.
     startPointer = startPointer.next;
     endPointer = endPointer.next;
   }
@@ -40,7 +39,7 @@ const startOfLoop = (head) => {
 const hasCycle = (head) => {
   let slow = head;
   let fast = head;
-  while (fast) {
+  while (fast !== null && fast.next !== null) {
     slow = slow.next;
     fast = fast.next.next;
     if (slow === fast) {
@@ -53,6 +52,9 @@ const hasCycle = (head) => {
 const getStartNode = (head) => {
   let pointer1 = head;
   let pointer2 = hasCycle(head);
+  if (!pointer2) {
+    return "There is no cycle";
+  }
   while (pointer1 !== pointer2) {
     pointer1 = pointer1.next;
     pointer2 = pointer2.next;

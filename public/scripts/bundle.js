@@ -15721,6 +15721,35 @@ module.exports = g;
 "use strict";
 
 
+//using fast and slow pointers
+var getSumDigits = function getSumDigits(number) {
+  var sum = 0;
+  var numberArray = number.toString().split("");
+  for (var i = 0; i < numberArray.length; i++) {
+    var _number = numberArray[i];
+    sum += _number * _number;
+  }
+  return sum;
+};
+
+var findHappyNumber = function findHappyNumber(number) {
+  var slow = number;
+  var fast = number;
+  //slow and fast equal the same thing right out of the gate, so i can't do while(slow!==fast) and then run my code when theyre equal, because they're equal from the start, so while loop wouldn't even run. Since, they're going to equal each other at some point, I just run a loop while(true) and then once they're equal, i find what im looking for and end the loop.
+  while (true) {
+    slow = getSumDigits(slow);
+    fast = getSumDigits(getSumDigits(fast));
+    if (slow === fast) {
+      if (slow === 1) {
+        return true;
+      }
+      return false;
+    }
+  }
+};
+
+console.log(getSumDigits(30));
+
 /***/ }),
 
 /***/ 0:
