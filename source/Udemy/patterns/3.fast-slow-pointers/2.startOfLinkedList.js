@@ -35,3 +35,27 @@ const startOfLoop = (head) => {
   }
   return startPointer;
 };
+
+//Alternate approach where when we are finding start of loop, we make pointer 2 equal the meeting point and go from there,instead of finding the length of the loop and making pointer 2 equal head+length. This way, we avoud having to find the length.
+const hasCycle = (head) => {
+  let slow = head;
+  let fast = head;
+  while (fast) {
+    slow = slow.next;
+    fast = fast.next.next;
+    if (slow === fast) {
+      return fast;
+    }
+  }
+  return false;
+};
+
+const getStartNode = (head) => {
+  let pointer1 = head;
+  let pointer2 = hasCycle(head);
+  while (pointer1 !== pointer2) {
+    pointer1 = pointer1.next;
+    pointer2 = pointer2.next;
+  }
+  return pointer1;
+};
