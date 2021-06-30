@@ -42,7 +42,7 @@ const palindrome2 = (head) => {
   return firstHalfWord === secondHalfWordReversed;
 };
 
-//0(1) space complexity;
+//BETTER SOLUTION 0(1) space complexity;
 class Node {
   constructor(value) {
     this.value = value;
