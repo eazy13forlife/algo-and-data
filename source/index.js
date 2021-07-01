@@ -1,48 +1,3 @@
-//this is a solution, but its 0(n) space complexity because we are using a string.
-const palindrome2 = (head) => {
-  let firstHalfWord = "";
-  let secondHalfWord = "";
-  let length = 0;
-  let slow = head;
-  let fast = head;
-  let count = head;
-
-  //find the length of our linked list
-  while (count !== null) {
-    length++;
-    count = count.next;
-  }
-
-  //move fast and slow until slow gets to the middle and fast reaches end of list
-  while (fast !== null && fast.next !== null) {
-    slow = slow.next;
-    fast = fast.next.next;
-  }
-
-  let leftIterator = head;
-  let rightIterator;
-  //if even length, then we want our rightIterator to include the node slow is on, so we can have an even left and right half, otherwise, we dont want rightIterator to include the node slow is on.
-  if (length % 2 === 0) {
-    rightIterator = slow;
-  } else {
-    rightIterator = slow.next;
-  }
-
-  while (leftIterator !== slow) {
-    firstHalfWord += leftIterator.value;
-    leftIterator = leftIterator.next;
-  }
-
-  while (rightIterator !== null) {
-    secondHalfWord += rightIterator.value;
-    rightIterator = rightIterator.next;
-  }
-
-  const secondHalfWordReversed = secondHalfWord.split("").reverse().join("");
-  return firstHalfWord === secondHalfWordReversed;
-};
-
-//0(1) space complexity;
 class Node {
   constructor(value) {
     this.value = value;
@@ -71,6 +26,7 @@ const palindrome = (head) => {
   while (head !== null && headSecondHalf !== null) {
     if (head.value !== headSecondHalf.value) {
       reverse(copyHeadSecondHalf);
+      console.log(head);
       return false;
     }
     head = head.next;
@@ -83,6 +39,7 @@ const palindrome = (head) => {
     headSecondHalf === null
   ) {
     reverse(copyHeadSecondHalf);
+    console.log(head);
     return true;
   }
 };
@@ -98,7 +55,6 @@ const reverse = (head) => {
   }
   return prev;
 };
-
 const head = new Node(2);
 head.next = new Node(4);
 head.next.next = new Node(6);

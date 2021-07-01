@@ -15723,52 +15723,6 @@ module.exports = g;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-//this is a solution, but its 0(n) space complexity because we are using a string.
-var palindrome2 = function palindrome2(head) {
-  var firstHalfWord = "";
-  var secondHalfWord = "";
-  var length = 0;
-  var slow = head;
-  var fast = head;
-  var count = head;
-
-  //find the length of our linked list
-  while (count !== null) {
-    length++;
-    count = count.next;
-  }
-
-  //move fast and slow until slow gets to the middle and fast reaches end of list
-  while (fast !== null && fast.next !== null) {
-    slow = slow.next;
-    fast = fast.next.next;
-  }
-
-  var leftIterator = head;
-  var rightIterator = void 0;
-  //if even length, then we want our rightIterator to include the node slow is on, so we can have an even left and right half, otherwise, we dont want rightIterator to include the node slow is on.
-  if (length % 2 === 0) {
-    rightIterator = slow;
-  } else {
-    rightIterator = slow.next;
-  }
-
-  while (leftIterator !== slow) {
-    firstHalfWord += leftIterator.value;
-    leftIterator = leftIterator.next;
-  }
-
-  while (rightIterator !== null) {
-    secondHalfWord += rightIterator.value;
-    rightIterator = rightIterator.next;
-  }
-
-  var secondHalfWordReversed = secondHalfWord.split("").reverse().join("");
-  return firstHalfWord === secondHalfWordReversed;
-};
-
-//0(1) space complexity;
-
 var Node = function Node(value) {
   _classCallCheck(this, Node);
 
@@ -15797,6 +15751,7 @@ var palindrome = function palindrome(head) {
   while (head !== null && headSecondHalf !== null) {
     if (head.value !== headSecondHalf.value) {
       reverse(copyHeadSecondHalf);
+      console.log(head);
       return false;
     }
     head = head.next;
@@ -15805,6 +15760,7 @@ var palindrome = function palindrome(head) {
 
   if (head === null && headSecondHalf === null || head === null || headSecondHalf === null) {
     reverse(copyHeadSecondHalf);
+    console.log(head);
     return true;
   }
 };
@@ -15820,7 +15776,6 @@ var reverse = function reverse(head) {
   }
   return prev;
 };
-
 var head = new Node(2);
 head.next = new Node(4);
 head.next.next = new Node(6);

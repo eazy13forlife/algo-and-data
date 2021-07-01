@@ -43,46 +43,36 @@ const palindrome2 = (head) => {
 };
 
 //BETTER SOLUTION 0(1) space complexity;
-class Node {
-  constructor(value) {
-    this.value = value;
-    this.next = null;
-  }
-}
-
 const palindrome = (head) => {
-  let slow = head;
-  let fast = head;
-  while (head === null || head.next === null) {
+  if (head === null || head.next === null) {
     return true;
   }
+
+  let slow = head;
+  let fast = head;
 
   while (fast !== null && fast.next !== null) {
     slow = slow.next;
     fast = fast.next.next;
   }
 
-  let headSecondHalf = reverse(slow);
-  //we store the head of reversedPart, so we can reverse back ater, starting from this head.because the original headSecondHalf is going to iterate through list, so it will end up equaling something completely different by the end of the iteration.
-  const copyHeadSecondHalf = headSecondHalf;
+  let secondHead = reverse(slow);
 
-  //so we look at our current head and look at the head of the reversedPart, called headSecondHalf
+  let secondHeadCopy = secondHead; //we store secondHead in secondHeadCopy because right now secondHead is the start of the reversed list,and as we iterate firstHead and secondHead secondHead will keep changing,but  at the end we need our list in its original form, so we want to call reverse with the original secondHead, not the secondHead thats been iterating and changing.
 
-  while (head !== null && headSecondHalf !== null) {
-    if (head.value !== headSecondHalf.value) {
-      reverse(copyHeadSecondHalf);
+  let firstHead = head; //since we are going to be iterating both lists, firstHead and secondHead,if we dont store the original head inside firstHead and instead do  head=head.next, we will be setting the original head to equal something totally new in each iteration, which we don't want because the linkedList should be in its original form once the algorithm is finished. So, we store head in firstHead, so when we do firsthead=firstHead.next firstHead is equaling something new every iteration, and the originalHead keeps its same value in reference..
+
+  while (firstHead !== null && secondHead !== null) {
+    if (firstHead.value !== secondHead.value) {
+      reverse(secondHeadCopy);
       return false;
     }
-    head = head.next;
-    headSecondHalf = headSecondHalf.next;
+    firstHead = firstHead.next;
+    secondHead = secondHead.next;
   }
 
-  if (
-    (head === null && headSecondHalf === null) ||
-    head === null ||
-    headSecondHalf === null
-  ) {
-    reverse(copyHeadSecondHalf);
+  if (firstHead === null || secondHead === null) {
+    reverse(secondHeadCopy);
     return true;
   }
 };
