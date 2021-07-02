@@ -15730,58 +15730,64 @@ var Node = function Node(value) {
   this.next = null;
 };
 
-var palindrome = function palindrome(head) {
-  var slow = head;
-  var fast = head;
-  while (head === null || head.next === null) {
-    return true;
+var cycleCircularArray = function cycleCircularArray(array) {
+  if (array.length <= 1) {
+    return false;
   }
 
-  while (fast !== null && fast.next !== null) {
-    slow = slow.next;
-    fast = fast.next.next;
-  }
-
-  var headSecondHalf = reverse(slow);
-  //we store the head of reversedPart, so we can reverse back ater, starting from this head.because the original headSecondHalf is going to iterate through list, so it will end up equaling something completely different by the end of the iteration.
-  var copyHeadSecondHalf = headSecondHalf;
-
-  //so we look at our current head and look at the head of the reversedPart, called headSecondHalf
-
-  while (head !== null && headSecondHalf !== null) {
-    if (head.value !== headSecondHalf.value) {
-      reverse(copyHeadSecondHalf);
-      console.log(head);
-      return false;
+  for (var i = 0; i < array.length; i++) {
+    var slow = i;
+    var fast = i;
+    var isPositive = array[slow] > 0; //keep track of whether we can only have positive or negative movements for this iteration;
+    while (true) {
+      //circular array so fast will never hit null, so we need to break out of this loop when we feel its necessary to.
+      slow = getNext(array, slow, isPositive); //move slow up one
+      if (slow === false) {
+        break;
+      }
+      fast = getNext(array, fast, isPositive); //move fast and return the nextindex
+      if (fast === false) {
+        break;
+      }
+      fast = getNext(array, fast, isPositive); //using the previous nextIndex, move fast again
+      if (fast === false) {
+        break;
+      }
+      if (slow === fast) {
+        return true;
+      }
     }
-    head = head.next;
-    headSecondHalf = headSecondHalf.next;
   }
-
-  if (head === null && headSecondHalf === null || head === null || headSecondHalf === null) {
-    reverse(copyHeadSecondHalf);
-    console.log(head);
-    return true;
-  }
+  return false;
 };
 
-var reverse = function reverse(head) {
-  //takes the head and reverses everything starting from there to the end of the list. We get this new reversed head node back
-  var prev = null;
-  while (head !== null) {
-    var next = head.next;
-    head.next = prev;
-    prev = head;
-    head = next;
+//function to get the next index, starting from a currentIndex;
+var getNext = function getNext(array, currentIndex, direction) {
+  var nextIndex = currentIndex + array[currentIndex];
+
+  if (nextIndex >= array.length) {
+    nextIndex = nextIndex % array.length;
+  } else if (nextIndex < 0) {
+    var number = Math.abs(nextIndex) % array.length;
+    if (number === 0) {
+      nextIndex = 0;
+    } else {
+      nextIndex = array.length - number;
+    }
   }
-  return prev;
+  var isPositive = array[nextIndex] >= 0;
+  //if this nextIndex number isn't the same sign as what slow and start is starting out, we return false, because the cycle cannot contains both forward and backward movements.
+  if (isPositive !== direction) {
+    return false;
+  }
+
+  //if the nextIndex we jump to is equal to the currentIndex, then we return false, because the cycle should have more than one element.
+  if (nextIndex === currentIndex) {
+    return false;
+  }
+
+  return nextIndex;
 };
-var head = new Node(2);
-head.next = new Node(4);
-head.next.next = new Node(6);
-head.next.next.next = new Node(4);
-head.next.next.next.next = new Node(2);
-palindrome(head);
 
 /***/ }),
 

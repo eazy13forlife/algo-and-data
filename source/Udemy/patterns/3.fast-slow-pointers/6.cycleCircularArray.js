@@ -1,10 +1,3 @@
-class Node {
-  constructor(value) {
-    this.value = value;
-    this.next = null;
-  }
-}
-
 const cycleCircularArray = (array) => {
   if (array.length <= 1) {
     return false;
