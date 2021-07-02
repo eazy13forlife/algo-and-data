@@ -9,15 +9,15 @@ const cycleCircularArray = (array) => {
     let isPositive = array[slow] > 0; //keep track of whether we can only have positive or negative movements for this iteration;
     while (true) {
       //circular array so fast will never hit null, so we need to break out of this loop when we feel its necessary to.
-      slow = getNext(array, slow, isPositive); //move slow up one
+      slow = getNext(array, slow, isPositive); //do one movement for slow to get to the next index
       if (slow === false) {
         break;
       }
-      fast = getNext(array, fast, isPositive); //move fast and return the nextindex
+      fast = getNext(array, fast, isPositive); //do one movement for fast to get to the next index
       if (fast === false) {
         break;
       }
-      fast = getNext(array, fast, isPositive); //using the previous nextIndex, move fast again
+      fast = getNext(array, fast, isPositive); //do another movement for fast to get to the next index
       if (fast === false) {
         break;
       }
@@ -44,7 +44,7 @@ const getNext = (array, currentIndex, direction) => {
     }
   }
   const isPositive = array[nextIndex] >= 0;
-  //if this nextIndex number isn't the same sign as what slow and start is starting out, we return false, because the cycle cannot contains both forward and backward movements.
+  //if this nextIndex number isn't the same sign as what slow and starts out with, we return false, because the cycle cannot contains both forward and backward movements.
   if (isPositive !== direction) {
     return false;
   }
