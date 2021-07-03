@@ -15723,71 +15723,53 @@ module.exports = g;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Node = function Node(value) {
-  _classCallCheck(this, Node);
+//instead of having to deal with 0 or 1 for start and end and possibly getting confused that way,lets create a class
 
-  this.value = value;
-  this.next = null;
+var Interval = function Interval(start, end) {
+  _classCallCheck(this, Interval);
+
+  this.start = start;
+  this.end = end;
 };
 
-var cycleCircularArray = function cycleCircularArray(array) {
-  if (array.length <= 1) {
-    return false;
-  }
+var mergeIntervals = function mergeIntervals(intervals) {
+  var results = [];
+  //i create a newIntervals array so I can use my interval class that has a start and end property so it's easier to identify,so I wont have to do  0 and 1 index to refer to start and end each time. However, it doesn't matter.
+  var newIntervals = [];
 
-  for (var i = 0; i < array.length; i++) {
-    var slow = i;
-    var fast = i;
-    var isPositive = array[slow] > 0; //keep track of whether we can only have positive or negative movements for this iteration;
-    while (true) {
-      //circular array so fast will never hit null, so we need to break out of this loop when we feel its necessary to.
-      slow = getNext(array, slow, isPositive); //move slow up one
-      if (slow === false) {
-        break;
-      }
-      fast = getNext(array, fast, isPositive); //move fast and return the nextindex
-      if (fast === false) {
-        break;
-      }
-      fast = getNext(array, fast, isPositive); //using the previous nextIndex, move fast again
-      if (fast === false) {
-        break;
-      }
-      if (slow === fast) {
-        return true;
-      }
-    }
-  }
-  return false;
-};
+  //populate newIntervals array with the items in our current intervals array
+  intervals.forEach(function (array, index) {
+    newIntervals.push(new Interval(array[0], array[1]));
+  });
 
-//function to get the next index, starting from a currentIndex;
-var getNext = function getNext(array, currentIndex, direction) {
-  var nextIndex = currentIndex + array[currentIndex];
+  //sort newIntervals array from lowest startTime to highest startTime because we want a.start<=b.start
+  newIntervals.sort(function (a, b) {
+    return a.start - b.start;
+  });
 
-  if (nextIndex >= array.length) {
-    nextIndex = nextIndex % array.length;
-  } else if (nextIndex < 0) {
-    var number = Math.abs(nextIndex) % array.length;
-    if (number === 0) {
-      nextIndex = 0;
+  //get the start and end of our firstInterval that is sorted,(this will be A).This will be the interval that we begin comparing to.
+  var currentStart = newIntervals[0].start;
+  var currentEnd = newIntervals[0].end;
+
+  //for each interval after our sorted first interval that we are comparing to,
+  for (var i = 1; i < newIntervals.length; i++) {
+    var interval = newIntervals[i];
+    //if the start of the interval we are looking at is less than the end of the interval we're comparing to, we have an overlap, so we adjust the end of the interval we're comparing to
+    if (interval.start <= currentEnd) {
+      currentEnd = Math.max(interval.end, currentEnd);
+      //otherwise, this means that the interval we are currently looking at doesn't overlap with the interval we're comparing to, so we push in the interval we're comparing to to our results, essentially saying that interval is done, and  the new interval we are comparing to is the interval we are currently looking at.
     } else {
-      nextIndex = array.length - number;
+      results.push(new Interval(currentStart, currentEnd));
+      currentStart = interval.start;
+      currentEnd = interval.end;
     }
   }
-  var isPositive = array[nextIndex] >= 0;
-  //if this nextIndex number isn't the same sign as what slow and start is starting out, we return false, because the cycle cannot contains both forward and backward movements.
-  if (isPositive !== direction) {
-    return false;
-  }
-
-  //if the nextIndex we jump to is equal to the currentIndex, then we return false, because the cycle should have more than one element.
-  if (nextIndex === currentIndex) {
-    return false;
-  }
-
-  return nextIndex;
+  //when our loop is done, we need to make sure to push in the current interval we are comparing to,since there are no more elements to compare to it anymore. it is the finals interval
+  results.push(new Interval(currentStart, currentEnd));
+  console.log(results);
 };
+
+console.log(mergeIntervals([[7, 9], [2, 5], [1, 4]]));
 
 /***/ }),
 

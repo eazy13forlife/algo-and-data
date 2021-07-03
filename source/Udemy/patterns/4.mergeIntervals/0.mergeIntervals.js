@@ -1,4 +1,4 @@
-//instead of having to deal with 0 or 1 for start and end and possibly getting confused that way,lets create a class
+//instead of having to deal with 0 or 1 for start and end and possibly getting confused that way,lets create a class, that pushes in an object with a start property and end property
 
 class Interval {
   constructor(start, end) {
