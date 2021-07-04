@@ -15723,8 +15723,6 @@ module.exports = g;
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-//instead of having to deal with 0 or 1 for start and end and possibly getting confused that way,lets create a class
-
 var Interval = function Interval(start, end) {
   _classCallCheck(this, Interval);
 
@@ -15732,44 +15730,39 @@ var Interval = function Interval(start, end) {
   this.end = end;
 };
 
-var mergeIntervals = function mergeIntervals(intervals) {
-  var results = [];
-  //i create a newIntervals array so I can use my interval class that has a start and end property so it's easier to identify,so I wont have to do  0 and 1 index to refer to start and end each time. However, it doesn't matter.
-  var newIntervals = [];
+var insertInterval = function insertInterval(intervalsArray, newInterval) {
+  var result = [];
+  var index = 0;
 
-  //populate newIntervals array with the items in our current intervals array
-  intervals.forEach(function (array, index) {
-    newIntervals.push(new Interval(array[0], array[1]));
-  });
-
-  //sort newIntervals array from lowest startTime to highest startTime because we want a.start<=b.start
-  newIntervals.sort(function (a, b) {
-    return a.start - b.start;
-  });
-
-  //get the start and end of our firstInterval that is sorted,(this will be A).This will be the interval that we begin comparing to.
-  var currentStart = newIntervals[0].start;
-  var currentEnd = newIntervals[0].end;
-
-  //for each interval after our sorted first interval that we are comparing to,
-  for (var i = 1; i < newIntervals.length; i++) {
-    var interval = newIntervals[i];
-    //if the start of the interval we are looking at is less than the end of the interval we're comparing to, we have an overlap, so we adjust the end of the interval we're comparing to
-    if (interval.start <= currentEnd) {
-      currentEnd = Math.max(interval.end, currentEnd);
-      //otherwise, this means that the interval we are currently looking at doesn't overlap with the interval we're comparing to, so we push in the interval we're comparing to to our results, essentially saying that interval is done, and  the new interval we are comparing to is the interval we are currently looking at.
-    } else {
-      results.push(new Interval(currentStart, currentEnd));
-      currentStart = interval.start;
-      currentEnd = interval.end;
+  //add all the  intervals that have an end less than the start of the newInterval we're adding, to our results array. This means that it's less than our newInterval, so no overlap. Also lets increment index, so we know the index of where the next item begins.
+  for (var i = 0; i < intervalsArray.length; i++) {
+    if (intervalsArray[i][1] < newInterval[0]) {
+      result.push(intervalsArray[i]);
+      index++;
     }
   }
-  //when our loop is done, we need to make sure to push in the current interval we are comparing to,since there are no more elements to compare to it anymore. it is the finals interval
-  results.push(new Interval(currentStart, currentEnd));
-  console.log(results);
+
+  //merge all intervals from the current index onwards that overlap with our newInterval to newInterval by changing the start and end of newInterval to account for the overlaps
+  for (var _i = index; _i < intervalsArray.length; _i++) {
+    //if the start of the interval we are looking at is less than the end of the newInterval, then there is overlap. so we find the start and end of this overlap, which is what newInterval becomes.
+    if (intervalsArray[_i][0] <= newInterval[1]) {
+      newInterval[0] = Math.min(intervalsArray[_i][0], newInterval[0]);
+      newInterval[1] = Math.max(intervalsArray[_i][1], newInterval[1]);
+      index++;
+    }
+  }
+
+  //insert this newInterval that has all the overallping factored in
+  result.push(newInterval);
+
+  //insert the rest of the intervals from intervalsArray to our results. these intervals don't have a start that is less than or equal to newIntervals's end, so there wont be any overlap.
+  for (var _i2 = index; _i2 < intervalsArray.length; _i2++) {
+    result.push(intervalsArray[_i2]);
+  }
+  return result;
 };
 
-console.log(mergeIntervals([[7, 9], [2, 5], [1, 4]]));
+console.log(insertInterval([[2, 3], [5, 7]], [1, 4]));
 
 /***/ }),
 
