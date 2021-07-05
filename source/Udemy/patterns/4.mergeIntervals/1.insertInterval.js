@@ -1,3 +1,10 @@
+class Interval {
+  constructor(start, end) {
+    this.start = start;
+    this.end = end;
+  }
+}
+
 const insertInterval = (intervalsArray, newInterval) => {
   const result = [];
   let index = 0;

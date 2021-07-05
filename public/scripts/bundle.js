@@ -15721,48 +15721,30 @@ module.exports = g;
 "use strict";
 
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Interval = function Interval(start, end) {
-  _classCallCheck(this, Interval);
-
-  this.start = start;
-  this.end = end;
-};
-
-var insertInterval = function insertInterval(intervalsArray, newInterval) {
+var intersectionLists = function intersectionLists(array1, array2) {
   var result = [];
-  var index = 0;
-
-  //add all the  intervals that have an end less than the start of the newInterval we're adding, to our results array. This means that it's less than our newInterval, so no overlap. Also lets increment index, so we know the index of where the next item begins.
-  for (var i = 0; i < intervalsArray.length; i++) {
-    if (intervalsArray[i][1] < newInterval[0]) {
-      result.push(intervalsArray[i]);
-      index++;
+  var i = 0;
+  var j = 0;
+  while (i < array1.length && j < array2.length) {
+    //array 1 has to have an end that is greater than or equal to array2s start for the possibility of an overlap and its start has to be less than or equal to array2s end for an actual overlap
+    var aoverlapsb = array1[i][1] >= array2[j][0] && array1[i][0] <= array2[j][1];
+    //if array1 does overlap array2, we find the intersection.
+    if (aoverlapsb) {
+      var start = Math.max(array1[i][0], array2[j][0]);
+      var end = Math.min(array1[i][1], array2[j][1]);
+      result.push([start, end]);
     }
-  }
-
-  //merge all intervals from the current index onwards that overlap with our newInterval to newInterval by changing the start and end of newInterval to account for the overlaps
-  for (var _i = index; _i < intervalsArray.length; _i++) {
-    //if the start of the interval we are looking at is less than the end of the newInterval, then there is overlap. so we find the start and end of this overlap, which is what newInterval becomes.
-    if (intervalsArray[_i][0] <= newInterval[1]) {
-      newInterval[0] = Math.min(intervalsArray[_i][0], newInterval[0]);
-      newInterval[1] = Math.max(intervalsArray[_i][1], newInterval[1]);
-      index++;
+    //now we check to see, if array1 end is less than array2 end, we move i up because the next interval might be from array 1 to array2 end meaning there will be some overlap that we have to check for.
+    if (array1[i][1] < array2[j][1]) {
+      i++;
+    } else {
+      j++;
     }
-  }
-
-  //insert this newInterval that has all the overallping factored in
-  result.push(newInterval);
-
-  //insert the rest of the intervals from intervalsArray to our results. these intervals don't have a start that is less than or equal to newIntervals's end, so there wont be any overlap.
-  for (var _i2 = index; _i2 < intervalsArray.length; _i2++) {
-    result.push(intervalsArray[_i2]);
   }
   return result;
 };
 
-console.log(insertInterval([[2, 3], [5, 7]], [1, 4]));
+console.log(intersectionLists([[1, 3], [5, 7], [9, 12]], [[5, 10]]));
 
 /***/ }),
 
