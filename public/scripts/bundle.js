@@ -15721,30 +15721,26 @@ module.exports = g;
 "use strict";
 
 
-var intersectionLists = function intersectionLists(array1, array2) {
-  var result = [];
-  var i = 0;
-  var j = 0;
-  while (i < array1.length && j < array2.length) {
-    //array 1 has to have an end that is greater than or equal to array2s start for the possibility of an overlap and its start has to be less than or equal to array2s end for an actual overlap
-    var aoverlapsb = array1[i][1] >= array2[j][0] && array1[i][0] <= array2[j][1];
-    //if array1 does overlap array2, we find the intersection.
-    if (aoverlapsb) {
-      var start = Math.max(array1[i][0], array2[j][0]);
-      var end = Math.min(array1[i][1], array2[j][1]);
-      result.push([start, end]);
-    }
-    //now we check to see, if array1 end is less than array2 end, we move i up because the next interval might be from array 1 to array2 end meaning there will be some overlap that we have to check for.
-    if (array1[i][1] < array2[j][1]) {
-      i++;
+var canAttend = function canAttend(intervalsArray) {
+  intervalsArray.sort(function (a, b) {
+    return a[0] - b[0];
+  });
+  var currentStart = intervalsArray[0][0];
+  var currentEnd = intervalsArray[0][1];
+  for (var i = 1; i < intervalsArray.length; i++) {
+    var interval = intervalsArray[i];
+    //usually we do if interval start is less than or equal to new intervals end, because we are looking for overlap/intersection and two of the same numbers is an overlap/intersection. however from 4-5 and 5-6 is not conflicting, because after something ends from 4-5, you can go to the 5-6 time. So, this is why we only check if start is less than ends time. not start is less than or equal to ends time.
+    if (interval[0] < currentEnd) {
+      return false;
     } else {
-      j++;
+      currentStart = interval[0];
+      currentEnd = interval[1];
     }
   }
-  return result;
+  return true;
 };
 
-console.log(intersectionLists([[1, 3], [5, 7], [9, 12]], [[5, 10]]));
+console.log(canAttend([[4, 5], [2, 3], [3, 6]]));
 
 /***/ }),
 
