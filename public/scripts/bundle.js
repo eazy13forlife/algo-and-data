@@ -15721,68 +15721,92 @@ module.exports = g;
 "use strict";
 
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var MinHeap = function () {
-  function MinHeap() {
-    _classCallCheck(this, MinHeap);
+var Interval = function Interval(start, end) {
+  _classCallCheck(this, Interval);
 
-    this.heap = [];
-  }
-
-  _createClass(MinHeap, [{
-    key: "insert",
-    value: function insert(value) {
-      this.heap.push(value);
-      this.heap.sort(function (a, b) {
-        return a[1] - b[1];
-      });
-    }
-  }, {
-    key: "extractMin",
-    value: function extractMin() {
-      this.heap.shift();
-    }
-  }]);
-
-  return MinHeap;
-}();
-
-var getMaxCPU = function getMaxCPU(intervalsArray) {
-  intervalsArray.sort(function (a, b) {
-    return a[0] - b[0];
-  });
-
-  var heap = new MinHeap();
-  heap.insert(intervalsArray[0]);
-  var maxSize = intervalsArray[0][2];
-  var currentSize = intervalsArray[0][2];
-
-  console.log(maxSize);
-
-  for (var i = 1; i < intervalsArray.length; i++) {
-    var interval = intervalsArray[i];
-    //while there is something in our heap and the earliest end time in our heap is less than or equal to our current intervals start time, it means that interval is done so we can remove it from our heap, which contains the current jobs happening
-    while (heap.heap.length && heap.heap[0][1] <= interval[0]) {
-      //lets remove this cpu time from our current maxSize
-      currentSize = currentSize - heap.heap[0][2];
-
-      //lets actually remove this item from our heap
-      heap.extractMin();
-    }
-    //not we can insert our interval to our heap. so what we did is we have finsihed removing all of the jobs that have finished at the start of this interval, and so now our heap contains the current jobs actually happening.
-    heap.insert(interval);
-    //lets recalculate maxSize since we added in a new interval to our heap
-    currentSize = currentSize + interval[2];
-    //lets push in this maxSize to our maxSizes array
-    maxSize = Math.max(currentSize, maxSize);
-  }
-  return maxSize;
+  this.start = start;
+  this.end = end;
 };
 
-console.log(getMaxCPU([[1, 4, 2], [2, 4, 1], [3, 6, 5]]));
+/*
+const merge = (intervals) => {
+  intervals.sort((a, b) => {
+    return a.start - b.start;
+  });
+  let currentStart = intervals[0].start;
+  let currentEnd = intervals[0].end;
+  const results = [];
+  for (let i = 1; i < intervals.length; i++) {
+    const interval = intervals[i];
+    if (interval.start <= currentEnd) {
+      currentEnd = Math.max(interval.end, currentEnd);
+    } else {
+      results.push(new Interval(currentStart, currentEnd));
+      currentStart = interval.start;
+      currentEnd = interval.end;
+    }
+  }
+  results.push(new Interval(currentStart, currentEnd));
+  return results;
+};
+*/
+
+/*
+const insert = (intervals, newInterval) => {
+  console.log(newInterval);
+  let index = 0;
+  const results = [];
+  for (let i = 0; i < intervals.length; i++) {
+    const interval = intervals[i];
+    if (interval.end < newInterval.start) {
+      results.push(interval);
+      index++;
+    } else {
+      break;
+    }
+  }
+
+  for (let i = index; i < intervals.length; i++) {
+    const interval = intervals[i];
+    if (interval.start <= newInterval.end) {
+      newInterval.start = Math.min(interval.start, newInterval.start);
+      newInterval.end = Math.max(interval.end, newInterval.end);
+      console.log(newInterval);
+      index++;
+    } else {
+      break;
+    }
+  }
+  results.push(newInterval);
+
+  for (let i = index; i < intervals.length; i++) {
+    results.push(intervals[i]);
+  }
+  return results;
+};
+
+*/
+
+var intersection = function intersection(interval1, interval2) {
+  var i = interval1;
+  var j = interval2;
+  var results = [];
+  while (i < interval.length && j < interval2.length) {
+    var aoverlapsb = interval1[i].end >= interval2[j].start && interval1[i].start <= interval2[j].end;
+    var intersectionStart = Math.max(interval1[i].start, interval2[j].start);
+    var intersectionEnd = Math.min(interval1[i].end, interval2[j].end);
+    results.push(new Interval(intersectionStart, intersectionEnd));
+    if (interval1[i].end < interval2[j].end) {
+      i++;
+    } else {
+      j++;
+    }
+  }
+  return results;
+};
+console.log(insert([new Interval(1, 3), new Interval(5, 7), new Interval(8, 12)], new Interval(4, 6)));
 
 /***/ }),
 
