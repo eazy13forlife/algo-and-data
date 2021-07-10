@@ -15721,92 +15721,33 @@ module.exports = g;
 "use strict";
 
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Interval = function Interval(start, end) {
-  _classCallCheck(this, Interval);
-
-  this.start = start;
-  this.end = end;
+var swap = function swap(array, index1, index2) {
+  var value1 = array[index1];
+  array[index1] = array[index2];
+  array[index2] = value1;
 };
 
-/*
-const merge = (intervals) => {
-  intervals.sort((a, b) => {
-    return a.start - b.start;
-  });
-  let currentStart = intervals[0].start;
-  let currentEnd = intervals[0].end;
-  const results = [];
-  for (let i = 1; i < intervals.length; i++) {
-    const interval = intervals[i];
-    if (interval.start <= currentEnd) {
-      currentEnd = Math.max(interval.end, currentEnd);
+var findMissing = function findMissing(array) {
+  var i = 0;
+  while (i < array.length) {
+    var value = array[i];
+    //first part means, if value is less than array.length,so the index exists
+    if (value < array.length && array[value] !== value) {
+      swap(array, value, i);
     } else {
-      results.push(new Interval(currentStart, currentEnd));
-      currentStart = interval.start;
-      currentEnd = interval.end;
-    }
-  }
-  results.push(new Interval(currentStart, currentEnd));
-  return results;
-};
-*/
-
-/*
-const insert = (intervals, newInterval) => {
-  console.log(newInterval);
-  let index = 0;
-  const results = [];
-  for (let i = 0; i < intervals.length; i++) {
-    const interval = intervals[i];
-    if (interval.end < newInterval.start) {
-      results.push(interval);
-      index++;
-    } else {
-      break;
-    }
-  }
-
-  for (let i = index; i < intervals.length; i++) {
-    const interval = intervals[i];
-    if (interval.start <= newInterval.end) {
-      newInterval.start = Math.min(interval.start, newInterval.start);
-      newInterval.end = Math.max(interval.end, newInterval.end);
-      console.log(newInterval);
-      index++;
-    } else {
-      break;
-    }
-  }
-  results.push(newInterval);
-
-  for (let i = index; i < intervals.length; i++) {
-    results.push(intervals[i]);
-  }
-  return results;
-};
-
-*/
-
-var intersection = function intersection(interval1, interval2) {
-  var i = interval1;
-  var j = interval2;
-  var results = [];
-  while (i < interval.length && j < interval2.length) {
-    var aoverlapsb = interval1[i].end >= interval2[j].start && interval1[i].start <= interval2[j].end;
-    var intersectionStart = Math.max(interval1[i].start, interval2[j].start);
-    var intersectionEnd = Math.min(interval1[i].end, interval2[j].end);
-    results.push(new Interval(intersectionStart, intersectionEnd));
-    if (interval1[i].end < interval2[j].end) {
       i++;
-    } else {
-      j++;
     }
   }
-  return results;
+  console.log(array);
+
+  for (var _i = 0; _i < array.length; _i++) {
+    var _value = array[_i];
+    if (_i !== _value) {
+      return _i;
+    }
+  }
 };
-console.log(insert([new Interval(1, 3), new Interval(5, 7), new Interval(8, 12)], new Interval(4, 6)));
+console.log(findMissing([8, 3, 5, 2, 4, 6, 0, 1]));
 
 /***/ }),
 

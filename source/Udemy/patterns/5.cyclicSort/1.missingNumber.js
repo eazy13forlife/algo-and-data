@@ -15,7 +15,6 @@ const findMissing = (array) => {
       i++;
     }
   }
-  console.log(array);
 
   for (let i = 0; i < array.length; i++) {
     let value = array[i];
@@ -23,5 +22,23 @@ const findMissing = (array) => {
       return i;
     }
   }
+  return "all numbers exist";
 };
-console.log(findMissing([8, 3, 5, 2, 4, 6, 0, 1]));
+
+/*not the optimal way because space complexity will be O(n)
+const findMissing = (array) => {
+  const newArray = [];
+  for (let i = 0; i < array.length; i++) {
+    let value = array[i];
+    newArray[value] = value;
+  }
+
+  for (let i = 0; i < newArray.length; i++) {
+    if (newArray[i] === undefined) {
+      return i;
+    }
+  }
+
+  return false;
+};
+*/
