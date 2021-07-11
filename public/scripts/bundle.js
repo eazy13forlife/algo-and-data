@@ -15727,27 +15727,37 @@ var swap = function swap(array, index1, index2) {
   array[index2] = value1;
 };
 
-var findMissing = function findMissing(array) {
+var findMissingNumbers = function findMissingNumbers(array) {
+  var seen = {};
   var i = 0;
   while (i < array.length) {
     var value = array[i];
-    //first part means, if value is less than array.length,so the index exists
-    if (value < array.length && array[value] !== value) {
-      swap(array, value, i);
+    if (seen[value] === true) {
+      i++;
+      continue;
+    }
+
+    // so, looking at the value of our current index,which is equal to the variable,value, we check if the index that should contain this value actually does contain it.So, if the index in question is the index we're on and it does contain the right value, great, we move on. If it doesn't we swap with our current index, so that the index that should contain this value ends up containing it.
+    if (array[value - 1] !== value) {
+      swap(array, value - 1, i);
     } else {
+      seen[array[i]] = true;
       i++;
     }
   }
-  console.log(array);
+
+  var results = [];
 
   for (var _i = 0; _i < array.length; _i++) {
     var _value = array[_i];
-    if (_i !== _value) {
-      return _i;
+    if (_i !== _value - 1) {
+      results.push(_i + 1);
     }
   }
+  return results;
 };
-console.log(findMissing([8, 3, 5, 2, 4, 6, 0, 1]));
+
+console.log(findMissingNumbers([2, 3, 2, 1]));
 
 /***/ }),
 

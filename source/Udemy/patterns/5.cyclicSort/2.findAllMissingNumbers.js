@@ -14,7 +14,7 @@ const findMissingNumbers = (array) => {
       continue;
     }
 
-    // so, looking at the value of our current index,which is equal to the variable,value, we check if the index that should contain this value actually does contain it.So, if the index in question is the index we're on and it does contain the right value, great, we move on. If it doesn't we swap with our current index, so that the index that should contain this value ends up containing it.
+    // so, looking at the value of our current index,which is equal to the variable,value, we check if the index that should contain this value actually does contain it.So, if the index in question is the index we're on, and it does contain this value, great, we move on.This index has the right value. If it doesn't we swap the index that should contain this value with our current index, so that the index that should contain this value ends up containing it.
     if (array[value - 1] !== value) {
       swap(array, value - 1, i);
     } else {
