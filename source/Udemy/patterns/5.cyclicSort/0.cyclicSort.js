@@ -9,7 +9,7 @@ const sort = (array) => {
   while (i < array.length) {
     let value = array[i];
     let correctValueIndex = value - 1;
-    // so, looking at the value of our current index,which is equal to the variable,value, we check if the index that should contain this value actually does contain it.So, if the index in question is the index we're on, and it does contain this value, great, we move on.This index has the right value. If it doesn't we swap the index that should contain this value with our current index, so that the index that should contain this value ends up containing it.
+    // The whole purpose, is to make sure the value at the index we're on, is in the correct index if not already. So, looking at the value of our current index,which is equal to the variable,value, we check if the index that should contain this value actually does contain it. So, if it does great, this value is in the correct index, so we move on to check to see if the value at the next index is in its correct index. If it doesn't, we swap the index that should contain this value with our current index, so that the index that should contain this value ends up containing it. And now we want to check if the new number at our current index is in its correct index, and repeat the process.When it is all said and done, our array will be sorted.
     if (array[correctValueIndex] !== value) {
       swap(array, correctValueIndex, i);
     } else {
