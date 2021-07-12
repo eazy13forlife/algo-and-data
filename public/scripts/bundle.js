@@ -15716,41 +15716,9 @@ module.exports = g;
   !*** ./source/index.js ***!
   \*************************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
-
-
-var swap = function swap(array, index1, index2) {
-  var value1 = array[index1];
-  array[index1] = array[index2];
-  array[index2] = value1;
-};
-
-var findMissingNumbers = function findMissingNumbers(array) {
-  var i = 0;
-  while (i < array.length) {
-    var value = array[i];
-    // The whole purpose, is to make sure the value at the index we're on, is in the correct index if not already. So, looking at the value of our current index,which is equal to the variable,value, we check if the index that should contain this value actually does contain it. So, if it does great, this value is in the correct index, so we move on to check to see if the value at the next index is in its correct index. If it doesn't, we swap the index that should contain this value with our current index, so that the index that should contain this value ends up containing it. And now we want to check if the new number at our current index is in its correct index, and repeat the process.When it is all said and done, our array will be sorted. So, we don't even need an object to store the numbers we've seen. Because if a number we've seen already is in its correct index, we move on to the next index, so we are essentially skipping this duplicate.
-    if (array[value - 1] !== value) {
-      swap(array, value - 1, i);
-    } else {
-      i++;
-    }
-  }
-
-  var results = [];
-
-  for (var _i = 0; _i < array.length; _i++) {
-    var _value = array[_i];
-    if (_i !== _value - 1) {
-      results.push(_i + 1);
-    }
-  }
-  return results;
-};
-
-console.log(findMissingNumbers([2, 3, 2, 1]));
+throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nDuplicate declaration \"findDuplicate\"\n\n\u001b[0m \u001b[90m 24 | \u001b[39m\n \u001b[90m 25 | \u001b[39m\u001b[90m//this other appraoch checks to see if the correct index contains the value it should, which is the value our i  is on,and if the correct index is not the same index as the i we're on, then we have a duplicate value, so we return this duplicate value.\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 26 | \u001b[39m\u001b[36mconst\u001b[39m findDuplicate \u001b[33m=\u001b[39m (array) \u001b[33m=>\u001b[39m {\n \u001b[90m    | \u001b[39m      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 27 | \u001b[39m  let i \u001b[33m=\u001b[39m \u001b[35m0\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m 28 | \u001b[39m  \u001b[36mwhile\u001b[39m (i \u001b[33m<\u001b[39m array\u001b[33m.\u001b[39mlength) {\n \u001b[90m 29 | \u001b[39m    \u001b[36mconst\u001b[39m value \u001b[33m=\u001b[39m array[i]\u001b[33m;\u001b[39m\u001b[0m\n");
 
 /***/ }),
 
