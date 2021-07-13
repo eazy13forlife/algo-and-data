@@ -15716,9 +15716,58 @@ module.exports = g;
   !*** ./source/index.js ***!
   \*************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nDuplicate declaration \"findDuplicate\"\n\n\u001b[0m \u001b[90m 24 | \u001b[39m\n \u001b[90m 25 | \u001b[39m\u001b[90m//this other appraoch checks to see if the correct index contains the value it should, which is the value our i  is on,and if the correct index is not the same index as the i we're on, then we have a duplicate value, so we return this duplicate value.\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 26 | \u001b[39m\u001b[36mconst\u001b[39m findDuplicate \u001b[33m=\u001b[39m (array) \u001b[33m=>\u001b[39m {\n \u001b[90m    | \u001b[39m      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 27 | \u001b[39m  let i \u001b[33m=\u001b[39m \u001b[35m0\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m 28 | \u001b[39m  \u001b[36mwhile\u001b[39m (i \u001b[33m<\u001b[39m array\u001b[33m.\u001b[39mlength) {\n \u001b[90m 29 | \u001b[39m    \u001b[36mconst\u001b[39m value \u001b[33m=\u001b[39m array[i]\u001b[33m;\u001b[39m\u001b[0m\n");
+"use strict";
+
+
+var swap = function swap(array, index1, index2) {
+  var value1 = array[index1];
+  array[index1] = array[index2];
+  array[index2] = value1;
+};
+//first approach
+
+var findAllDuplicates2 = function findAllDuplicates2(array) {
+  var i = 0;
+  while (i < array.length) {
+    var value = array[i];
+    if (array[value - 1] !== value) {
+      swap(array, value - 1, i);
+    } else {
+      i++;
+    }
+  }
+  var results = [];
+  for (var _i = 0; _i < array.length; _i++) {
+    var _value = array[_i];
+    if (_i !== _value - 1) {
+      results.push(_value);
+    }
+  }
+  return results;
+};
+
+//second approach of using a pointer to store all the duplicates
+var findAllDuplicates = function findAllDuplicates(array) {
+  var d = 0;
+  var i = 0;
+  while (i < array.length) {
+    var value = array[i];
+    if (array[value - 1] !== value) {
+      swap(array, value - 1, i);
+    } else {
+      if (value - 1 !== i) {
+        array[d] = value;
+        d++;
+      }
+      i++;
+    }
+  }
+  return array.slice(0, d);
+};
+
+console.log(findAllDuplicates2([5, 4, 7, 2, 3, 5, 3, 3, 3, 3]));
 
 /***/ }),
 
