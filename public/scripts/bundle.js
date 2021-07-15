@@ -15726,9 +15726,8 @@ var swap = function swap(array, index1, index2) {
   array[index1] = array[index2];
   array[index2] = value1;
 };
-//first approach
 
-var findAllDuplicates2 = function findAllDuplicates2(array) {
+var findCorruptPair = function findCorruptPair(array) {
   var i = 0;
   while (i < array.length) {
     var value = array[i];
@@ -15738,36 +15737,19 @@ var findAllDuplicates2 = function findAllDuplicates2(array) {
       i++;
     }
   }
+
   var results = [];
   for (var _i = 0; _i < array.length; _i++) {
     var _value = array[_i];
     if (_i !== _value - 1) {
       results.push(_value);
+      results.push(_i + 1);
     }
   }
   return results;
 };
 
-//second approach of using a pointer to store all the duplicates
-var findAllDuplicates = function findAllDuplicates(array) {
-  var d = 0;
-  var i = 0;
-  while (i < array.length) {
-    var value = array[i];
-    if (array[value - 1] !== value) {
-      swap(array, value - 1, i);
-    } else {
-      if (value - 1 !== i) {
-        array[d] = value;
-        d++;
-      }
-      i++;
-    }
-  }
-  return array.slice(0, d);
-};
-
-console.log(findAllDuplicates2([5, 4, 7, 2, 3, 5, 3, 3, 3, 3]));
+console.log(findCorruptPair([3, 1, 2, 3, 6, 4]));
 
 /***/ }),
 
